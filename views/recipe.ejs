@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe List</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <h1><%=recipe[0].title%></h1>
+    <img src="<%=recipe[0].imageUrl%>" height="300px">
+    <h2>Description</h2>
+    <p><%=recipe[0].description%></p>
+    <h3>Ingredients</h3>
+    <ul>
+        <% for (let i=0; i < recipe[0].ingredients.length; i++){%>
+            <li><%=recipe[0].ingredients[i]%></li>
+        <%}%> 
+    </ul>
+    <h3>Steps</h3>
+    <ol>
+        <% for (let i=0; i < recipe[0].steps.length; i++){%>
+            <li><%=recipe[0].steps[i]%></li>
+        <%}%> 
+    </ol>
+    
+        
+</body>
+</html>

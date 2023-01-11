@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe List</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <h1>Recipe Lists</h1>
+
+    <ul>
+        <% for(var i=0; i < recipeList.length; i++) {%>
+
+            <li><a href="/recipe/<%=recipeList[i].recipeURL%>"><%=recipeList[i].title%></a></li>
+            
+        <%}%>
+    </ul>
+
+        
+</body>
+</html>

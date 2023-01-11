@@ -1,0 +1,16 @@
+.col{
+    display:flex;
+    flex-direction: column;
+}
+
+.row{
+    display:flex;
+    justify-content: space-between;
+}
+
+.newRecipeWrapper{
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Recipe</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <!---->
+    <div class="newRecipeWrapper">
+        <h1>New Recipe</h1>
+
+         <!--Recipe Form-->
+         <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
+        <form class="col" id='submitRecipe' action='/newRecipe' method='post'>
+
+            <div class="Title row">
+                <h2>Title</h2>
+                <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
+            </div>
+
+            <h2>Image URL</h2>
+            <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" required></input>
+
+            <h2>Description</h2>
+            <input type='text' name='description' required pattern="[^{}<>]{2,500}"></input>
+
+            <div class="Ingredients row">
+                <h2>Ingredients</h2>
+                <button type="button" id="addIngredient">+</button>
+            </div>
+
+            <div class="ingredientsList">
+                <div class="row">
+                    <h3>1</h3>
+                    <input type="text" name="ingredient1" pattern="[^{}<>]{2,70}"required>
+                </div>
+            </div>
+            
+            <div class="Steps row">
+                <h2>Steps</h2>
+                <button type="button" id="addStep">+</button>
+            </div>
+
+            <div class="stepsList">
+                <div>
+                    <h3>Step 1</h3>
+                    <input type="text" name="step1" required pattern="[^{}<>]{2,70}">
+                </div>
+            </div>
+            <button type='submit' class='submitBtn'>SUBMIT</button>
+
+        </form>
+    </div>
+
+    <script>
+
+        //Assign button for adding steps, and step area for appending steps.
+        let stepAddButton = document.getElementById("addStep");
+        let stepsArea = document.querySelector(".stepsList")
+
+        //Amount of steps starts at 0, increases with added steps, helps us name the steps ids and names
+        let stepNumber = 1;
+
+        /*When the button is clicked, add one to the step counter.
+          Then create a div, h3, and text input. Assign the "text" type to the input.
+          Assign a name to the input using the step counter, eg. 'Step1, Step2, Step3'.
+          Append the h3, and text input to the div. This is a full step node. Append it to the step area.*/
+        stepAddButton.addEventListener("click", function(){
+
+            stepNumber += 1;
+            let div = document.createElement("div");
+            let h3 = document.createElement("h3");
+            let textInput = document.createElement("input");
+
+            h3.textContent = `Step ${stepNumber}`;
+            textInput.name = `step${stepNumber}`;
+            textInput.type = "text";
+            textInput.required = true;
+            textInput.pattern = "[^{}<>]{2,300}";
+
+            div.append(h3);
+            div.append(textInput);
+            stepsArea.append(div);
+        })
+
+        //Repeat logic for ingrients list
+        let ingredientAddButton = document.getElementById("addIngredient");
+        let ingredientsArea = document.querySelector(".ingredientsList")
+        let ingredientNumber = 1;
+
+        ingredientAddButton.addEventListener("click", function(){
+
+            ingredientNumber += 1;
+            let div = document.createElement("div");
+            let h3 = document.createElement("h3");
+            let textInput = document.createElement("input");
+            div.classList.add("row");
+
+            h3.textContent = `${ingredientNumber}`;
+            textInput.name = `ingredient${ingredientNumber}`;
+            textInput.type = "text";
+            textInput.required = true;
+            textInput.pattern = "[^{}<>]{2,70}";
+
+
+            div.append(h3);
+            div.append(textInput);
+            ingredientsArea.append(div);
+            })
+
+    </script>
+</body>
+</html>
