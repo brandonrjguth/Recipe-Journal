@@ -35,10 +35,6 @@
             </div>
 
             <div class="ingredientsList">
-                <div class="row">
-                    <h3>1</h3>
-                    <input type="text" name="ingredient1" pattern="[^{}<>]{2,70}"required>
-                </div>
             </div>
             
             <div class="Steps row">
@@ -47,10 +43,6 @@
             </div>
 
             <div class="stepsList">
-                <div>
-                    <h3>Step 1</h3>
-                    <input type="text" name="step1" required pattern="[^{}<>]{2,70}">
-                </div>
             </div>
             <button type='submit' class='submitBtn'>SUBMIT</button>
 
@@ -64,7 +56,7 @@
         let stepsArea = document.querySelector(".stepsList")
 
         //Amount of steps starts at 0, increases with added steps, helps us name the steps ids and names
-        let stepNumber = 1;
+        let stepNumber = 0;
 
         /*When the button is clicked, add one to the step counter.
           Then create a div, h3, and text input. Assign the "text" type to the input.
@@ -73,25 +65,62 @@
         stepAddButton.addEventListener("click", function(){
 
             stepNumber += 1;
+
+            //define elements for a step node
             let div = document.createElement("div");
             let h3 = document.createElement("h3");
             let textInput = document.createElement("input");
+            let deleteButton = document.createElement("button");
 
+            //Add names, ids, and text-content to nodes
             h3.textContent = `Step ${stepNumber}`;
+            div.id = `stepDiv${stepNumber}`;
+            div.classList.add("stepNode");
             textInput.name = `step${stepNumber}`;
             textInput.type = "text";
             textInput.required = true;
             textInput.pattern = "[^{}<>]{2,300}";
+            deleteButton.id = `stepBtn${stepNumber}`;
+            deleteButton.textContent = "X";
+            deleteButton.type = "button";
 
+      
+            //append nodes together and then append to the step area
             div.append(h3);
             div.append(textInput);
+            div.append(deleteButton);
             stepsArea.append(div);
+
+            //Initialize variables for the new fully appended step node and corresponding delete button
+            let thisStepNode = document.querySelector(`#stepDiv${stepNumber}`)
+            let thisNodeDeleteBtn = document.querySelector(`#stepBtn${stepNumber}`)
+
+            //add event listener to this nodes delete button which will delete this node
+            thisNodeDeleteBtn.addEventListener("click", function(){
+                thisStepNode.remove()
+
+                //rename all step numbers so that they are in order
+                let allSteps = document.querySelectorAll(".stepNode");
+
+                /*We create an array of all step nodes, and iterate through their H3s through the "children"
+                property. Div, and button ID's remain unchanged because they are only visible to the back end.
+                So "Step 2" may still have the div and button ID "step 5", but it does not matter, this keeps
+                delete buttons corresponding to the nodes and they will get added in the correct order to an 
+                array in the database entry after server-side anyways*/
+                for (i=0; i < allSteps.length; i++){
+                    allSteps[i].children[0].textContent = `Step ${i+1}`
+                    allSteps[i].children[0].textContent = `Step ${i+1}`
+                }
+                
+                
+            })
+
         })
 
-        //Repeat logic for ingrients list
+        //Repeat logic for ingredients list
         let ingredientAddButton = document.getElementById("addIngredient");
         let ingredientsArea = document.querySelector(".ingredientsList")
-        let ingredientNumber = 1;
+        let ingredientNumber = 0;
 
         ingredientAddButton.addEventListener("click", function(){
 
@@ -99,20 +128,37 @@
             let div = document.createElement("div");
             let h3 = document.createElement("h3");
             let textInput = document.createElement("input");
-            div.classList.add("row");
+            let deleteButton = document.createElement("button");
 
             h3.textContent = `${ingredientNumber}`;
+            div.classList.add("row");
+            div.classList.add("ingredientNode");
+            div.id = `ingredientDiv${ingredientNumber}`;
             textInput.name = `ingredient${ingredientNumber}`;
             textInput.type = "text";
             textInput.required = true;
             textInput.pattern = "[^{}<>]{2,70}";
-
+            deleteButton.id = `ingredientBtn${ingredientNumber}`;
+            deleteButton.textContent = "X";
 
             div.append(h3);
             div.append(textInput);
+            div.append(deleteButton);
             ingredientsArea.append(div);
+
+            let thisIngredientNode = document.querySelector(`#ingredientDiv${ingredientNumber}`)
+            let thisIngredientDeleteBtn = document.querySelector(`#ingredientBtn${ingredientNumber}`)
+
+            thisIngredientDeleteBtn.addEventListener("click", function(){
+                thisIngredientNode.remove()
+                let allIngredients = document.querySelectorAll(".ingredientNode");
+                for (i=0; i < allIngredients.length; i++){
+                    allIngredients[i].children[0].textContent = `${i+1}`
+                    allIngredients[i].children[0].textContent = `${i+1}`
+                }
             })
 
+        })
     </script>
 </body>
 </html>
