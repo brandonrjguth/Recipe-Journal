@@ -53,9 +53,10 @@
             <div class="stepsList">
                 <%for (i = 0; i < recipe[0].steps.length; i++){%>
                     <div class="stepNode" id="stepDiv<%=i+1%>">
-                    <h3>Step <%=i+1%></h3>
-                    <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
-                    <button id="stepBtn<%=i+1%>">X</button>
+                        <h3>Step <%=i+1%></h3>
+                        <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
+                        <button id="stepBtn<%=i+1%>" type="button">X</button>
+                    </div>
                 <%}%>
             </div>
             <button type='button' class='submitBtn'>SUBMIT</button>
@@ -68,24 +69,41 @@
         //Assign button for adding steps, and step area for appending steps.
         let stepAddButton = document.getElementById("addStep");
         let stepsArea = document.querySelector(".stepsList")
+        let steps = [];
+        let stepNumber;
 
-        //Amount of steps starts at 0, increases with added steps, helps us name the steps ids and names
-        let stepNumber = 0;
+        //Assign function to recount steps, assign step number, change values
+        let setStepNumber = () => {
+            steps = document.querySelectorAll(".stepNode");
+            if (steps[0] === undefined){
+                stepNumber = 0;
+            } else {
+                stepNumber = steps.length;
+            }
+        }
 
-        /*When the button is clicked, add one to the step counter.
-          Then create a div, h3, and text input. Assign the "text" type to the input.
-          Assign a name to the input using the step counter, eg. 'Step1, Step2, Step3'.
-          Append the h3, and text input to the div. This is a full step node. Append it to the step area.*/
-        stepAddButton.addEventListener("click", function(){
+        //Assign function to assign delete buttons
+        let initDeleteStepButtons = () => {
+            for (i = 1; i < steps.length + 1; i++){
+                let thisStepNode = document.querySelector(`#stepDiv${i}`)
+                let thisNodeDeleteBtn = document.querySelector(`#stepBtn${i}`)
+                //add event listener to this nodes delete button which will delete this node
+                thisNodeDeleteBtn.addEventListener("click", function(){
+                    thisStepNode.remove();
+                    setStepNumber();
+                    resetSteps(); 
+                })
+            }
+        }
 
+        //Assign function to create new step node
+        let createStep = () => {
             stepNumber += 1;
-
-            //define elements for a step node
+             //define elements for a step node
             let div = document.createElement("div");
             let h3 = document.createElement("h3");
             let textInput = document.createElement("input");
             let deleteButton = document.createElement("button");
-
             //Add names, ids, and text-content to nodes
             h3.textContent = `Step ${stepNumber}`;
             div.id = `stepDiv${stepNumber}`;
@@ -97,39 +115,38 @@
             deleteButton.id = `stepBtn${stepNumber}`;
             deleteButton.textContent = "X";
             deleteButton.type = "button";
-
-      
             //append nodes together and then append to the step area
             div.append(h3);
             div.append(textInput);
             div.append(deleteButton);
             stepsArea.append(div);
+            setStepNumber();
+        }
 
-            //Initialize variables for the new fully appended step node and corresponding delete button
-            let thisStepNode = document.querySelector(`#stepDiv${stepNumber}`)
-            let thisNodeDeleteBtn = document.querySelector(`#stepBtn${stepNumber}`)
+        let resetSteps = () => {
+            for (i=0; i < steps.length; i++){
+                    steps[i].id = `stepDiv${i+1}`;
+                    steps[i].children[1].name = `step${i+1}`
+                    steps[i].children[0].textContent = `Step ${i+1}`
+                    steps[i].children[0].textContent = `Step ${i+1}`
+                    steps[i].children[2].id = `stepBtn${i+1}`
+            }
+        }
 
-            //add event listener to this nodes delete button which will delete this node
-            thisNodeDeleteBtn.addEventListener("click", function(){
-                thisStepNode.remove()
 
-                //rename all step numbers so that they are in order
-                let allSteps = document.querySelectorAll(".stepNode");
 
-                /*We create an array of all step nodes, and iterate through their H3s through the "children"
-                property. Div, and button ID's remain unchanged because they are only visible to the back end.
-                So "Step 2" may still have the div and button ID "step 5", but it does not matter, this keeps
-                delete buttons corresponding to the nodes and they will get added in the correct order to an 
-                array in the database entry after server-side anyways*/
-                for (i=0; i < allSteps.length; i++){
-                    allSteps[i].children[0].textContent = `Step ${i+1}`
-                    allSteps[i].children[0].textContent = `Step ${i+1}`
-                }
-                
-                
-            })
 
+
+        setStepNumber();
+        initDeleteStepButtons();
+    
+        stepAddButton.addEventListener("click", function(){
+            setStepNumber();
+            createStep();
+            initDeleteStepButtons();
         })
+
+
 
         //Repeat logic for ingredients list
         let ingredientAddButton = document.getElementById("addIngredient");
