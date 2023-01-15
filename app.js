@@ -65,12 +65,10 @@ client.connect(err => {
   //to be displayed on the recipe page
   app.get("/recipe/:recipeURL", (req, res) => {
     recipes.find({recipeURL:req.params.recipeURL}).toArray((err, fullRecipe) => {
-      console.log(fullRecipe);
-      res.render("recipe", {recipe:fullRecipe})
+      res.render("recipe", {recipe:fullRecipe});
       });
 
   })
-
 
   //POST ROUTES
   app.post('/newRecipe', function(req, res) {
@@ -98,6 +96,7 @@ client.connect(err => {
         let ingredients = [];
         let keysArray = Object.keys(req.body);
         let valuesArray = Object.values(req.body);
+        let favourite = false;
 
         for (i = 0; i < keysArray.length; i++){
           if (keysArray[i].includes("step")){
@@ -109,6 +108,10 @@ client.connect(err => {
           }
         }
 
+        if (req.body.favourite == "on"){
+          favourite = true;
+        }
+
         //Add the recipe into the recipe collection on mongoDB
         recipes.insertOne({
           title: req.body.title,
@@ -116,15 +119,41 @@ client.connect(err => {
           imageUrl: req.body.image,
           description: req.body.description,
           steps: steps,
-          ingredients:ingredients
+          ingredients:ingredients,
+          favourite:favourite
         })
 
-        res.redirect("newRecipePage");
+        //redirect to new recipes page, with a short wait for the database to have time to fill it
+        setTimeout(function(){res.redirect("/recipe/"+ recipeURL)}, 2000)
     
     })
   })
 
-  //recipes.remove({})
+
+  //find recipe by recieved URL, if its not a favourite, make it one, else remove it from favourites
+  app.post('/favouriteRecipe', function(req, res) {
+    recipes.find({recipeURL:req.body.recipeURL}).toArray((err, recipe) => {
+      if (recipe[0].favourite === false){
+        recipes.updateOne({recipeURL:req.body.recipeURL}, { $set: {"favourite":true}})
+      } else {
+        recipes.updateOne({recipeURL:req.body.recipeURL}, { $set: {"favourite":false}})
+      }
+      res.render("recipe", {recipe:recipe});
+    });
+  });
+
+  //edit recipe page
+  app.get('/recipe/:recipeURL/editRecipe', function(req, res) {
+    recipes.find({recipeURL:req.params.recipeURL}).toArray((err, recipe) => {
+      res.render("editRecipe", {recipe:recipe, recipeExists:false});
+    });
+  });
+
+  //find recipe and delete it entirely
+  app.post('/deleteRecipe', function(req, res) {
+    recipes.deleteOne({recipeURL:req.body.recipeURL})
+    res.redirect("/recipeList");
+  });
   
   //Initiate Express listening on port
   app.listen(port, () => {

@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
     <title>Recipe List</title>
 </head>
 <body>
     <%- include('partials/header') %>
     <h1><%=recipe[0].title%></h1>
-    <img src="<%=recipe[0].imageUrl%>" height="300px">
+    <div class="row">
+        <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+            <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+            <button><% if (recipe[0].favourite == false){%>Favourite<%} else {%>Unfavourite<%}%></button>
+        </form>
+            <button><a href="/recipe/<%=recipe[0].recipeURL%>/editRecipe">Edit</a></button>
+        <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
+            <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+            <button>Delete</button>
+        </form>
+    </div>
+    <img src=<%=recipe[0].imageUrl%> height="300px">
     <h2>Description</h2>
     <p><%=recipe[0].description%></p>
     <h3>Ingredients</h3>

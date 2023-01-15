@@ -12,7 +12,7 @@
 
     <!---->
     <div class="newRecipeWrapper">
-        <h1>New Recipe</h1>
+        <h1>Edit Recipe</h1>
 
          <!--Recipe Form-->
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
@@ -20,15 +20,15 @@
 
             <div class="Title row">
                 <h2>Title</h2>
-                <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
+                <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe[0].title%>"></input>
             </div>
 
             <h3>Favourite</h3><input type="checkbox" name="favourite"></input>
             <h2>Description</h2>
-            <input type='text' name='description' required pattern="[^{}<>]{2,500}"></input>
+            <input type='text' name='description' required pattern="[^{}<>]{2,500}" value="<%=recipe[0].description%>"></input>
 
             <h2>Image URL</h2>
-            <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" required></input>
+            <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"required></input>
 
             <div class="Ingredients row">
                 <h2>Ingredients</h2>
@@ -36,6 +36,13 @@
             </div>
 
             <div class="ingredientsList">
+                <%for (i = 0; i < recipe[0].ingredients.length; i++){%>
+                    <div class="row ingredientNode" id="ingredientDiv<%=i+1%>">
+                        <h3><%=i+1%></h3>
+                        <input name="ingredient<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].ingredients[i]%>">
+                        <button id="ingredientBtn<%=i+1%>">X</button>
+                    </div>
+                    <%}%>
             </div>
             
             <div class="Steps row">
@@ -44,6 +51,12 @@
             </div>
 
             <div class="stepsList">
+                <%for (i = 0; i < recipe[0].steps.length; i++){%>
+                    <div class="stepNode" id="stepDiv<%=i+1%>">
+                    <h3>Step <%=i+1%></h3>
+                    <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
+                    <button id="stepBtn<%=i+1%>">X</button>
+                <%}%>
             </div>
             <button type='button' class='submitBtn'>SUBMIT</button>
 

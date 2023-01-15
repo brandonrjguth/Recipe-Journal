@@ -5,7 +5,6 @@
 
 .row{
     display:flex;
-    justify-content: space-between;
 }
 
 .newRecipeWrapper{
@@ -13,4 +12,7 @@
     flex-direction:column;
     justify-content: center;
     align-items: center;
+}
+body{
+    background-color: cadetblue;
 }
