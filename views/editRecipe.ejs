@@ -16,7 +16,7 @@
 
          <!--Recipe Form-->
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
-        <form class="col" id='submitRecipe' action='/newRecipe' method='post'>
+        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeURL%>/editRecipe' method='post'>
 
             <div class="Title row">
                 <h2>Title</h2>

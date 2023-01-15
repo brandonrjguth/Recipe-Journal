@@ -149,6 +149,49 @@ client.connect(err => {
     });
   });
 
+
+  app.post("/recipe/:recipeURL/editRecipe", function(req, res){
+
+    console.log(req.body.recipeUrl);
+
+    let recipeURL = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+    let steps = [];
+    let ingredients = [];
+    let keysArray = Object.keys(req.body);
+    let valuesArray = Object.values(req.body);
+    let favourite = false;
+
+    for (i = 0; i < keysArray.length; i++){
+      if (keysArray[i].includes("step")){
+        steps.push(valuesArray[i]);
+      }
+
+      if (keysArray[i].includes("ingredient")){
+        ingredients.push(valuesArray[i]);
+      }
+    }
+
+    if (req.body.favourite == "on"){
+      favourite = true;
+    }
+
+    recipes.updateMany({recipeURL:req.params.recipeURL}, { $set: {
+      "title": req.body.title,
+      "recipeURL": recipeURL,
+      "imageUrl": req.body.image,
+      "description": req.body.description,
+      "steps": steps,
+      "ingredients":ingredients,
+      "favourite":favourite
+    }})
+
+    console.log(req.body.description);
+
+    setTimeout(function(){res.redirect("/recipe/"+ recipeURL)}, 2000)
+  })
+
+  
+
   //find recipe and delete it entirely
   app.post('/deleteRecipe', function(req, res) {
     recipes.deleteOne({recipeURL:req.body.recipeURL})
