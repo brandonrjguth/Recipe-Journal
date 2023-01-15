@@ -36,6 +36,11 @@
             </div>
 
             <div class="ingredientsList">
+                <div class="row ingredientsNode" id="ingredientDiv1">
+                    <h3>1</h3>
+                    <input name="ingredient1" type="text" required="" pattern="[^{}<>]{2,70}">
+                    <button id="ingredientBtn1">X</button>
+                </div>
             </div>
             
             <div class="Steps row">
@@ -44,6 +49,11 @@
             </div>
 
             <div class="stepsList">
+                <div class="stepsNode" id="stepDiv1">
+                    <h3>Step 1</h3>
+                    <input name="step1" type="text" required="" pattern="[^{}<>]{2,70}">
+                    <button id="stepBtn1" type="button">X</button>
+                </div>
             </div>
             <button type='button' class='submitBtn'>SUBMIT</button>
 
@@ -221,6 +231,8 @@
             let inputsFilled = true;
             let inputsValid = true;
 
+            console.log(inputs)
+
             for (i = 0; i < inputs.length; i++){
                 if (inputs[i].validity.valueMissing === true){
                     inputsFilled = false;
@@ -232,7 +244,7 @@
                 }
             }
 
-            if (document.querySelectorAll(".ingredientNode")[0] !== undefined && document.querySelectorAll(".stepNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
+            if (document.querySelectorAll(".ingredientsNode")[0] !== undefined && document.querySelectorAll(".stepsNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
                 submitRecipeForm.submit();
             };
         })

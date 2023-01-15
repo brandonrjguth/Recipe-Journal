@@ -18,7 +18,7 @@
             <button><a href="/recipe/<%=recipe[0].recipeURL%>/editRecipe">Edit</a></button>
         <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
             <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
-            <button>Delete</button>
+            <button type="button" id="deleteBtn">Delete</button>
         </form>
     </div>
     <img src=<%=recipe[0].imageUrl%> height="300px">
@@ -37,6 +37,17 @@
         <%}%> 
     </ol>
     
+    <script>
+        let deleteBtn = document.querySelector("#deleteBtn");
+        let deleteForm = document.querySelector("#deleteRecipe")
+
+        deleteBtn.addEventListener("click", function(){
+            const response = confirm("Are you sure you want to delete this recipe?")
+            if (response === true){
+                deleteForm.submit();
+            }
+        })
+    </script>
         
 </body>
 </html>
