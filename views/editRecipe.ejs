@@ -37,7 +37,7 @@
 
             <div class="ingredientsList">
                 <%for (i = 0; i < recipe[0].ingredients.length; i++){%>
-                    <div class="row ingredientNode" id="ingredientDiv<%=i+1%>">
+                    <div class="row ingredientsNode" id="ingredientDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
                         <input name="ingredient<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].ingredients[i]%>">
                         <button id="ingredientBtn<%=i+1%>">X</button>
@@ -52,7 +52,7 @@
 
             <div class="stepsList">
                 <%for (i = 0; i < recipe[0].steps.length; i++){%>
-                    <div class="stepNode" id="stepDiv<%=i+1%>">
+                    <div class="stepsNode" id="stepDiv<%=i+1%>">
                         <h3>Step <%=i+1%></h3>
                         <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
                         <button id="stepBtn<%=i+1%>" type="button">X</button>
@@ -69,127 +69,162 @@
         //Assign button for adding steps, and step area for appending steps.
         let stepAddButton = document.getElementById("addStep");
         let stepsArea = document.querySelector(".stepsList")
+        let ingredientAddButton = document.getElementById("addIngredient");
+        let ingredientsArea = document.querySelector(".ingredientsList")
         let steps = [];
+        let ingredients = [];
         let stepNumber;
+        let ingredientNumber;
 
-        //Assign function to recount steps, assign step number, change values
-        let setStepNumber = () => {
-            steps = document.querySelectorAll(".stepNode");
-            if (steps[0] === undefined){
-                stepNumber = 0;
-            } else {
-                stepNumber = steps.length;
+        //Assign function to recount "steps" or "ingredients", assign number, change values
+        let setNumber = (recipeReq) => {
+            if (recipeReq === "steps"){
+                steps = document.querySelectorAll(`.stepsNode`);
+                if (steps[0] === undefined){
+                    stepNumber = 0;
+                } else {
+                    stepNumber = steps.length;
+                }
+            }
+            
+            if (recipeReq === "ingredients"){
+                ingredients = document.querySelectorAll(`.ingredientsNode`);
+                if (ingredients[0] === undefined){
+                    ingredientNumber = 0;
+                } else {
+                    ingredientNumber = ingredients.length;
+                }
+            }
+
+            else {
+                console.log("Error, valid paramaters are 'steps' or 'ingredients'")
             }
         }
 
-        //Assign function to assign delete buttons
-        let initDeleteStepButtons = () => {
-            for (i = 1; i < steps.length + 1; i++){
-                let thisStepNode = document.querySelector(`#stepDiv${i}`)
+        //Assign function to assign delete buttons for steps or ingredients
+        let initDeleteButtons = (recipeReq) => {
+
+            if (recipeReq === "steps"){
+                for (i = 1; i < steps.length + 1; i++){
+                let thisStepsNode = document.querySelector(`#stepDiv${i}`)
                 let thisNodeDeleteBtn = document.querySelector(`#stepBtn${i}`)
                 //add event listener to this nodes delete button which will delete this node
                 thisNodeDeleteBtn.addEventListener("click", function(){
-                    thisStepNode.remove();
-                    setStepNumber();
-                    resetSteps(); 
-                })
+                    thisStepsNode.remove();
+                    setNumber("steps");
+                    reset("steps"); 
+                    })
+                }
+            }
+
+            if (recipeReq === "ingredients"){
+                for (i = 1; i < ingredients.length + 1; i++){
+                let thisIngredientsNode = document.querySelector(`#ingredientDiv${i}`)
+                let thisNodeDeleteBtn = document.querySelector(`#ingredientBtn${i}`)
+                //add event listener to this nodes delete button which will delete this node
+                thisNodeDeleteBtn.addEventListener("click", function(){
+                    thisIngredientsNode.remove();
+                    setNumber("ingredients");
+                    reset("ingredients"); 
+                    })
+                }
             }
         }
 
-        //Assign function to create new step node
-        let createStep = () => {
-            stepNumber += 1;
-             //define elements for a step node
-            let div = document.createElement("div");
-            let h3 = document.createElement("h3");
-            let textInput = document.createElement("input");
-            let deleteButton = document.createElement("button");
-            //Add names, ids, and text-content to nodes
-            h3.textContent = `Step ${stepNumber}`;
-            div.id = `stepDiv${stepNumber}`;
-            div.classList.add("stepNode");
-            textInput.name = `step${stepNumber}`;
-            textInput.type = "text";
-            textInput.required = true;
-            textInput.pattern = "[^{}<>]{2,300}";
-            deleteButton.id = `stepBtn${stepNumber}`;
-            deleteButton.textContent = "X";
-            deleteButton.type = "button";
-            //append nodes together and then append to the step area
-            div.append(h3);
-            div.append(textInput);
-            div.append(deleteButton);
-            stepsArea.append(div);
-            setStepNumber();
+        //Assign function to create new step or ingredient node
+        let create = (recipeReq) => {
+
+            if (recipeReq === "steps"){
+                stepNumber += 1;
+                //define elements for a step node
+                let div = document.createElement("div");
+                let h3 = document.createElement("h3");
+                let textInput = document.createElement("input");
+                let deleteButton = document.createElement("button");
+                //Add names, ids, and text-content to nodes
+                h3.textContent = `Step ${stepNumber}`;
+                div.id = `stepDiv${stepNumber}`;
+                div.classList.add("stepsNode");
+                textInput.name = `step${stepNumber}`;
+                textInput.type = "text";
+                textInput.required = true;
+                textInput.pattern = "[^{}<>]{2,300}";
+                deleteButton.id = `stepBtn${stepNumber}`;
+                deleteButton.textContent = "X";
+                deleteButton.type = "button";
+                //append nodes together and then append to the step area
+                div.append(h3);
+                div.append(textInput);
+                div.append(deleteButton);
+                stepsArea.append(div);
+                setNumber("steps");
+            }
+
+            if (recipeReq === "ingredients"){
+                ingredientNumber += 1;
+                let div = document.createElement("div");
+                let h3 = document.createElement("h3");
+                let textInput = document.createElement("input");
+                let deleteButton = document.createElement("button");
+                h3.textContent = `${ingredientNumber}`;
+                div.classList.add("row");
+                div.classList.add("ingredientsNode");
+                div.id = `ingredientDiv${ingredientNumber}`;
+                textInput.name = `ingredient${ingredientNumber}`;
+                textInput.type = "text";
+                textInput.required = true;
+                textInput.pattern = "[^{}<>]{2,70}";
+                deleteButton.id = `ingredientBtn${ingredientNumber}`;
+                deleteButton.textContent = "X";
+                div.append(h3);
+                div.append(textInput);
+                div.append(deleteButton);
+                ingredientsArea.append(div);
+                setNumber("ingredients")
+            }
         }
 
-        let resetSteps = () => {
-            for (i=0; i < steps.length; i++){
+        //Assign function to proper change ids, names, and h3s of steps to represent correct order after deleting a step or ingredient
+        let reset = (recipeReq) => {
+
+            if (recipeReq === "steps"){
+                for (i=0; i < steps.length; i++){
                     steps[i].id = `stepDiv${i+1}`;
                     steps[i].children[1].name = `step${i+1}`
                     steps[i].children[0].textContent = `Step ${i+1}`
-                    steps[i].children[0].textContent = `Step ${i+1}`
                     steps[i].children[2].id = `stepBtn${i+1}`
+                }
+            }
+
+            if (recipeReq === "ingredients"){
+                for (i=0; i < ingredients.length; i++){
+                    ingredients[i].id = `ingredientDiv${i+1}`;
+                    ingredients[i].children[1].name = `ingredient${i+1}`
+                    ingredients[i].children[0].textContent = `${i+1}`
+                    ingredients[i].children[2].id = `ingredientBtn${i+1}`
+                }
             }
         }
 
-
-
-
-
-        setStepNumber();
-        initDeleteStepButtons();
+        //initiate step number and delete buttons on page load
+        setNumber("steps");
+        initDeleteButtons("steps");
+        setNumber("ingredients");
+        initDeleteButtons("ingredients");
     
+        //when step add buitton is pressed, set the step number, create a new step and append it, then assign event listeners to delete buttons
         stepAddButton.addEventListener("click", function(){
-            setStepNumber();
-            createStep();
-            initDeleteStepButtons();
+            setNumber("steps");
+            create("steps");
+            initDeleteButtons("steps");
         })
-
-
-
-        //Repeat logic for ingredients list
-        let ingredientAddButton = document.getElementById("addIngredient");
-        let ingredientsArea = document.querySelector(".ingredientsList")
-        let ingredientNumber = 0;
 
         ingredientAddButton.addEventListener("click", function(){
-
-            ingredientNumber += 1;
-            let div = document.createElement("div");
-            let h3 = document.createElement("h3");
-            let textInput = document.createElement("input");
-            let deleteButton = document.createElement("button");
-
-            h3.textContent = `${ingredientNumber}`;
-            div.classList.add("row");
-            div.classList.add("ingredientNode");
-            div.id = `ingredientDiv${ingredientNumber}`;
-            textInput.name = `ingredient${ingredientNumber}`;
-            textInput.type = "text";
-            textInput.required = true;
-            textInput.pattern = "[^{}<>]{2,70}";
-            deleteButton.id = `ingredientBtn${ingredientNumber}`;
-            deleteButton.textContent = "X";
-
-            div.append(h3);
-            div.append(textInput);
-            div.append(deleteButton);
-            ingredientsArea.append(div);
-
-            let thisIngredientNode = document.querySelector(`#ingredientDiv${ingredientNumber}`)
-            let thisIngredientDeleteBtn = document.querySelector(`#ingredientBtn${ingredientNumber}`)
-
-            thisIngredientDeleteBtn.addEventListener("click", function(){
-                thisIngredientNode.remove()
-                let allIngredients = document.querySelectorAll(".ingredientNode");
-                for (i=0; i < allIngredients.length; i++){
-                    allIngredients[i].children[0].textContent = `${i+1}`
-                    allIngredients[i].children[0].textContent = `${i+1}`
-                }
-            })
-
+            setNumber("ingredients");
+            create("ingredients");
+            initDeleteButtons("ingredients");
         })
+
 
         //Manual validation checks before submit
         let submitBtn = document.querySelector(".submitBtn");
@@ -212,7 +247,7 @@
                 }
             }
 
-            if (document.querySelectorAll(".ingredientNode")[0] !== undefined && document.querySelectorAll(".stepNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
+            if (document.querySelectorAll(".ingredientsNode")[0] !== undefined && document.querySelectorAll(".stepsNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
                 submitRecipeForm.submit();
             };
         })
