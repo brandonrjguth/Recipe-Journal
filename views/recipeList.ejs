@@ -14,16 +14,22 @@
 <body>
     
     <%- include('partials/header') %>
-    <h1>Recipe Lists</h1>
-    
-    <!--For each recipe in the collection, add a link to the recipe as list item in the ordered list-->
-    <ul>
-        <% for(var i=0; i < recipeList.length; i++) {%>
+    <div class="content">
 
-            <li><a href="/recipe/<%=recipeList[i].recipeURL%>"><%=recipeList[i].title%></a></li>
-            
-        <%}%>
-    </ul>
+
+        <h1><%if (favourites === true){%>
+            Favourites
+        <%} else {%>Recipes<%}%></h1>
+        
+        <!--For each recipe in the collection, add a link to the recipe as list item in the ordered list-->
+        <ul>
+            <% for(var i=0; i < recipeList.length; i++) {%>
+                <div class="contentRow">
+                <span>>></span><li><a href="/recipe/<%=recipeList[i].recipeURL%>"><%=recipeList[i].title%></a></li>
+                </div>
+            <%}%>
+        </ul>
+    </div>
 
         
 </body>

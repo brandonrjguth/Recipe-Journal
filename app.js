@@ -46,7 +46,13 @@ client.connect(err => {
 
   //Root, render homepage
   app.get('/', (req, res) => {
-    res.render('index')
+    res.redirect('/recipeList')
+  })
+
+  app.get("/favourites", (req,res) =>{
+    recipes.find({favourite:true}).sort({"title":1}).toArray((err, recipeList) => {
+      res.render('recipeList', {recipeList:recipeList, favourites:true})
+      });
   })
 
   //Render page for creating a new recipe
@@ -56,8 +62,8 @@ client.connect(err => {
 
   //send array of all recipes in collection to recipeList page
   app.get('/recipeList', (req, res) => {
-    recipes.find().toArray((err, recipeList) => {
-    res.render('recipeList', {recipeList:recipeList})
+    recipes.find().sort({"title":1}).toArray((err, recipeList) => {
+    res.render('recipeList', {recipeList:recipeList, favourites:false})
     });
   })
 
@@ -114,7 +120,7 @@ client.connect(err => {
         }
       }
 
-      if (req.body.favourite == "on"){
+      if (req.body.favourite === "on"){
         favourite = true;
       }
 
@@ -143,8 +149,16 @@ client.connect(err => {
       } else {
         recipes.updateOne({recipeURL:req.body.recipeURL}, { $set: {"favourite":false}})
       }
-      res.render("recipe", {recipe:recipe});
     });
+
+    /*find recipe again, otherwise we are sending the orignal object of the recipe we retrieved from mongoDB that doesn't
+    have the favourite status changed. Timeout for 1 second before doing this to insure the server has had time to update*/
+    setTimeout(function(){
+      recipes.find({recipeURL:req.body.recipeURL}).toArray((err, recipe) => {
+        res.render("recipe", {recipe:recipe}) 
+      });
+    }, 1000)
+
   });
 
   /*Edit submission. Repeat the same logic that is used for a new recipe, but this time, find and update the submitted recipe 
@@ -167,7 +181,7 @@ client.connect(err => {
       }
     }
 
-    if (req.body.favourite == "on"){
+    if (req.body.favourite === "on"){
       favourite = true;
     }
 
@@ -180,7 +194,7 @@ client.connect(err => {
       "ingredients":ingredients,
       "favourite":favourite
     }})
-    
+
     setTimeout(function(){res.redirect("/recipe/"+ recipeURL)}, 2000)
   })
 

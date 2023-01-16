@@ -1,0 +1,51 @@
+body{
+    display:flex;
+    flex-direction: column;
+}
+.content{
+    padding:0 1rem;
+    align-self:center;
+}
+
+.content h1, .content img, .content h2, .content h3{
+    padding-top:1rem;
+}
+
+.content ul{
+    margin-left:5%;
+}
+ol li{
+    padding-bottom:0.75rem;
+    text-align:left;
+}
+
+.content ol{
+    padding-inline-start:0;
+    margin-left:5%;
+}
+
+.buttons{
+    display:flex;
+    align-items: center;
+}
+
+.buttons a{
+    display:flex;
+    align-items: center;
+
+}
+
+button{
+    border:none;
+    background-color: rgba(128, 128, 128, 0);
+    font-size:2rem;
+    display:flex;
+    align-items: center;
+}
+
+.buttons img{
+    height:30px;
+    width:30px;
+    padding:0;
+}
+
