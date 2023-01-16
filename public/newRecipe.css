@@ -1,0 +1,94 @@
+
+/*Recipe Form*/
+input{
+    width:100%
+}
+
+.newRecipeWrapper h1{
+    text-align: center;
+    padding-top:1rem;
+}
+.newRecipeWrapper h2, .newRecipeWrapper h3{
+    font-size:1rem;
+    font-weight:500;
+}
+
+.newRecipeWrapper h3{
+    padding-right:1rem;
+    width:1rem;
+}
+
+#submitRecipe{
+    padding: 0 2rem;
+}
+
+.title h2, .favourite h2, .ingredients h2, .steps h2{
+    padding-right:0.75rem;
+}
+
+.checkbox{
+   width:auto;
+}
+
+.title, .ingredients, .steps{
+    padding-top:2rem;
+ }
+ 
+.favourite{
+    padding:1rem 0 1rem 0;
+}
+
+.description > h2, .image > h2{
+    padding-bottom:0.5rem;
+}
+
+.description > textarea{
+    width:100%;
+}
+
+.image, .ingredientsNode, .stepsNode{
+    padding-top:1rem;
+}
+
+.image{
+    padding-bottom:1rem;
+}
+
+.ingredients button, .steps button{
+    background-color: #00A5E0;
+    border-radius:20px;
+    border:none;
+    color:white;
+    width:2rem;
+    
+}
+
+.ingredientsNode button, .stepsNode button{
+    background-color: rgb(3, 3, 3);
+    border-radius:100%;
+    border:none;
+    color:white;
+    width:1.9rem;
+    margin-left:0.5rem;
+    
+}
+
+
+.submitBtn{
+    margin:2rem 0;
+    padding:0.5rem 0;
+    background-color: #00A5E0;
+    border-radius:20px;
+    border:none;
+    color:white;
+    font-family: 'Poppins', sans-serif;
+    font-weight:400;
+    font-size:1rem;
+    box-shadow:1px 1px 1px black;
+    width:8rem;
+}
+
+.submitWrapper{
+    display:flex;
+    justify-content: center;
+}

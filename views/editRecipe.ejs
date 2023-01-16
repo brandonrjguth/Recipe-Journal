@@ -5,12 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Recipe</title>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <link rel="stylesheet" type="text/css" href="/newRecipe.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
 </head>
 <body>
     <%- include('partials/header') %>
 
-    <!---->
+    <!--Everything here is the same as the newRecipe page except for the values being prefilled with that of the selected
+    recipe to edit and the form being sent to the editRecipe route instead of the newRecipe Route.
+
+    In the future, either put the javascript in its own file and link to both of these pages, and/or combine both and only
+    display values if editRecipe is requested and change the form route accordingly-->
     <div class="newRecipeWrapper">
         <h1>Edit Recipe</h1>
 
@@ -18,19 +26,24 @@
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeURL%>/editRecipe' method='post'>
 
-            <div class="Title row">
+            <div class="title row">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe[0].title%>"></input>
             </div>
+            <div class="favourite row">
+                <h2>Favourite</h2>
+                <input class="checkbox" type="checkbox" name="favourite"></input>
+            </div>
+            <div class="image">
+                <h2>Image URL</h2>
+                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"required></input>
+            </div>
+            <div class="description">
+                <h2>Description</h2>
+                <input type='text' name='description' required pattern="[^{}<>]{2,500}" value="<%=recipe[0].description%>"></input>
+            </div>
 
-            <h3>Favourite</h3><input type="checkbox" name="favourite"></input>
-            <h2>Description</h2>
-            <input type='text' name='description' required pattern="[^{}<>]{2,500}" value="<%=recipe[0].description%>"></input>
-
-            <h2>Image URL</h2>
-            <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"required></input>
-
-            <div class="Ingredients row">
+            <div class="ingredients row">
                 <h2>Ingredients</h2>
                 <button type="button" id="addIngredient">+</button>
             </div>
@@ -45,38 +58,46 @@
                     <%}%>
             </div>
             
-            <div class="Steps row">
+            <div class="steps row">
                 <h2>Steps</h2>
                 <button type="button" id="addStep">+</button>
             </div>
 
             <div class="stepsList">
                 <%for (i = 0; i < recipe[0].steps.length; i++){%>
-                    <div class="stepsNode" id="stepDiv<%=i+1%>">
-                        <h3>Step <%=i+1%></h3>
+                    <div class="stepsNode row" id="stepDiv<%=i+1%>">
+                        <h3><%=i+1%></h3>
                         <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
                         <button id="stepBtn<%=i+1%>" type="button">X</button>
                     </div>
                 <%}%>
             </div>
-            <button type='button' class='submitBtn'>SUBMIT</button>
-
+            <div class="submitWrapper">
+                <button type='button' class='submitBtn'>SUBMIT</button>
+            </div>
         </form>
     </div>
 
     <script>
-
-        //Assign button for adding steps, and step area for appending steps.
+        //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
         let stepAddButton = document.getElementById("addStep");
         let stepsArea = document.querySelector(".stepsList")
         let ingredientAddButton = document.getElementById("addIngredient");
         let ingredientsArea = document.querySelector(".ingredientsList")
+
+        /*empty arrays for steps and ingredients are initialized as well as counters for how many are on screen
+        this is also used when editing a recipe that already has multiple steps, and gets changed anytime
+        any steps or ingredients are added or deleted*/
         let steps = [];
         let ingredients = [];
         let stepNumber;
         let ingredientNumber;
 
-        //Assign function to recount "steps" or "ingredients", assign number, change values
+        //-----------------------------------------------//
+        //-----------FUNCTION DECLERATIONS--------------//
+        //-----------------------------------------------//
+
+        //Assign function to recount "steps" or "ingredients"
         let setNumber = (recipeReq) => {
             if (recipeReq === "steps"){
                 steps = document.querySelectorAll(`.stepsNode`);
@@ -86,8 +107,7 @@
                     stepNumber = steps.length;
                 }
             }
-            
-            if (recipeReq === "ingredients"){
+            else if (recipeReq === "ingredients"){
                 ingredients = document.querySelectorAll(`.ingredientsNode`);
                 if (ingredients[0] === undefined){
                     ingredientNumber = 0;
@@ -95,7 +115,6 @@
                     ingredientNumber = ingredients.length;
                 }
             }
-
             else {
                 console.log("Error, valid paramaters are 'steps' or 'ingredients'")
             }
@@ -103,12 +122,13 @@
 
         //Assign function to assign delete buttons for steps or ingredients
         let initDeleteButtons = (recipeReq) => {
-
             if (recipeReq === "steps"){
                 for (i = 1; i < steps.length + 1; i++){
                 let thisStepsNode = document.querySelector(`#stepDiv${i}`)
                 let thisNodeDeleteBtn = document.querySelector(`#stepBtn${i}`)
-                //add event listener to this nodes delete button which will delete this node
+                
+                /*When a nodes delete button is clicked, remove the node, recount the nodes,
+                reset the steps headers, and id's in order again accordingly*/
                 thisNodeDeleteBtn.addEventListener("click", function(){
                     thisStepsNode.remove();
                     setNumber("steps");
@@ -116,18 +136,19 @@
                     })
                 }
             }
-
-            if (recipeReq === "ingredients"){
+            //repeat for ingredients
+            else if (recipeReq === "ingredients"){
                 for (i = 1; i < ingredients.length + 1; i++){
                 let thisIngredientsNode = document.querySelector(`#ingredientDiv${i}`)
                 let thisNodeDeleteBtn = document.querySelector(`#ingredientBtn${i}`)
-                //add event listener to this nodes delete button which will delete this node
                 thisNodeDeleteBtn.addEventListener("click", function(){
                     thisIngredientsNode.remove();
                     setNumber("ingredients");
                     reset("ingredients"); 
                     })
                 }
+            } else {
+                console.log("Error, valid paramaters are 'steps' or 'ingredients'")
             }
         }
 
@@ -136,13 +157,13 @@
 
             if (recipeReq === "steps"){
                 stepNumber += 1;
-                //define elements for a step node
+                //define elements for a node.
                 let div = document.createElement("div");
                 let h3 = document.createElement("h3");
                 let textInput = document.createElement("input");
                 let deleteButton = document.createElement("button");
-                //Add names, ids, and text-content to nodes
-                h3.textContent = `Step ${stepNumber}`;
+                //Add names, ids, types, and text-content to nodes
+                h3.textContent = `${stepNumber}`;
                 div.id = `stepDiv${stepNumber}`;
                 div.classList.add("stepsNode");
                 textInput.name = `step${stepNumber}`;
@@ -157,10 +178,11 @@
                 div.append(textInput);
                 div.append(deleteButton);
                 stepsArea.append(div);
+                //recount steps and update the step count
                 setNumber("steps");
             }
-
-            if (recipeReq === "ingredients"){
+            //repeat for ingredients
+            else if (recipeReq === "ingredients"){
                 ingredientNumber += 1;
                 let div = document.createElement("div");
                 let h3 = document.createElement("h3");
@@ -181,30 +203,38 @@
                 div.append(deleteButton);
                 ingredientsArea.append(div);
                 setNumber("ingredients")
+            } else {
+                console.log("Error, valid paramaters are 'steps' or 'ingredients'")
             }
         }
 
-        //Assign function to proper change ids, names, and h3s of steps to represent correct order after deleting a step or ingredient
+        /*Assign function to change ids, names, and h3s of steps to represent correct order counting from one
+        after deleting a step or ingredient*/
         let reset = (recipeReq) => {
-
             if (recipeReq === "steps"){
                 for (i=0; i < steps.length; i++){
                     steps[i].id = `stepDiv${i+1}`;
                     steps[i].children[1].name = `step${i+1}`
-                    steps[i].children[0].textContent = `Step ${i+1}`
+                    steps[i].children[0].textContent = `${i+1}`
                     steps[i].children[2].id = `stepBtn${i+1}`
                 }
             }
-
-            if (recipeReq === "ingredients"){
+            else if (recipeReq === "ingredients"){
                 for (i=0; i < ingredients.length; i++){
                     ingredients[i].id = `ingredientDiv${i+1}`;
                     ingredients[i].children[1].name = `ingredient${i+1}`
                     ingredients[i].children[0].textContent = `${i+1}`
                     ingredients[i].children[2].id = `ingredientBtn${i+1}`
                 }
+            } else {
+                console.log("Error, valid paramaters are 'steps' or 'ingredients'")
             }
         }
+        
+
+        //-----------------------------------------------//
+        //---On Page Load and Initial Event Listeners----//
+        //-----------------------------------------------//
 
         //initiate step number and delete buttons on page load
         setNumber("steps");
@@ -212,19 +242,16 @@
         setNumber("ingredients");
         initDeleteButtons("ingredients");
     
-        //when step add buitton is pressed, set the step number, create a new step and append it, then assign event listeners to delete buttons
+        //when step/ingredient add button is pressed, create new, append it, and then assign event listeners to delete buttons
         stepAddButton.addEventListener("click", function(){
-            setNumber("steps");
             create("steps");
             initDeleteButtons("steps");
         })
-
         ingredientAddButton.addEventListener("click", function(){
             setNumber("ingredients");
             create("ingredients");
             initDeleteButtons("ingredients");
         })
-
 
         //Manual validation checks before submit
         let submitBtn = document.querySelector(".submitBtn");
@@ -251,7 +278,6 @@
                 submitRecipeForm.submit();
             };
         })
-
     </script>
 </body>
 </html>
