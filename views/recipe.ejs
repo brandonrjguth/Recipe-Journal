@@ -17,35 +17,49 @@
     for the selected recipt-->
 
     <div class="content">
-        
-        <h1><%=recipe[0].title%></h1>
-        
-        <div class="buttons row">
-            <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
-                <button class=><img src="/imgs/<%if (recipe[0].favourite === false){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
-            </form>
-                <button><a href="/recipe/<%=recipe[0].recipeURL%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
-            <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
-                <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
-                <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
-            </form>
+        <div class="recipeHeroWrapper">
+            <div class="recipeHero">
+                <h1 class="title"><%=recipe[0].title%></h1>
+                <div class="buttons row">
+                    <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                        <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+                        <button class=><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                    </form>
+                        <button><a href="/recipe/<%=recipe[0].recipeURL%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                    <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
+                        <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+                        <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                    </form>
+                </div>
+                <img class="recipeImg" src=<%=recipe[0].imageUrl%> height="300px">
+                <div class="description">
+                    <h2>Description</h2>
+                    <p><%=recipe[0].description%></p>
+                </div>
+            </div>
         </div>
-        <img src=<%=recipe[0].imageUrl%> height="300px">
-        <h2>Description</h2>
-        <p><%=recipe[0].description%></p>
-        <h3>Ingredients</h3>
-        <ul>
-            <% for (let i=0; i < recipe[0].ingredients.length; i++){%>
-                <li><%=recipe[0].ingredients[i]%></li>
-            <%}%> 
-        </ul>
-        <h3>Steps</h3>
-        <ol>
-            <% for (let i=0; i < recipe[0].steps.length; i++){%>
-                <li><%=recipe[0].steps[i]%></li>
-            <%}%> 
-        </ol>
+
+        <div class="recipeInstructionsWrapper">
+            <div class="recipeInstructions">
+                <div class="ingredients">
+                <h3>Ingredients</h3>
+                    <ul>
+                        <% for (let i=0; i < recipe[0].ingredients.length; i++){%>
+                            <li><%=recipe[0].ingredients[i]%></li>
+                        <%}%> 
+                    </ul>
+                </div>
+                <div class="steps">
+                    <h3>Steps</h3>
+                    <ol>
+                        <% for (let i=0; i < recipe[0].steps.length; i++){%>
+                            <li><%=recipe[0].steps[i]%></li>
+                        <%}%> 
+                    </ol>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>

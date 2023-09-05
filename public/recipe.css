@@ -1,19 +1,27 @@
+html, body{
+    height:100%;
+}
+
 body{
     display:flex;
     flex-direction: column;
 }
+
 .content{
     padding:0 1rem;
     align-self:center;
 }
 
-.content h1, .content img, .content h2, .content h3{
-    padding-top:1rem;
+.title, .recipeImg, .description, .steps, .ingredients{
+    padding-top:2rem;
 }
 
 .content ul{
-    margin-left:5%;
+    margin-left:1.5rem;
+    margin-top:0;
+    padding-top:0.5rem;
 }
+
 ol li{
     padding-bottom:0.75rem;
     text-align:left;
@@ -21,7 +29,9 @@ ol li{
 
 .content ol{
     padding-inline-start:0;
-    margin-left:5%;
+    margin-left:1rem;
+    margin-top:0;
+    padding-top:0.5rem;
 }
 
 .buttons{
@@ -49,3 +59,123 @@ button{
     padding:0;
 }
 
+@media (min-width: 768px) {
+    .content{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      grid-template-rows: max-content;
+      grid-template-areas:
+      "hero hero hero"
+      "inst inst inst";
+      padding:0;
+      width:100%;
+      height: 100%;
+    }
+
+    .recipeHeroWrapper{
+        grid-area:hero;
+        display:flex;
+        justify-content: center;
+    }
+    .recipeHero{
+        display:grid;
+        grid-template-columns:auto;
+        grid-template-areas:
+        "img title title"
+        "img btn btn"
+        "img des des"
+        "img des des"
+        "img des des"
+        "img des des" ;
+        padding:2rem 0;
+        padding:2rem 0 4rem 0;
+        justify-self:center;
+        max-width:90%;
+    }
+
+    .recipeInstructionsWrapper{
+        grid-area:inst;
+        background-color: #ecf3f9;
+        display:flex;
+        justify-content: center;
+    }
+    .recipeInstructions{
+        display:flex;
+        justify-content: center;
+        padding: 2rem 0;
+        gap:2rem;
+        max-width:90%;
+    }
+
+    .recipeHero .recipeImg{
+        grid-area:img;
+        padding-right:2rem;
+    }
+
+    .title{
+        grid-area:title;
+    }
+
+    .steps{
+        grid-area:step;
+        background-color: white;
+        width:60%;
+        padding: 3rem;
+        border-radius: 20px;
+        height: fit-content;
+    }
+
+    .ingredients{
+        grid-area:ing;
+        background-color: white;
+        width: 30%;
+        height: fit-content;
+        border-radius: 20px;
+        padding:3rem 1.5rem;
+    }
+    
+    .description{
+        grid-area:des;
+    }
+
+    .buttons{
+        grid-area:btn;
+        align-self:start;
+    }
+
+
+  }
+
+  @media (min-width: 1000px) {
+    .recipeHero{
+        padding:2rem 0;
+        max-width:80%;
+    }
+    .recipeInstructions{
+        padding:2rem 0;
+        max-width:80%;
+    }
+  }
+
+
+  @media (min-width: 1300px) {
+    .recipeHero{
+        padding:2rem 0;
+        max-width:70%;
+    }
+    .recipeInstructions{
+        padding:2rem 0;
+        max-width:70%;
+    }
+  }
+
+  @media (min-width: 1500px) {
+    .recipeHero{
+        padding:2rem 0;
+        max-width:60%;
+    }
+    .recipeInstructions{
+        padding:2rem 0;
+        max-width:60%;
+    }
+  }
