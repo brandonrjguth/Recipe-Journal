@@ -2,7 +2,7 @@
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require('body-parser');
-
+require('dotenv').config()
 //Express App and Port
 const app = express()
 const port = 3000;
@@ -27,9 +27,11 @@ liveReloadServer.server.once("connection", () => {
 });
 app.use(connectLiveReload());
 
+
+console.log(process.env.URI)
 //Mongo Atlas Connection
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "Mongo URI Here";
+const uri = process.env.URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 client.connect(err => {
 
