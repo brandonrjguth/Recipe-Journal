@@ -9,6 +9,41 @@ input, textarea{
     width:100%
 }
 
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  font-family: 'Arial', sans-serif;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px #ddd;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: #66afe9;
+  box-shadow: inset 0 1px 3px #ddd, 0 0 8px rgba(102, 175, 233, .6);
+}
+
+input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
 .newRecipeWrapper{
     display: flex;
     justify-content: center;
@@ -44,6 +79,10 @@ input, textarea{
 .title, .ingredients, .steps{
     padding-top:2rem;
  }
+
+.ingredients, .steps{
+    align-items: center;
+}
  
 .favourite{
     padding:1rem 0 1rem 0;
@@ -69,15 +108,27 @@ input, textarea{
     padding-bottom:1rem;
 }
 
-.ingredients button, .steps button{
+.ingredients button, .steps button {
     background-color: #00A5E0;
-    border-radius:20px;
-    border:none;
-    color:white;
-    width:2rem;
-    
+    border-radius: 50%; /* Makes the button round */
+    border: none;
+    color: white;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
+.ingredients button:hover, .steps button:hover {
+    background-color: #008CBA; /* Slightly darker shade on hover */
+}
+
+
+/*
 .ingredientsNode button, .stepsNode button{
     background-color: rgb(3, 3, 3);
     border-radius:100%;
@@ -87,6 +138,33 @@ input, textarea{
     height:1.7rem;
     margin-left:0.5rem;   
     align-self:center;
+}
+*/
+
+.ingredientsNode button, .stepsNode button {
+    background-color: #1f1f1f; /* A vibrant red color for delete buttons */
+    border-radius: 50%; /* Perfectly round shape */
+    border: none;
+    color: white;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    margin-left: 0.5rem;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s; /* Smooth transitions for interactions */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.ingredientsNode button:hover, .stepsNode button:hover {
+    background-color: #E74C3C; /* Slightly darker shade on hover */
+    transform: scale(1.1); /* Slight increase in size on hover */
+}
+
+.ingredientsNode button:active, .stepsNode button:active {
+    transform: scale(0.9); /* Slight decrease in size when clicked */
 }
 
 .stepsNode input{

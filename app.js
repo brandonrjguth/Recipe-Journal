@@ -110,7 +110,7 @@ client.connect(err => {
     let recipeURL = "noURL";
 
     //Redirect back to page with error message if this recipe name already exists
-    recipes.find({recipeURL:recipeURL}).toArray(function(err, result){
+    recipes.find({recipeTitleShort:recipeTitleShort}).toArray(function(err, result){
       if (result[0] !== undefined){
         console.log("duplicate");
         res.render("newRecipe", {recipeExists: true})
@@ -153,7 +153,7 @@ client.connect(err => {
       })
 
       //redirect to new recipes page, with a short wait for the database to have time to fill it
-      setTimeout(function(){res.redirect("/recipe/"+ recipeURL)}, 2000)
+      setTimeout(function(){res.redirect("/recipe/"+ recipeTitleShort)}, 2000)
     })
   })
 

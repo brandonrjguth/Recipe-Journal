@@ -23,7 +23,7 @@
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         <form class="col" id='submitRecipe' action='/newRecipe' method='post'>
 
-            <div class="title row">
+            <div class="title col">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
             </div>

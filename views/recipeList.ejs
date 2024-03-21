@@ -28,13 +28,30 @@
                 if (!recipeList[i].isLink)
                 {%>
                 <div class="contentRow">
-                <li><span>>></span><a href="/recipe/<%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a></li>
+        
+                    <li>
+                        <span>>></span>
+                        <a href="/recipe/<%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a>
+                    </li>
+    
+                    <div class="buttons row">
+                        <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
+                            <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                            <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                        </form>
+                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                            <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        </form>
+                    </div>
                 </div>
                 <%}
             }%>
         </ul>
 
         <h1>Saved Links</h1>
+
         <ul>
         <% for(var i=0; i < recipeList.length; i++){
             
@@ -42,24 +59,23 @@
             {%>
             <div class="contentRow">
             
-            <li>
-                <span>>></span>
-                <a href="<%=recipeList[i].recipeURL%>"><%=recipeList[i].title%></a>
-            </li>
+                <li>
+                    <span>>></span>
+                    <a href="<%=recipeList[i].recipeURL%>"><%=recipeList[i].title%></a>
+                </li>
 
-            <div class="buttons row">
-                <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
-                    <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
-                    <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
-                </form>
-                <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
-                <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                    <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
-                    <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
-                </form>
+                <div class="buttons row">
+                    <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                        <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                    </form>
+                    <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                    <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                        <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                    </form>
+                </div>
             </div>
-            </div>
-
             <%}
         }%>
         </ul>
