@@ -10,6 +10,7 @@
     font-size:1rem;
     box-shadow:1px 1px 1px black;
     width:10rem;
+    text-align: center;
 }
 
 .recipeFrom:hover{
