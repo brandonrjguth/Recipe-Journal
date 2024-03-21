@@ -1,7 +1,17 @@
 
 /*Recipe Form*/
-input{
+body{
+    display:flex;
+    flex-direction:column;
+}
+
+input, textarea{
     width:100%
+}
+
+.newRecipeWrapper{
+    display: flex;
+    justify-content: center;
 }
 
 .newRecipeWrapper h1{
@@ -20,6 +30,7 @@ input{
 
 #submitRecipe{
     padding: 0 2rem;
+    width:100%;
 }
 
 .title h2, .favourite h2, .ingredients h2, .steps h2{
@@ -46,6 +57,10 @@ input{
     width:100%;
 }
 
+.description textarea{
+    height:3.5rem;
+}
+
 .image, .ingredientsNode, .stepsNode{
     padding-top:1rem;
 }
@@ -69,10 +84,15 @@ input{
     border:none;
     color:white;
     width:1.9rem;
-    margin-left:0.5rem;
-    
+    height:1.7rem;
+    margin-left:0.5rem;   
+    align-self:center;
 }
 
+.stepsNode input{
+    height:3rem;
+    overflow-x: auto;
+}
 
 .submitBtn{
     margin:2rem 0;
@@ -92,3 +112,10 @@ input{
     display:flex;
     justify-content: center;
 }
+
+@media only screen and (min-width: 600px) {
+
+    #submitRecipe {
+        width: 40%;
+    }
+  }

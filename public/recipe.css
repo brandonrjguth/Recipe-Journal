@@ -59,6 +59,11 @@ button{
     padding:0;
 }
 
+.recipeHero{
+    width: 100%;
+    padding: 0;
+}
+
 @media (min-width: 768px) {
     .content{
       display:grid;
@@ -75,8 +80,13 @@ button{
     .recipeHeroWrapper{
         grid-area:hero;
         display:flex;
+        justify-self: center;
         justify-content: center;
+        width:100%;
     }
+
+    
+
     .recipeHero{
         display:grid;
         grid-template-columns:auto;
@@ -87,10 +97,9 @@ button{
         "img des des"
         "img des des"
         "img des des" ;
-        padding:2rem 0;
         padding:2rem 0 4rem 0;
-        justify-self:center;
-        max-width:90%;
+        justify-content:start;
+        width:70%;
     }
 
     .recipeInstructionsWrapper{
@@ -98,13 +107,14 @@ button{
         background-color: #ecf3f9;
         display:flex;
         justify-content: center;
+        width:100%
     }
     .recipeInstructions{
         display:flex;
         justify-content: center;
         padding: 2rem 0;
         gap:2rem;
-        max-width:90%;
+        width:70%;
     }
 
     .recipeHero .recipeImg{

@@ -4,6 +4,9 @@ html, body, p, h3, h2, h1, ul, li {
     font-family: 'Poppins', sans-serif;
 }
 
+textarea{
+    font-family: 'Poppins', sans-serif;
+}
 .col{
     display:flex;
     flex-direction: column;
@@ -51,3 +54,4 @@ html, body, p, h3, h2, h1, ul, li {
     color:white;
     text-decoration:none;
 }
+

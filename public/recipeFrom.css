@@ -1,0 +1,46 @@
+.recipeFrom{
+    margin:2rem 0;
+    padding:1rem 0;
+    background-color: #00A5E0;
+    border-radius:20px;
+    border:none;
+    color:white;
+    font-family: 'Poppins', sans-serif;
+    font-weight:400;
+    font-size:1rem;
+    box-shadow:1px 1px 1px black;
+    width:10rem;
+}
+
+.recipeFrom:hover{
+    background-color: #a2cddc;
+    box-shadow:none;
+}
+.recipeFromWrapper{
+    display:flex;
+    justify-content: center;
+    padding-top:4rem;
+}
+
+.recipeFromCol{
+    display:flex;
+    flex-direction: column;
+    background-color:white;
+    padding:2rem;
+    border-radius:20px;
+}
+
+body{
+    background-color: #ecf3f9;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    gap:2rem;
+}
+
+h1 {
+    font-weight: 300;
+    font-size: 2rem;
+}

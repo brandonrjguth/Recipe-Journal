@@ -33,7 +33,7 @@
             </div>
             <div class="image">
                 <h2>Image URL (Optional)</h2>
-                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" required></input>
+                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}"></input>
             </div>
             <div class="description">
                 <h2>Description</h2>
@@ -64,7 +64,7 @@
             <div class="stepsList">
                 <div class="stepsNode row" id="stepDiv1">
                     <h3>1</h3>
-                    <input name="step1" type="text" required="" pattern="[^{}<>]{2,70}">
+                    <textarea name="step1" type="text" required="" pattern="[^{}<>]{2,70}"></textarea>
                     <button id="stepBtn1" type="button">X</button>
                 </div>
             </div>
@@ -157,7 +157,7 @@
                 //define elements for a node.
                 let div = document.createElement("div");
                 let h3 = document.createElement("h3");
-                let textInput = document.createElement("input");
+                let textInput = document.createElement("textarea");
                 let deleteButton = document.createElement("button");
                 //Add names, ids, types, and text-content to nodes
                 h3.textContent = `${stepNumber}`;

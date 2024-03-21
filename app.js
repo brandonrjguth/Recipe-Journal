@@ -60,6 +60,17 @@ client.connect(err => {
     res.render('newRecipe', {recipeExists: false})
   })
 
+  //Render page for linking a new recipe
+  app.get('/newRecipeLink', (req, res) => {
+    res.render('newRecipeLink', {recipeExists: false})
+  })
+
+
+  //Render page for creating a new recipe
+  app.get('/recipeFrom', (req, res) => {
+    res.render('recipeFrom', {recipeExists: false})
+  })
+
   //send array of all recipes in collection to recipeList page
   app.get('/recipeList', (req, res) => {
     recipes.find().sort({"title":1}).toArray((err, recipeList) => {
@@ -69,15 +80,16 @@ client.connect(err => {
 
   //When a recipe url is entered, find the recipe and send the recipe information
   //to be displayed on the recipe page
-  app.get("/recipe/:recipeURL", (req, res) => {
-    recipes.find({recipeURL:req.params.recipeURL}).toArray((err, fullRecipe) => {
+  app.get("/recipe/:recipeTitleShort", (req, res) => {
+    console.log(req.params.recipeTitleShort)
+    recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray((err, fullRecipe) => {
       res.render("recipe", {recipe:fullRecipe});
       });
   })
 
   //Send user to the editing page for the chosen recipe
-  app.get('/recipe/:recipeURL/editRecipe', function(req, res) {
-    recipes.find({recipeURL:req.params.recipeURL}).toArray((err, recipe) => {
+  app.get('/recipe/:recipeTitleShort/editRecipe', function(req, res) {
+    recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray((err, recipe) => {
       res.render("editRecipe", {recipe:recipe, recipeExists:false});
     });
   });
@@ -91,7 +103,8 @@ client.connect(err => {
     
     //Take the title, and replace all spaces with underscores, remove punctuation.
     //This will be used as a human readable url for the recipe
-    let recipeURL = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+    let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+    let recipeURL = "noURL";
 
     //Redirect back to page with error message if this recipe name already exists
     recipes.find({recipeURL:recipeURL}).toArray(function(err, result){
@@ -127,6 +140,7 @@ client.connect(err => {
       //Add the recipe into the recipe collection on mongoDB
       recipes.insertOne({
         title: req.body.title,
+        recipeTitleShort:recipeTitleShort,
         recipeURL: recipeURL,
         imageUrl: req.body.image,
         description: req.body.description,
@@ -140,22 +154,69 @@ client.connect(err => {
     })
   })
 
+    //Submitted newly created recipe
+    app.post('/newRecipeLink', function(req, res) {
+
+      let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+      let recipeURL = req.body.link;
+
+      //Redirect back to page with error message if this recipe name already exists
+      recipes.find({recipeURL:recipeURL}).toArray(function(err, result){
+        if (result[0] !== undefined){
+          console.log("duplicate");
+          res.render("newRecipeLink", {recipeExists: true})
+          return
+        } 
+        let favourite = false;
+  
+        if (req.body.favourite === "on"){
+          favourite = true;
+        }
+  
+        //Add the recipe into the recipe collection on mongoDB
+        recipes.insertOne({
+          title: req.body.title,
+          recipeTitleShort:recipeTitleShort,
+          recipeURL: recipeURL,
+          favourite:favourite,
+          isLink:true
+        })
+  
+        //redirect to new recipes page, with a short wait for the database to have time to fill it
+        setTimeout(function(){res.redirect("/recipeList")}, 2000)
+      })
+    })
+
 
   //Favourite submission. Find recipe by recieved URL, if its not a favourite, make it one, else remove it from favourites
   app.post('/favouriteRecipe', function(req, res) {
-    recipes.find({recipeURL:req.body.recipeURL}).toArray((err, recipe) => {
+
+    console.log();
+    recipes.find({recipeTitleShort:req.body.recipeTitleShort}).toArray((err, recipe) => {
       if (recipe[0].favourite === false){
-        recipes.updateOne({recipeURL:req.body.recipeURL}, { $set: {"favourite":true}})
+        recipes.updateOne({recipeTitleShort:req.body.recipeTitleShort}, { $set: {"favourite":true}})
       } else {
-        recipes.updateOne({recipeURL:req.body.recipeURL}, { $set: {"favourite":false}})
+        recipes.updateOne({recipeTitleShort:req.body.recipeTitleShort}, { $set: {"favourite":false}})
       }
     });
 
     /*find recipe again, otherwise we are sending the orignal object of the recipe we retrieved from mongoDB that doesn't
     have the favourite status changed. Timeout for 1 second before doing this to insure the server has had time to update*/
     setTimeout(function(){
-      recipes.find({recipeURL:req.body.recipeURL}).toArray((err, recipe) => {
-        res.render("recipe", {recipe:recipe}) 
+      //req.get('Referrer').includes("recipeList")
+
+
+      recipes.find({recipeTitleShort:req.body.recipeTitleShort}).toArray((err, recipe) => {
+
+        //redirect based on page the favourite was selected from
+        
+        if (req.get('Referrer').includes("recipeList")){
+          res.redirect("recipeList");
+        } else if (req.get('Referrer').includes('favourites')){
+          res.redirect("favourites");
+        } else {
+          res.render("recipe", {recipe:recipe})
+        }
       });
     }, 1000)
 
@@ -163,9 +224,15 @@ client.connect(err => {
 
   /*Edit submission. Repeat the same logic that is used for a new recipe, but this time, find and update the submitted recipe 
   for edditing*/
-  app.post("/recipe/:recipeURL/editRecipe", function(req, res){
+  app.post("/recipe/:recipeTitleShort/editRecipe", function(req, res){
 
-    let recipeURL = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+    let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+    let recipeURL = "noURL";
+    if (req.body.link){
+      recipeURL = req.body.link;
+
+    }
+
     let steps = [];
     let ingredients = [];
     let keysArray = Object.keys(req.body);
@@ -185,8 +252,9 @@ client.connect(err => {
       favourite = true;
     }
 
-    recipes.updateMany({recipeURL:req.params.recipeURL}, { $set: {
+    recipes.updateMany({recipeTitleShort:req.params.recipeTitleShort}, { $set: {
       "title": req.body.title,
+      "recipeTitleShort":recipeTitleShort,
       "recipeURL": recipeURL,
       "imageUrl": req.body.image,
       "description": req.body.description,
@@ -195,12 +263,16 @@ client.connect(err => {
       "favourite":favourite
     }})
 
-    setTimeout(function(){res.redirect("/recipe/"+ recipeURL)}, 2000)
+    if (req.body.link){
+      setTimeout(function(){res.redirect("/recipeList")}, 2000);
+    } else{
+      setTimeout(function(){res.redirect("/recipe/"+ recipeTitleShort)}, 2000);
+  }
   })
 
   //find recipe and delete it entirely
   app.post('/deleteRecipe', function(req, res) {
-    recipes.deleteOne({recipeURL:req.body.recipeURL})
+    recipes.deleteOne({recipeTitleShort:req.body.recipeTitleShort})
     res.redirect("/recipeList");
   });
   

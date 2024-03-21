@@ -20,12 +20,11 @@
     In the future, either put the javascript in its own file and link to both of these pages, and/or combine both and only
     display values if editRecipe is requested and change the form route accordingly-->
     <div class="newRecipeWrapper">
-        <h1>Edit Recipe</h1>
-
          <!--Recipe Form-->
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
-        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeURL%>/editRecipe' method='post'>
-
+        
+        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe' method='post'>
+            <h1>Edit Recipe</h1>
             <div class="title row">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe[0].title%>"></input>
@@ -34,15 +33,21 @@
                 <h2>Favourite</h2>
                 <input class="checkbox" type="checkbox" name="favourite"></input>
             </div>
+            <% if (recipe[0].recipeURL !== "noURL"){%>
+                <div class="Link">
+                    <h2>Recipe Link</h2>
+                    <input type='text' name='link' value = <%=recipe[0].recipeURL%> required></input>
+                </div>     
+            <%}%>
+            <%if (recipe[0].recipeURL == "noURL"){%>
             <div class="image">
                 <h2>Image URL</h2>
-                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"required></input>
+                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"></input>
             </div>
             <div class="description">
                 <h2>Description</h2>
-                <input type='text' name='description' required pattern="[^{}<>]{2,500}" value="<%=recipe[0].description%>"></input>
+                <textarea type='text' name='description' required pattern="[^{}<>]{2,500}"><%=recipe[0].description%></textarea>
             </div>
-
             <div class="ingredients row">
                 <h2>Ingredients</h2>
                 <button type="button" id="addIngredient">+</button>
@@ -67,11 +72,13 @@
                 <%for (i = 0; i < recipe[0].steps.length; i++){%>
                     <div class="stepsNode row" id="stepDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
-                        <input name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].steps[i]%>">
+                        <textarea name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}"><%=recipe[0].steps[i]%></textarea>
                         <button id="stepBtn<%=i+1%>" type="button">X</button>
                     </div>
                 <%}%>
             </div>
+
+            <%}%>
             <div class="submitWrapper">
                 <button type='button' class='submitBtn'>SUBMIT</button>
             </div>
@@ -79,6 +86,10 @@
     </div>
 
     <script>
+        let recipeURL = "<%=JSON.stringify(recipe[0].recipeURL).replace(/^"|"$/g, '')%>";
+       
+
+    if (recipeURL == "noURL"){
         //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
         let stepAddButton = document.getElementById("addStep");
         let stepsArea = document.querySelector(".stepsList")
@@ -186,7 +197,7 @@
                 ingredientNumber += 1;
                 let div = document.createElement("div");
                 let h3 = document.createElement("h3");
-                let textInput = document.createElement("input");
+                let textInput = document.createElement("textarea");
                 let deleteButton = document.createElement("button");
                 h3.textContent = `${ingredientNumber}`;
                 div.classList.add("row");
@@ -252,7 +263,7 @@
             create("ingredients");
             initDeleteButtons("ingredients");
         })
-
+    }
         //Manual validation checks before submit
         let submitBtn = document.querySelector(".submitBtn");
         let submitRecipeForm = document.querySelector("#submitRecipe");
@@ -262,21 +273,30 @@
             let inputs = document.querySelectorAll("input");
             let inputsFilled = true;
             let inputsValid = true;
+            console.log("here")
 
             for (i = 0; i < inputs.length; i++){
                 if (inputs[i].validity.valueMissing === true){
                     inputsFilled = false;
                     console.log("input missing");
                 }
+
+                /*
                 if (inputs[i].validity.patternMismatch === true){
                     inputsValid = false;
                     console.log("pattern mismatch");
-                }
+                }*/
             }
 
-            if (document.querySelectorAll(".ingredientsNode")[0] !== undefined && document.querySelectorAll(".stepsNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
-                submitRecipeForm.submit();
-            };
+            if (recipeURL !== "noURL"){
+                if (inputsFilled == true && inputsValid == true){
+                    submitRecipeForm.submit("recipeLink");
+                }
+            } else{
+                if (document.querySelectorAll(".ingredientsNode")[0] !== undefined && document.querySelectorAll(".stepsNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
+                    submitRecipeForm.submit();
+                };
+            }
         })
     </script>
 </body>

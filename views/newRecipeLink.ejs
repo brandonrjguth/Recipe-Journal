@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Recipe</title>
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <link rel="stylesheet" type="text/css" href="/newRecipe.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <!---->
+    <div class="newRecipeWrapper">
+         <!--Recipe Form-->
+         <!--If the submitted recipe already exists this page is reloaded with an error message-->
+         <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
+            patternValidity and empty inputs for entire page before submitting-->
+         <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
+        <form class="col" id='submitRecipe' action='/newRecipeLink' method='post'>
+
+            <div class="title row">
+                <h2>Title</h2>
+                <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
+            </div>
+            <div class="favourite row">
+                <h2>Favourite</h2>
+                <input type="checkbox" class="checkbox" name="favourite"></input>
+            </div>
+            <div class="Link">
+                <h2>Recipe Link</h2>
+                <input type='text' name='link' required></input>
+            </div>     
+            <div class="submitWrapper">
+                <button type='button' class='submitBtn'>SUBMIT</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        //Manual validation checks before submit
+        let submitBtn = document.querySelector(".submitBtn");
+        let submitRecipeForm = document.querySelector("#submitRecipe");
+
+        //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
+        submitBtn.addEventListener("click", function(){
+            let inputs = document.querySelectorAll("input");
+            let inputsFilled = true;
+            let inputsValid = true;
+
+            for (i = 0; i < inputs.length; i++){
+                if (inputs[i].validity.valueMissing === true){
+                    inputsFilled = false;
+                    console.log("input missing");
+                }
+                if (inputs[i].validity.patternMismatch === true){
+                    inputsValid = false;
+                    console.log("pattern mismatch");
+                }
+            }
+
+            if (inputsFilled === true && inputsValid === true){
+                submitRecipeForm.submit();
+            };
+        })
+    </script>
+</body>
+</html>

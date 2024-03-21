@@ -22,16 +22,18 @@
                 <h1 class="title"><%=recipe[0].title%></h1>
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                        <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
                         <button class=><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
-                        <button><a href="/recipe/<%=recipe[0].recipeURL%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <button><a href="/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
-                        <input type="hidden" name="recipeURL" value="<%=recipe[0].recipeURL%>"></input>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
                         <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                     </form>
                 </div>
+                <%if (recipe[0].imageURL){%>
                 <img class="recipeImg" src=<%=recipe[0].imageUrl%> height="300px">
+                <%}%>
                 <div class="description">
                     <h2>Description</h2>
                     <p><%=recipe[0].description%></p>
