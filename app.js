@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Express will use ejs templates stored in 'views' folder
 app.set('view engine', 'ejs');
 
+
 //Live Reload setup for live editing and browser refreshing
 var livereload = require("livereload");
 var connectLiveReload = require("connect-livereload");
@@ -28,7 +29,7 @@ app.use(connectLiveReload());
 
 //Mongo Atlas Connection
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "***REMOVED***";
+const uri = "Mongo URI Here";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 client.connect(err => {
 
