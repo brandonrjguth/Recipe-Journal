@@ -26,8 +26,9 @@
     display:flex;
     flex-direction: column;
     background-color:white;
-    padding:2rem;
-    border-radius:20px;
+    padding:3vw;
+    border-radius:0;
+    width:100%;
 }
 
 body{
@@ -44,3 +45,9 @@ h1 {
     font-weight: 300;
     font-size: 2rem;
 }
+
+@media only screen and (min-width: 600px) {
+    .recipeFromCol{
+        border-radius:20px;
+    }
+  }
