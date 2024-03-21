@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config()
 //Express App and Port
 const app = express()
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //Set express to use body parser and ejs
 //allows express to access and serve static files like the css from the folder called 'public'
