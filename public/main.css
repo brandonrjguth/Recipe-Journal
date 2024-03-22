@@ -5,7 +5,6 @@ html, body, p, h3, h2, h1, ul, li {
 }
 
 html{
-    overflow: hidden;
     height: 100%;
 }
 

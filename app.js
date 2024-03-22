@@ -157,16 +157,18 @@ client.connect(err => {
     })
   })
 
-    //Submitted newly created recipe
+    //Submitted newly created recipe link
     app.post('/newRecipeLink', function(req, res) {
 
+      //shorten recipe title to use in database
       let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+
+      //make url the link from the form
       let recipeURL = req.body.link;
 
       //Redirect back to page with error message if this recipe name already exists
       recipes.find({recipeURL:recipeURL}).toArray(function(err, result){
         if (result[0] !== undefined){
-          console.log("duplicate");
           res.render("newRecipeLink", {recipeExists: true})
           return
         } 
@@ -194,7 +196,7 @@ client.connect(err => {
   //Favourite submission. Find recipe by recieved URL, if its not a favourite, make it one, else remove it from favourites
   app.post('/favouriteRecipe', function(req, res) {
 
-    console.log();
+
     recipes.find({recipeTitleShort:req.body.recipeTitleShort}).toArray((err, recipe) => {
       if (recipe[0].favourite === false){
         recipes.updateOne({recipeTitleShort:req.body.recipeTitleShort}, { $set: {"favourite":true}})
@@ -206,13 +208,9 @@ client.connect(err => {
     /*find recipe again, otherwise we are sending the orignal object of the recipe we retrieved from mongoDB that doesn't
     have the favourite status changed. Timeout for 1 second before doing this to insure the server has had time to update*/
     setTimeout(function(){
-      //req.get('Referrer').includes("recipeList")
-
-
       recipes.find({recipeTitleShort:req.body.recipeTitleShort}).toArray((err, recipe) => {
 
         //redirect based on page the favourite was selected from
-        
         if (req.get('Referrer').includes("recipeList")){
           res.redirect("recipeList");
         } else if (req.get('Referrer').includes('favourites')){
@@ -229,13 +227,16 @@ client.connect(err => {
   for edditing*/
   app.post("/recipe/:recipeTitleShort/editRecipe", function(req, res){
 
+    //Generate short title to use as local url and database
     let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+
+    //If this is a local recipe, we use "noURL" as the url, otherwise is is the link received from the add link page
     let recipeURL = "noURL";
     if (req.body.link){
       recipeURL = req.body.link;
-
     }
 
+    //Add all steps and ingredients into an array to be stored in the database
     let steps = [];
     let ingredients = [];
     let keysArray = Object.keys(req.body);
@@ -251,10 +252,12 @@ client.connect(err => {
       }
     }
 
+    //check if favourite was selected.
     if (req.body.favourite === "on"){
       favourite = true;
     }
 
+    //update the recipe
     recipes.updateMany({recipeTitleShort:req.params.recipeTitleShort}, { $set: {
       "title": req.body.title,
       "recipeTitleShort":recipeTitleShort,
@@ -266,6 +269,7 @@ client.connect(err => {
       "favourite":favourite
     }})
 
+    //if we came from editing a link, redirect to the recipe list, otherwise, redirect to the local recipe
     if (req.body.link){
       setTimeout(function(){res.redirect("/recipeList")}, 2000);
     } else{

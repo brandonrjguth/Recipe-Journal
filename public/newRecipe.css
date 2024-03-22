@@ -127,20 +127,6 @@ input[type="submit"]:hover {
     background-color: #008CBA; /* Slightly darker shade on hover */
 }
 
-
-/*
-.ingredientsNode button, .stepsNode button{
-    background-color: rgb(3, 3, 3);
-    border-radius:100%;
-    border:none;
-    color:white;
-    width:1.9rem;
-    height:1.7rem;
-    margin-left:0.5rem;   
-    align-self:center;
-}
-*/
-
 .ingredientsNode button, .stepsNode button {
     background-color: #1f1f1f; /* A vibrant red color for delete buttons */
     border-radius: 50%; /* Perfectly round shape */

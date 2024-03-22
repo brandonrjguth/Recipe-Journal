@@ -21,6 +21,7 @@
     display values if editRecipe is requested and change the form route accordingly-->
     <div class="newRecipeWrapper">
          <!--Recipe Form-->
+
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         
         <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe' method='post'>
@@ -33,12 +34,16 @@
                 <h2>Favourite</h2>
                 <input class="checkbox" type="checkbox" name="favourite"></input>
             </div>
+
+        <!-- If the recipe is a link (contains a proper URL) render the link input for the form -->
             <% if (recipe[0].recipeURL !== "noURL"){%>
                 <div class="Link">
                     <h2>Recipe Link</h2>
                     <input type='text' name='link' value = <%=recipe[0].recipeURL%> required></input>
                 </div>     
             <%}%>
+
+        <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
             <%if (recipe[0].recipeURL == "noURL"){%>
             <div class="image">
                 <h2>Image URL</h2>
