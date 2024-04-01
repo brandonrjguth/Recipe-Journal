@@ -25,7 +25,7 @@
         <ul>
             <% for(var i=0; i < recipeList.length; i++){
             
-                if (!recipeList[i].isLink)
+                if (!recipeList[i].isLink && !recipeList[i].isImg)
                 {%>
                 <div class="contentRow">
         
@@ -40,7 +40,7 @@
                             <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                         </form>
                         <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
-                        <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                        <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
                             <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
                             <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                         </form>
@@ -70,9 +70,39 @@
                         <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                     </form>
                     <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
-                    <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                    <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
                         <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
-                        <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        <button class="favouriteBtn" type="button"><img class="heartIcon" src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                    </form>
+                </div>
+            </div>
+            <%}
+        }%>
+        </ul>
+
+        <h1>Picture Recipes</h1>
+
+        <ul>
+        <% for(var i=0; i < recipeList.length; i++){
+            
+            if (recipeList[i].isImg)
+            {%>
+            <div class="contentRow">
+            
+                <li>
+                    <span>>></span>
+                    <a href="/recipeImg/<%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a>
+                </li>
+
+                <div class="buttons row">
+                    <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                        <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                    </form>
+                    <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                    <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
+                        <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                        <button class="favouriteBtn" type="button"><img class="heartIcon" src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
                 </div>
             </div>
@@ -85,9 +115,24 @@
 
         let deleteBtns = document.querySelectorAll(".deleteBtn");
         let deleteForm = document.querySelectorAll(".deleteRecipe");
-        console.log(deleteForm);
+        let favouriteForms = document.querySelectorAll(".favouriteRecipe");
+        favouriteForms.forEach((form, index) => {
+            let favouriteButton = form.querySelector(".favouriteBtn");
 
+            favouriteButton.addEventListener("click", function(event){
+                event.preventDefault();
 
+                // Toggle the heart icon
+                let heartIcon = favouriteButton.querySelector('img');
+                let currentSrc = heartIcon.getAttribute('src');
+                let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
+                heartIcon.setAttribute('src', newSrc);
+
+                // Send the form data asynchronously using Fetch API
+                form.submit();
+            });
+        });
+        
         for (i = 0; i < deleteBtns.length; i++) {
             let attachedForm = i;
             deleteBtns[i].addEventListener("click", function(){

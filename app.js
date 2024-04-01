@@ -6,6 +6,10 @@ require('dotenv').config()
 //Express App and Port
 const app = express()
 const port = process.env.PORT || 3000;
+const fs = require('fs');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 
 //Set express to use body parser and ejs
 //allows express to access and serve static files like the css from the folder called 'public'
@@ -41,11 +45,20 @@ client.connect(err => {
   //Create Database and Collection
   const db = client.db('recipeBook');
   const recipes = db.collection('recipes');
+  const images = db.collection('images');
+
+  ///Store image test
+  // Function to encode an image into Base64
+  function encodeImageToBase64(imagePath) {
+    const bitmap = fs.readFileSync(imagePath);
+    return Buffer.from(bitmap).toString('base64'); 
+  }
 
 
   //---------------------------------------------------------------//
   //---------------------GET ROUTES--------------------------------//
   //---------------------------------------------------------------//
+
 
   //Root, render homepage
   app.get('/', (req, res) => {
@@ -68,6 +81,10 @@ client.connect(err => {
     res.render('newRecipeLink', {recipeExists: false})
   })
 
+  //Render page for linking a new recipe
+  app.get('/newRecipePicture', (req, res) => {
+    res.render('newRecipePicture', {recipeExists: false})
+  })
 
   //Render page for creating a new recipe
   app.get('/recipeFrom', (req, res) => {
@@ -90,9 +107,30 @@ client.connect(err => {
       });
   })
 
+    //When a recipe url is entered, find the recipe and send the recipe information
+  //to be displayed on the recipe page
+  app.get("/recipeImg/:recipeTitleShort", (req, res) => {
+    recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray((err, fullRecipe) => {
+      console.log(fullRecipe);
+      let imageNumber = fullRecipe[0].recipeIsIMG.length;
+      console.log(imageNumber);
+      res.render("recipeImg", {recipe:fullRecipe, imageNumber:imageNumber});
+      });
+  })
+
+  app.get("/recipeImg/imgURL/:recipeTitleShort/:number", (req, res) => {
+    let imageNumber = req.params.number;
+    recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray((err, fullRecipe) => {
+      const img = fullRecipe[0].recipeIsIMG[imageNumber];
+      res.contentType(img.contentType);
+      res.send(img.data.buffer);
+      });
+  })
+
   //Send user to the editing page for the chosen recipe
   app.get('/recipe/:recipeTitleShort/editRecipe', function(req, res) {
     recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray((err, recipe) => {
+      console.log(recipe);
       res.render("editRecipe", {recipe:recipe, recipeExists:false});
     });
   });
@@ -192,6 +230,70 @@ client.connect(err => {
       })
     })
 
+      //Submitted newly created recipe link
+      app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res) {
+
+        //shorten recipe title to use in database
+        let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
+  
+        //make url the link from the form
+        let recipeURL = "noURL";
+        let images = [];
+  
+        let readFiles = req.files.map(file => {
+          return new Promise((resolve, reject) => {
+            fs.readFile(file.path, (err, data) => {
+              if (err) {
+                reject(err);
+                return;
+              }
+              const img = {
+                data: Buffer.from(data),
+                contentType: 'image/png'
+              };
+              resolve(img);
+            });
+          });
+        });
+        
+        Promise.all(readFiles)
+          .then(images => {
+            //Redirect back to page with error message if this recipe name already exists
+            recipes.find({recipeTitleShort:recipeTitleShort}).toArray(function(err, result){
+              if (result[0] !== undefined){
+                res.render("newRecipeLink", {recipeExists: true})
+                return
+              } 
+              let favourite = false;
+        
+              if (req.body.favourite === "on"){
+                favourite = true;
+              }
+
+              //Add the recipe into the recipe collection on mongoDB
+              recipes.insertOne({
+                title: req.body.title,
+                recipeTitleShort:recipeTitleShort,
+                recipeURL: recipeURL,
+                favourite:favourite,
+                recipeIsIMG:images,
+                isLink:false,
+                isImg:true
+              })
+        
+              //redirect to new recipes page, with a short wait for the database to have time to fill it
+              setTimeout(function(){res.redirect("/recipeList")}, 2000)
+            })
+
+          })
+          .catch(err => {
+            console.error(err);
+            // Handle error...
+          });
+        
+      })
+  
+
 
   //Favourite submission. Find recipe by recieved URL, if its not a favourite, make it one, else remove it from favourites
   app.post('/favouriteRecipe', function(req, res) {
@@ -270,7 +372,7 @@ client.connect(err => {
     }})
 
     //if we came from editing a link, redirect to the recipe list, otherwise, redirect to the local recipe
-    if (req.body.link){
+    if (req.body.link || req.body.isImg){
       setTimeout(function(){res.redirect("/recipeList")}, 2000);
     } else{
       setTimeout(function(){res.redirect("/recipe/"+ recipeTitleShort)}, 2000);

@@ -32,8 +32,12 @@
             </div>
             <div class="favourite row">
                 <h2>Favourite</h2>
-                <input class="checkbox" type="checkbox" name="favourite"></input>
+                <input class="checkbox" type="checkbox" name="favourite" <%if (recipe[0].favourite){%>checked<%}%>></input>
             </div>
+        <% if (recipe[0].isImg){%>
+            <input type='text' hidden name='isImg' value="true" required></input>
+        <%}%>
+            
 
         <!-- If the recipe is a link (contains a proper URL) render the link input for the form -->
             <% if (recipe[0].recipeURL !== "noURL"){%>
@@ -44,7 +48,7 @@
             <%}%>
 
         <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
-            <%if (recipe[0].recipeURL == "noURL"){%>
+            <%if (recipe[0].recipeURL == "noURL" && !recipe[0].isImg){%>
             <div class="image">
                 <h2>Image URL</h2>
                 <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"></input>
@@ -92,9 +96,11 @@
 
     <script>
         let recipeURL = "<%=JSON.stringify(recipe[0].recipeURL).replace(/^"|"$/g, '')%>";
+        let isImg = "<%=JSON.stringify(recipe[0].isImg).replace(/^"|"$/g, '')%>"
        
-
-    if (recipeURL == "noURL"){
+        
+    if (recipeURL == "noURL" && !isImg){
+        
         //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
         let stepAddButton = document.getElementById("addStep");
         let stepsArea = document.querySelector(".stepsList")
@@ -251,7 +257,6 @@
         //-----------------------------------------------//
         //---On Page Load and Initial Event Listeners----//
         //-----------------------------------------------//
-
         //initiate step number and delete buttons on page load
         setNumber("steps");
         initDeleteButtons("steps");
@@ -269,6 +274,7 @@
             initDeleteButtons("ingredients");
         })
     }
+ 
         //Manual validation checks before submit
         let submitBtn = document.querySelector(".submitBtn");
         let submitRecipeForm = document.querySelector("#submitRecipe");
@@ -278,7 +284,6 @@
             let inputs = document.querySelectorAll("input");
             let inputsFilled = true;
             let inputsValid = true;
-            console.log("here")
 
             for (i = 0; i < inputs.length; i++){
                 if (inputs[i].validity.valueMissing === true){
@@ -293,7 +298,7 @@
                 }*/
             }
 
-            if (recipeURL !== "noURL"){
+            if (recipeURL !== "noURL" || isImg){
                 if (inputsFilled == true && inputsValid == true){
                     submitRecipeForm.submit("recipeLink");
                 }
