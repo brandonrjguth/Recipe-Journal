@@ -9,6 +9,7 @@ const port = process.env.PORT || 3000;
 const fs = require('fs');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
+const sharp = require('sharp');
 
 
 //Set express to use body parser and ejs
@@ -242,16 +243,33 @@ client.connect(err => {
   
         let readFiles = req.files.map(file => {
           return new Promise((resolve, reject) => {
-            fs.readFile(file.path, (err, data) => {
-              if (err) {
-                reject(err);
-                return;
-              }
+          // Get the size of the file in megabytes
+          const sizeInMB = fs.statSync(file.path).size / (1024*1024);
+          console.log(`Original image size: ${sizeInMB.toFixed(2)} MB`); 
+
+          // Calculate the quality: start with 100 for small files and decrease as the file size gets larger
+          let quality = 100;
+          /*if (sizeInMB < 1 && sizeInMB > 0.5){
+            quality = 85;         
+          } else {          
+            quality = Math.min(100, Math.max(10, Math.floor(100 * 0.95 / 1)));
+          }*/
+
+          sharp(file.path)
+            .resize(1400)
+            .jpeg({ quality: 80}) // adjust quality based on file size
+            .toBuffer()
+            .then(data => {
               const img = {
-                data: Buffer.from(data),
-                contentType: 'image/png'
+                data: data,
+                contentType: 'image/jpeg'
               };
+              const newSizeInMB = img.data.length / (1024*1024);
+              console.log(`Final image size: ${newSizeInMB.toFixed(2)} MB`); 
               resolve(img);
+            })
+            .catch(err => {
+              reject(err);
             });
           });
         });
