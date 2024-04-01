@@ -23,7 +23,7 @@
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
                         <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
-                        <button class=><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        <button><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
                         <button><a href="/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>

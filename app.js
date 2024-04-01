@@ -329,13 +329,14 @@ client.connect(err => {
     have the favourite status changed. Timeout for 1 second before doing this to insure the server has had time to update*/
     setTimeout(function(){
       recipes.find({recipeTitleShort:req.body.recipeTitleShort}).toArray((err, recipe) => {
-
         //redirect based on page the favourite was selected from
         if (req.get('Referrer').includes("recipeList")){
           res.redirect("recipeList");
         } else if (req.get('Referrer').includes('favourites')){
           res.redirect("favourites");
-        } else {
+        } else if (req.get('Referrer').includes('recipeImg')){
+          res.redirect("recipeImg/" + recipe[0].recipeTitleShort);
+        }else {
           res.render("recipe", {recipe:recipe})
         }
       });
