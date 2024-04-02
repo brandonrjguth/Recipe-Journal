@@ -8,12 +8,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 const fs = require('fs');
 const multer  = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const sharp = require('sharp');
 const recipeScraper = require("recipe-scraper");
-const url = 'https://www.budgetbytes.com/taco-chicken-bowls/';
-
-
 
 
 //Set express to use body parser and ejs
@@ -76,23 +74,6 @@ async function run() {
   //---------------------GET ROUTES--------------------------------//
   //---------------------------------------------------------------//
 
-  recipeScraper(url).then(recipe => {
-  
-    recipes.insertOne({
-        title:recipe.name,
-        description:recipe.description,
-        recipeTitleShort:recipe.name,
-        recipeURL:"noURL",
-        ingredients:recipe.ingredients,
-        steps:recipe.instructions
-      })
-    
-    }).catch(error => {
-      console.log(error);
-    });
-  
-
-
   //Root, render homepage
   app.get('/', (req, res) => {
    
@@ -112,6 +93,11 @@ async function run() {
   //Render page for creating a new recipe
   app.get('/newRecipePage', (req, res) => {
     res.render('newRecipe', {recipeExists: false})
+  })
+
+    //Convert a link to a Recipe
+  app.get('/convertRecipe', (req, res) =>{
+    res.render('convertRecipe', {recipeExists:false});
   })
 
   //Render page for linking a new recipe
@@ -248,6 +234,44 @@ async function run() {
     }
   })
 
+//Convert a link to a Recipe
+app.post('/convertRecipe', async(req, res) =>{
+  try {
+    let favourite = false;
+
+    if (req.body.favourite === "on"){
+      favourite = true;
+    }
+
+    const url = req.body.link;
+
+    let recipe = await recipeScraper(url).then(recipe => {return recipe});
+    let result = await recipes.find({recipeTitleShort:recipe.name}).toArray();
+    if (result[0] !== undefined){
+      console.log("recipeExists");
+      res.render("convertRecipe", {recipeExists: true})
+      return
+    } else {
+      await
+      recipes.insertOne({
+        title:recipe.name,
+        description:recipe.description,
+        recipeTitleShort:recipe.name,
+        recipeURL:"noURL",
+        ingredients:recipe.ingredients,
+        steps:recipe.instructions,
+        imageUrl: recipe.image,
+        favourite:favourite
+      })
+
+      res.redirect('recipeList');
+    }
+  } catch (err){
+    console.log(err);
+  }
+})
+
+
 //Submitted newly created recipe link
 app.post('/newRecipeLink', async(req, res) => {
   try{
@@ -299,13 +323,13 @@ app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res)
   let readFiles = req.files.map(file => {
     return new Promise((resolve, reject) => {
     // Get the size of the file in megabytes
-    const sizeInMB = fs.statSync(file.path).size / (1024*1024);
-    console.log(`Original image size: ${sizeInMB.toFixed(2)} MB`); 
+    //const sizeInMB = fs.statSync(file.buffer).size / (1024*1024);
+    //console.log(`Original image size: ${sizeInMB.toFixed(2)} MB`); 
 
     // Calculate the quality: start with 100 for small files and decrease as the file size gets larger
     let quality = 100;
 
-    sharp(file.path)
+    sharp(file.buffer)
       .resize(1400)
       .jpeg({ quality: 80}) // adjust quality based on file size
       .toBuffer()

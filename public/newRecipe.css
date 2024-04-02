@@ -40,6 +40,13 @@ input[type="submit"] {
   cursor: pointer;
 }
 
+.warning{
+    color:red;
+    text-align:center;
+    font-size:1rem;
+    padding-top:2rem;
+}
+
 input[type="submit"]:hover {
   background-color: #45a049;
 }

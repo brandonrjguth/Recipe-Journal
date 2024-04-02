@@ -15,12 +15,12 @@
     <%- include('partials/header') %>
 
     <!---->
+    <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
     <div class="newRecipeWrapper">
          <!--Recipe Form-->
          <!--If the submitted recipe already exists this page is reloaded with an error message-->
          <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
             patternValidity and empty inputs for entire page before submitting-->
-         <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         <form class="col" id='submitRecipe' action='/newRecipeLink' method='post'>
 
             <div class="title row">
