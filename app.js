@@ -12,6 +12,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const sharp = require('sharp');
 const recipeScraper = require("recipe-scraper");
+const axios = require('axios');
 
 
 //Set express to use body parser and ejs
@@ -162,6 +163,18 @@ async function run() {
     }
   })
 
+  app.get("/recipeImg/imgThumbURL/:recipeTitleShort/:number", async(req, res) => {
+    try{
+      let imageNumber = req.params.number;
+      let fullRecipe = await recipes.find({recipeTitleShort:req.params.recipeTitleShort}).toArray()
+      const img = fullRecipe[0].imageUrl;
+      //res.contentType(img.contentType);
+      res.send(img.buffer);
+    } catch (err) {
+      console.error(err);
+    }
+  })
+
   //Send user to the editing page for the chosen recipe
   app.get('/recipe/:recipeTitleShort/editRecipe', async(req, res) => {
     try{
@@ -252,6 +265,19 @@ app.post('/convertRecipe', async(req, res) =>{
       res.render("convertRecipe", {recipeExists: true})
       return
     } else {
+
+      let image = await axios({
+        method: 'get',
+        url: recipe.image,
+        responseType: 'arraybuffer'
+      });
+
+      const imageBuffer = await sharp(image.data)
+      .resize(1400)
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+
       await
       recipes.insertOne({
         title:recipe.name,
@@ -260,7 +286,7 @@ app.post('/convertRecipe', async(req, res) =>{
         recipeURL:"noURL",
         ingredients:recipe.ingredients,
         steps:recipe.instructions,
-        imageUrl: recipe.image,
+        imageUrl: imageBuffer,
         favourite:favourite
       })
 
