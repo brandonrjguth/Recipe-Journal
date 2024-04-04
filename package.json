@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "@brandonrjguth/recipe-scraper": "^2.1.1",
     "@dimfu/recipe-scraper": "^0.3.0",
     "axios": "^1.6.8",
     "body-parser": "^1.20.2",
+    "cheerio": "^1.0.0-rc.12",
     "connect-livereload": "^0.6.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
@@ -12,7 +14,6 @@
     "mongo": "^0.1.0",
     "mongodb": "^6.5.0",
     "multer": "^1.4.5-lts.1",
-    "recipe-scraper": "^2.1.1",
     "shark": "^2.3.0",
     "sharp": "^0.33.3"
   }

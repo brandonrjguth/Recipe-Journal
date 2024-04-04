@@ -24,7 +24,7 @@
 
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         
-        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe' method='post'>
+        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe' method='post' enctype="multipart/form-data">
             <h1>Edit Recipe</h1>
             <div class="title row">
                 <h2>Title</h2>
@@ -49,9 +49,9 @@
 
         <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
             <%if (recipe[0].recipeURL == "noURL" && !recipe[0].isImg){%>
-            <div class="image">
-                <h2>Image URL</h2>
-                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}" value="<%=recipe[0].imageUrl%>"></input>
+            <div class="upload row">
+                <h2>Upload New Picture (Optional)</h2>
+                <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
             </div>
             <div class="description">
                 <h2>Description</h2>
@@ -96,7 +96,8 @@
 
     <script>
         let recipeURL = "<%=JSON.stringify(recipe[0].recipeURL).replace(/^"|"$/g, '')%>";
-        let isImg = "<%=JSON.stringify(recipe[0].isImg).replace(/^"|"$/g, '')%>"
+        let isImg ="<%=JSON.stringify(recipe[0]).replace(/^"|"$/g, '')%>"
+        console.log(isImg);
        
         
     if (recipeURL == "noURL" && !isImg){

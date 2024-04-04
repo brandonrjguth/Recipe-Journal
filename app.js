@@ -11,7 +11,7 @@ const multer  = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const sharp = require('sharp');
-const recipeScraper = require("recipe-scraper");
+const recipeScraper = require("@brandonrjguth/recipe-scraper");
 const axios = require('axios');
 
 
@@ -75,10 +75,9 @@ async function run() {
   //---------------------GET ROUTES--------------------------------//
   //---------------------------------------------------------------//
 
-  //Root, render homepage
+  //Render page for creating a new recipe
   app.get('/', (req, res) => {
-   
-    res.redirect('/recipeList')
+    res.redirect('recipeList');
   })
 
   app.get("/favourites", async(req,res) =>{
@@ -88,7 +87,6 @@ async function run() {
       } catch (err) {
         console.error(err);
       }
-
   })
 
   //Render page for creating a new recipe
@@ -190,8 +188,10 @@ async function run() {
   //---------------------------------------------------------------//
 
   //Submitted newly created recipe
-  app.post('/newRecipe', async(req, res) =>{
+  app.post('/newRecipe', upload.single('recipeImage'), async(req, res) =>{
     try{
+
+      console.log(req.file);
       //Take the title, and replace all spaces with underscores, remove punctuation.
       //This will be used as a human readable url for the recipe
       let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
@@ -204,6 +204,16 @@ async function run() {
         res.render("newRecipe", {recipeExists: true})
         return
       } 
+      
+      let imageBuffer = undefined;
+  
+      if (req.file){
+         imageBuffer = await sharp(req.file.buffer)
+        .resize(1400)
+        .jpeg({ quality: 80 })
+        .toBuffer();
+      }
+
 
       /*Initiate empty steps and ingredients array, then make an array out of all key/value pairs from
       the recieved recipe form so that they can be itterated through. Iterate through all keys to find all of the 
@@ -233,11 +243,12 @@ async function run() {
         title: req.body.title,
         recipeTitleShort:recipeTitleShort,
         recipeURL: recipeURL,
-        imageUrl: req.body.image,
+        imageUrl: imageBuffer,
         description: req.body.description,
         steps: steps,
         ingredients:ingredients,
-        favourite:favourite
+        favourite:favourite,
+        isImg:false
       })
 
       //redirect to new recipes page, with a short wait for the database to have time to fill it
@@ -287,7 +298,8 @@ app.post('/convertRecipe', async(req, res) =>{
         ingredients:recipe.ingredients,
         steps:recipe.instructions,
         imageUrl: imageBuffer,
-        favourite:favourite
+        favourite:favourite,
+        isImg:false
       })
 
       res.redirect('recipeList');
@@ -325,7 +337,8 @@ app.post('/newRecipeLink', async(req, res) => {
       recipeTitleShort:recipeTitleShort,
       recipeURL: recipeURL,
       favourite:favourite,
-      isLink:true
+      isLink:true,
+      isImg:false
     })
 
     //redirect to new recipes page, with a short wait for the database to have time to fill it
@@ -447,10 +460,9 @@ app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res)
 
   /*Edit submission. Repeat the same logic that is used for a new recipe, but this time, find and update the submitted recipe 
   for edditing*/
-  app.post("/recipe/:recipeTitleShort/editRecipe", async(req, res) => {
+  app.post("/recipe/:recipeTitleShort/editRecipe", upload.single('recipeImage'), async(req, res) => {
 
     try{
-      
       //Generate short title to use as local url and database
       let recipeTitleShort = req.body.title.replace(/[^a-zA-Z\s]/g, "").replace(/\s/, "_");
 
@@ -481,12 +493,24 @@ app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res)
         favourite = true;
       }
 
+     
+  
+      if (req.file){
+         let imageBuffer = await sharp(req.file.buffer)
+        .resize(1400)
+        .jpeg({ quality: 80 })
+        .toBuffer();
+
+        await recipes.updateMany({recipeTitleShort:req.params.recipeTitleShort}, { $set: {
+          imageUrl:imageBuffer
+        }})
+      }
+
       //update the recipe
       await recipes.updateMany({recipeTitleShort:req.params.recipeTitleShort}, { $set: {
         "title": req.body.title,
         "recipeTitleShort":recipeTitleShort,
         "recipeURL": recipeURL,
-        "imageUrl": req.body.image,
         "description": req.body.description,
         "steps": steps,
         "ingredients":ingredients,

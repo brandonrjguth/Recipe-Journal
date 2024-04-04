@@ -21,9 +21,9 @@
          <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
             patternValidity and empty inputs for entire page before submitting-->
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
-        <form class="col" id='submitRecipe' action='/newRecipe' method='post'>
+        <form class="col" id='submitRecipe' action='/newRecipe' method='post' enctype="multipart/form-data">
 
-            <div class="title col">
+            <div class="title row">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
             </div>
@@ -31,9 +31,9 @@
                 <h2>Favourite</h2>
                 <input type="checkbox" class="checkbox" name="favourite"></input>
             </div>
-            <div class="image">
-                <h2>Image URL (Optional)</h2>
-                <input type='text' name='image' pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|webp|bmp|jpeg){0,500}"></input>
+            <div class="upload row">
+                <h2>Upload Picture (Optional)</h2>
+                <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
             </div>
             <div class="description">
                 <h2>Description</h2>

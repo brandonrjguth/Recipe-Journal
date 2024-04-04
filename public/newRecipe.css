@@ -77,22 +77,29 @@ input[type="submit"]:hover {
 
 .title h2, .favourite h2, .ingredients h2, .steps h2{
     padding-right:0.75rem;
+    align-self: center;
 }
 
 .checkbox{
    width:auto;
 }
 
-.title, .ingredients, .steps{
+.title, .ingredients, .steps, .favourite, .upload, .description, .submitWrapper{
+    padding-bottom:1rem;
+    padding-top:1rem;
+ }
+
+ .steps{
     padding-top:2rem;
  }
 
+.uploadInput{
+    width:auto;
+    padding-left:1rem;
+}
+
 .ingredients, .steps{
     align-items: center;
-}
- 
-.favourite{
-    padding:1rem 0 1rem 0;
 }
 
 .description > h2, .image > h2{
