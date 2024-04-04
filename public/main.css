@@ -33,9 +33,51 @@ textarea{
     padding:1rem 0;
 }
 
+.logoWrapper {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+}
+
 .logoName{
     height:2rem;
 }
+
+.searchBar{
+    align-self:center;
+}
+
+
+  /* Style the form */
+  .searchInput {
+    display: flex;
+    width: 100%; /* Full width */
+    max-width: 500px; /* Maximum width of the form */
+  }
+
+  /* Style the input field */
+  .searchInput input[type='text'] {
+    flex-grow: 1; /* Allow input to grow and fill space */
+    padding: 10px;
+    border: 2px solid #ddd; /* Light grey border */
+    border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
+    outline: none; /* Remove default focus outline */
+  }
+
+  /* Style the submit button */
+  .searchInput button.searchbutton {
+    padding: 10px;
+    border: none;
+    background-color: #171717; /* Bootstrap primary color */
+    color: white;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0; /* Rounded corners on the right side */
+  }
+
+  /* Change button background on hover */
+  .searchInput button.searchbutton:hover {
+    background-color: #a8a8a8; /* Darker shade when hovered */
+  }
 
 .menu{
     display:none;

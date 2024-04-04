@@ -539,6 +539,34 @@ app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res)
       console.error(err);
     }
   });
+
+  app.post('/search', async(req, res) => {
+    try{
+      
+      //find by Title, or Ingredient
+      let byTitle = await recipes.find({ "title": { "$regex": req.body.search, "$options": "i" } }).toArray();
+      let byIngredient = await recipes.find({ "ingredients": { "$regex": req.body.search, "$options": "i" } }).toArray();
+
+      //Combine Results into single array
+      let combinedArray = byTitle.concat(byIngredient);
+
+      //Filter out duplicates
+      let recipeList = combinedArray.filter((recipe, index, self) =>
+        index === self.findIndex((t) => (
+          t.title === recipe.title
+        ))
+      );
+
+      // Sort the array alphabetically by title
+      recipeList.sort((a, b) => a.title.localeCompare(b.title));
+
+      res.render('recipeList', {recipeList:recipeList, favourites:false})
+
+
+    } catch (err){
+      console.log(err);
+    }
+  });
   
   //Initiate Express listening on port
   app.listen(port, () => {
