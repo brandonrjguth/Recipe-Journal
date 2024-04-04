@@ -544,7 +544,7 @@ app.post('/newRecipePicture', upload.array('recipeImage', 6), function(req, res)
     try{
       
       //find by Title, or Ingredient
-      let byTitle = await recipes.find({ "title": { "$regex": req.body.search, "$options": "i" } }).toArray();
+      let byTitle = await recipes.find({ "title": { "$regex": "\\b" + req.body.search + "\\b", "$options": "i" } }).toArray();
       let byIngredient = await recipes.find({ "ingredients": { "$regex": "\\b" + req.body.search + "\\b", "$options": "i" } }).toArray();
 
       //Combine Results into single array
