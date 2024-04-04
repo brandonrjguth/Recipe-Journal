@@ -55,7 +55,7 @@ span{
     background-color: white;
 }
 
-img {
+.deleteBtn img, .editBtn img, .favouriteBtn img {
     height: 1rem;
 }
 

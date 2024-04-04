@@ -8,6 +8,10 @@ html{
     height: 100%;
 }
 
+.hidden{
+    display:none !important;
+}
+
 textarea{
     font-family: 'Poppins', sans-serif;
 }
@@ -35,49 +39,70 @@ textarea{
 
 .logoWrapper {
     display: flex;
-    width: 50%;
+    width: 100%;
+    padding: 0 1rem;
     justify-content: space-between;
 }
 
 .logoName{
+    align-self: center;
     height:2rem;
 }
 
 .searchBar{
-    align-self:center;
+    display:none;
 }
 
+.searchButton{
+    background-color: rgb(221, 60, 42);
+    border:none;
+    align-self: center;
+    height:100%;
+}
 
-  /* Style the form */
-  .searchInput {
+.searchButton img{
+    height: 1.6rem;
+}
+
+.searchButtonMobile{
     display: flex;
-    width: 100%; /* Full width */
-    max-width: 500px; /* Maximum width of the form */
-  }
+}
 
-  /* Style the input field */
-  .searchInput input[type='text'] {
-    flex-grow: 1; /* Allow input to grow and fill space */
-    padding: 10px;
-    border: 2px solid #ddd; /* Light grey border */
-    border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
-    outline: none; /* Remove default focus outline */
-  }
+.searchBarMobileWrapper{
+    padding:1rem;
+}
 
-  /* Style the submit button */
-  .searchInput button.searchbutton {
-    padding: 10px;
-    border: none;
-    background-color: #171717; /* Bootstrap primary color */
-    color: white;
-    cursor: pointer;
-    border-radius: 0 4px 4px 0; /* Rounded corners on the right side */
-  }
+.searchInput{
+    border-radius:4px;
+    box-shadow: 0 0 0 2px #ddd;
+}
 
-  /* Change button background on hover */
-  .searchInput button.searchbutton:hover {
-    background-color: #a8a8a8; /* Darker shade when hovered */
-  }
+.searchInput:focus-within {
+    box-shadow: 0 0 0 2px #a8d4ff; /* Change as needed */
+}
+
+.searchBarMobileWrapper .searchInput input{
+    width:100%;
+    border-radius: 0 4px 4px 0;
+}
+
+.searchBarMobileWrapper .searchInput input:focus{
+    outline:none;
+}
+
+.searchBarMobileWrapper .searchInput input, .searchBarMobileWrapper .searchInput button{
+    border:none;
+}
+
+.searchBarMobileWrapper .searchInput button{
+    background-color: white;
+    border-radius: 4px 0 0 4px;
+}
+
+.searchBarMobileWrapper .searchInput button img{
+    height: 1.6rem;
+    padding: 0.3rem;
+}
 
 .menu{
     display:none;
@@ -101,3 +126,53 @@ textarea{
     text-decoration:none;
 }
 
+@media only screen and (min-width: 600px) {
+    .searchBar{
+        align-self:center;
+        display:flex;
+    }
+
+    .logoWrapper {
+        width:50%;
+        justify-content: space-between;
+    }
+    
+    .searchBarMobile{
+        display:none;
+    }
+
+    .searchButtonMobile{
+        display:none;
+    }
+
+    .searchInput{
+        box-shadow:none;
+    }
+
+    /* Style the input field */
+    .searchInput input[type='text'] {
+        flex-grow: 1; /* Allow input to grow and fill space */
+        padding: 0.5rem;
+        border: 2px solid #ddd; /* Light grey border */
+        border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
+        outline: none; /* Remove default focus outline */
+    }
+
+    /* Style the submit button */
+    .searchInput button.searchButton {
+        border: none;
+        background-color: #171717; /* Bootstrap primary color */
+        color: white;
+        cursor: pointer;
+        border-radius: 0 4px 4px 0; /* Rounded corners on the right side */
+    }
+
+    /* Change button background on hover */
+    .searchInput button.searchButton:hover {
+        background-color: #a8a8a8; /* Darker shade when hovered */
+    }
+
+    .searchButton img{
+        height: 1.4rem;
+    }
+  }

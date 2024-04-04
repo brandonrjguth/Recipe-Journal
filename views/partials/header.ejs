@@ -2,12 +2,25 @@
     <div class="logo">
         <div class="logoWrapper">
             <a href="/" class="logoName"><img src="/imgs/logofull-none.png" class="logoName"></a>
+            <div class="searchButtonMobile">
+                <button type="button" class="searchButton"><img src="/imgs/search-white.svg"></button>
+            </div>
             <div class="searchBar">
                 <form class="row searchInput" action='/search' method='post'>
                     <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
-                    <button type="submit" class="searchbutton"><img src="/imgs/search-white.svg"></button>
+                    <button type="submit" class="searchButton"><img src="/imgs/search-white.svg"></button>
                 </form>
             </div>
+        </div>
+
+    </div>
+    <div class="searchBarMobile hidden">
+        <div class="searchBarMobileWrapper">
+            <form class="row searchInput" action='/search' method='post'>
+                <button type="submit" class="searchButtonMobileInner"><img src="/imgs/search.svg"></button>
+                <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe">
+                </input>
+            </form>
         </div>
     </div>
     <ul class="menu">
@@ -21,3 +34,12 @@
         <li><a href="/recipeFrom">New Recipe</a></li> |
     </ul>
 </div>
+
+<script>
+    let searchButtonMobile = document.querySelector(".searchButtonMobile");
+    let searchBarMobile = document.querySelector(".searchBarMobile");
+
+    searchButtonMobile.addEventListener("click", () => {
+        searchBarMobile.classList.remove("hidden");
+    })
+</script>
