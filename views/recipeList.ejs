@@ -27,8 +27,7 @@
                 <div class="contentRow">
         
                     <li>
-                        <span>>></span>
-                        <a href="/recipe/<%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a>
+                        <a href="<%if (recipeList[i].isImg){%>/recipeImg/<%} else {%>/recipe/<%}%><%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a>
                     </li>
     
                     <div class="buttons row">
