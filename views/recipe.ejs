@@ -34,6 +34,16 @@
                 <%if (recipe.images){%>
                 <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">
                 <%}%>
+                <div class="presets">
+                <h2>Categories</h2>
+                    <div class="presetWrapper">
+                        <%if (recipe.categories){
+                            recipe.categories.forEach((category) => {%>
+                                <p class="presetTag"><%=category%></p>
+                            <%})
+                        }%>
+                    </div>
+                </div>
                 <div class="description">
                     <h2>Description</h2>
                     <p><%=recipe.description%></p>

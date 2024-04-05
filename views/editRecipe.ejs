@@ -26,14 +26,33 @@
         
         <form class="col" id='submitRecipe' action='/recipe/<%=recipe.title%>/editRecipe' method='post' enctype="multipart/form-data">
             <h1>Edit Recipe</h1>
-            <div class="title row">
+            <div class="title col">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe.title%>"></input>
             </div>
-            <div class="favourite row">
+            <div class="favourite col">
                 <h2>Favourite</h2>
                 <input class="checkbox" type="checkbox" name="favourite" <%if (recipe.favourite){%>checked<%}%>></input>
             </div>
+            <div class="tagWrapper">
+                <input type="hidden" name="categories" class="categories" value=""></input>
+                <div class="tagTitle">
+                  <h2>Categories</h2>
+                </div>
+                <div class="tagContent">
+                  <p>Press enter after each category or select from popular categories below</p>
+                  <ul><input type="text" spellcheck="false"></ul>
+                  <div class="presetWrapper">
+                    <p class="presetTag">Main</p>
+                    <p class="presetTag">Side</p>
+                    <p class="presetTag">Dessert</p>
+                    <p class="presetTag">Cocktail</p>
+                    <p class="presetTag">Slow Cooker</p>
+                    <p class="presetTag">Air Fryer</p>
+                  </div>
+                </div>
+              </div>
+
         <% if (recipe.isImg){%>
             <input type='text' hidden name='isImg' value="true" required></input>
         <%}%>
@@ -49,7 +68,7 @@
 
         <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
             <%if (recipe.recipeUrl == "noUrl" && !recipe.isImg){%>
-            <div class="upload row">
+            <div class="upload col">
                 <h2>Upload New Picture (Optional)</h2>
                 <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
             </div>
@@ -96,9 +115,79 @@
 
     <script>
         let recipeUrl = "<%=JSON.stringify(recipe.recipeUrl).replace(/^"|"$/g, '')%>";
-        let isImg ="<%=JSON.stringify(recipe).replace(/^"|"$/g, '')%>"
-        console.log(isImg);
-       
+        let isImg ="<%=JSON.stringify(recipe.isImg).replace(/^"|"$/g, '')%>"
+        
+        //--------------------------TAG SECTION LOGIC ----------------------//
+        const tagUl = document.querySelector(".tagContent ul"),
+        tagInput = document.querySelector(".tagContent ul input"),
+        tagNumb = document.querySelector(".tagDetails span"),
+        tagPreset = document.querySelectorAll(".presetTag");
+
+        let maxTags = 10,
+        tags = [];
+
+        //Seed existing categories
+        let existingCategories = <%- JSON.stringify(recipe.categories) %>;
+
+        if (existingCategories){
+        existingCategories.forEach((category) => {
+            tags.push(category)
+        })
+        }
+
+        countTags();
+        createTag();
+
+        function countTags(){
+            tagInput.focus();
+        }
+
+        function seed(){
+
+        }
+
+        function createTag(){
+            tagUl.querySelectorAll("li").forEach(li => li.remove());
+            tags.slice().reverse().forEach(tag =>{
+                let liTag = `<li>${tag} <i class="uit uit-multiply" onclick="remove(this, '${tag}')"></i></li>`;
+                tagUl.insertAdjacentHTML("afterbegin", liTag);
+            });
+            countTags();
+        }
+
+        function remove(element, tag){
+            let index  = tags.indexOf(tag);
+            tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+            element.parentElement.remove();
+            countTags();
+        }
+
+        function addTag(e){
+            if(e.key == "Enter"){
+                let tag = e.target.value.replace(/\s+/g, ' ');
+                if(tag.length > 1 && !tags.includes(tag)){
+                    if(tags.length < 10){
+                        tag.split(',').forEach(tag => {
+                            tags.push(tag);
+                            createTag();
+                        });
+                    }
+                }
+                e.target.value = "";
+            }
+        }
+
+        tagInput.addEventListener("keyup", addTag);
+        tagPreset.forEach((tag) => {
+            tag.addEventListener("click", function(){
+                console.log("here");
+                tags.push(this.textContent);
+                createTag();
+            })
+        })
+    // ----------------------------------------------------------------------------------------------//
+    // -----------------------------       END OF TAG LOGIC       ------------------------------------//
+    // ----------------------------------------------------------------------------------------------//
         
     if (recipeUrl == "noUrl" && !isImg){
         
@@ -279,6 +368,7 @@
         //Manual validation checks before submit
         let submitBtn = document.querySelector(".submitBtn");
         let submitRecipeForm = document.querySelector("#submitRecipe");
+        let categories = document.querySelector(".categories");
 
         //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
         submitBtn.addEventListener("click", function(){
@@ -299,15 +389,13 @@
                 }*/
             }
 
-            if (recipeUrl !== "noUrl" || isImg){
-                if (inputsFilled == true && inputsValid == true){
-                    submitRecipeForm.submit("recipeLink");
-                }
-            } else{
-                if (document.querySelectorAll(".ingredientsNode")[0] !== undefined && document.querySelectorAll(".stepsNode")[0] !== undefined && inputsFilled === true && inputsValid === true){
-                    submitRecipeForm.submit();
-                };
+           
+            if (inputsFilled == true && inputsValid == true){
+                categories.value = tags;
+                submitRecipeForm.submit("recipeLink");
             }
+           
+          
         })
     </script>
 </body>

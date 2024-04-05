@@ -7,13 +7,29 @@ body{
     flex-direction: column;
 }
 
+p{
+    font-size: 0.9rem;
+}
+
+h2{
+    font-size:1rem;
+}
+
 .content{
     padding:0 1rem;
     align-self:center;
 }
 
-.title, .recipeImg, .description, .steps, .ingredients{
+.title, .recipeImg, .steps, .ingredients{
     padding-top:2rem;
+}
+
+.description, .presets{
+    padding-top:1rem;
+}
+
+p.presetTag {
+    font-size:0.8rem;
 }
 
 .content ul{
@@ -64,6 +80,22 @@ button{
     padding: 0;
 }
 
+.presetTag{
+    color: #333;
+    margin: 4px 3px;
+    list-style: none;
+    border-radius: 5px;
+    background: #F2F2F2;
+    padding: 5px 8px 5px 10px;
+    width:fit-content;
+    border: 1px solid #e3e1e1;
+  }
+  
+  .presetWrapper{
+    display:flex;
+    flex-wrap:wrap;
+  }
+
 @media (min-width: 768px) {
     .content{
       display:grid;
@@ -93,7 +125,7 @@ button{
         grid-template-areas:
         "img title title"
         "img btn btn"
-        "img des des"
+        "img pre pre"
         "img des des"
         "img des des"
         "img des des" ;
@@ -146,6 +178,10 @@ button{
     
     .description{
         grid-area:des;
+    }
+
+    .presets{
+        grid-area:pre;
     }
 
     .buttons{

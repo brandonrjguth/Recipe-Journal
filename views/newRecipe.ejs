@@ -16,31 +16,51 @@
 
     <!---->
     <div class="newRecipeWrapper">
+
          <!--Recipe Form-->
          <!--If the submitted recipe already exists this page is reloaded with an error message-->
          <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
             patternValidity and empty inputs for entire page before submitting-->
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         <form class="col" id='submitRecipe' action='/newRecipe' method='post' enctype="multipart/form-data">
+            <h1>New Recipe</h1>
 
-            <div class="title row">
+            <div class="title col">
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
             </div>
-            <div class="favourite row">
+            <div class="favourite col">
                 <h2>Favourite</h2>
                 <input type="checkbox" class="checkbox" name="favourite"></input>
             </div>
+            <div class="tagWrapper">
+                <input type="hidden" name="categories" class="categories"></input>
+                <div class="tagTitle">
+                  <h2>Categories</h2>
+                </div>
+                <div class="tagContent">
+                  <p>Press enter after each category or select from popular categories below</p>
+                  <ul><input type="text" spellcheck="false"></ul>
+                  <div class="presetWrapper">
+                    <p class="presetTag">Main</p>
+                    <p class="presetTag">Side</p>
+                    <p class="presetTag">Dessert</p>
+                    <p class="presetTag">Cocktail</p>
+                    <p class="presetTag">Slow Cooker</p>
+                    <p class="presetTag">Air Fryer</p>
+                  </div>
+                </div>
+              </div>
 
         <% if (!isLink && !isImg) {%>
-            <div class="upload row">
+            <div class="upload col">
                 <h2>Upload Picture (Optional)</h2>
                 <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
             </div>
         <%}%>
 
         <%if (isImg){%>
-            <div class="upload row">
+            <div class="upload col">
                 <h2>Upload Picture</h2>
                 <input class="uploadInput" type="file" multiple max-length="6" name="recipeImage" accept="image/*">
                 <input type="hidden" name="isImg" value="isImg">
@@ -98,6 +118,70 @@
     </div>
 
     <script>
+
+        //--------------------------TAG SECTION LOGIC ----------------------//
+        const tagUl = document.querySelector(".tagContent ul"),
+        tagInput = document.querySelector(".tagContent ul input"),
+        tagNumb = document.querySelector(".tagDetails span"),
+        tagPreset = document.querySelectorAll(".presetTag");
+
+
+        let maxTags = 10,
+        tags = [];
+
+        countTags();
+        createTag();
+
+        function countTags(){
+            tagInput.focus();
+        }
+
+        function createTag(){
+            tagUl.querySelectorAll("li").forEach(li => li.remove());
+            tags.slice().reverse().forEach(tag =>{
+                let liTag = `<li>${tag} <i class="uit uit-multiply" onclick="remove(this, '${tag}')"></i></li>`;
+                tagUl.insertAdjacentHTML("afterbegin", liTag);
+            });
+            countTags();
+        }
+
+        function remove(element, tag){
+            let index  = tags.indexOf(tag);
+            tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
+            element.parentElement.remove();
+            countTags();
+        }
+
+        function addTag(e){
+            if(e.key == "Enter"){
+                let tag = e.target.value.replace(/\s+/g, ' ');
+                if(tag.length > 1 && !tags.includes(tag)){
+                    if(tags.length < 10){
+                        tag.split(',').forEach(tag => {
+                            tags.push(tag);
+                            createTag();
+                        });
+                    }
+                }
+                e.target.value = "";
+            }
+        }
+
+        tagInput.addEventListener("keyup", addTag);
+        tagPreset.forEach((tag) => {
+            tag.addEventListener("click", function(){
+                console.log("here");
+                tags.push(this.textContent);
+                createTag();
+            })
+        })
+    // ----------------------------------------------------------------------------------------------//
+    // -----------------------------       END OF TAG LOGIC       ------------------------------------//
+    // ----------------------------------------------------------------------------------------------//
+
+
+
+
         //Grab isLink and isImg from ejs variable
         const isLink = "<%-JSON.stringify(isLink)%>";
         const isImg = "<%-JSON.stringify(isImg)%>";
@@ -273,6 +357,7 @@
         //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
         submitBtn.addEventListener("click", function(){
             let inputs = document.querySelectorAll("#submitRecipe input, textarea");
+            let categories = document.querySelector(".categories");
             console.log(inputs);
             
             let inputsFilled = true;
@@ -290,9 +375,11 @@
             }
 
             if (inputsValid && inputsFilled){
+                categories.value = tags;
                 submitRecipeForm.submit();
             }
         })
+
     </script>
 </body>
 </html>

@@ -55,7 +55,6 @@ async function run() {
   //---------------------GET ROUTES--------------------------------//
   //---------------------------------------------------------------//
 
-
   app.get('/', (req, res) => {
     res.redirect('recipeList');
   })
@@ -167,7 +166,6 @@ async function run() {
   //Submitted newly created recipe
   app.post('/newRecipe', upload.array('recipeImage', 6), async(req, res) =>{
     try{
-
       //setup initial variables to be used in recipe object
       let title = req.body.title;
       let favourite = !!req.body.favourite;
@@ -179,6 +177,11 @@ async function run() {
       let ingredients = [];
       let keysArray = Object.keys(req.body);
       let valuesArray = Object.values(req.body);
+      let categories = undefined;
+
+      if (req.body.categories){
+        categories = req.body.categories.split(",");
+      }
 
       //Redirect back to page with error message if this recipe name already exists
       let result = await recipes.findOne({title:title});
@@ -234,6 +237,7 @@ async function run() {
           description: req.body.description,
           steps: steps,
           ingredients:ingredients,
+          categories:categories
         })
 
     res.redirect("recipeList");
@@ -249,6 +253,12 @@ app.post('/convertRecipe', async(req, res) =>{
     //use recipeScraper to generate recipe from URL
     const url = req.body.link;
     let recipe = await recipeScraper(url).then(recipe => {return recipe});
+
+    let categories = undefined;
+    if (req.body.categories){
+      categories = req.body.categories.split(",");
+    }
+
 
     //Check if recipe title already exists in DB, if so, render page again alerting user
     let result = await recipes.find({title:recipe.name}).toArray();
@@ -281,6 +291,7 @@ app.post('/convertRecipe', async(req, res) =>{
         images: imageBuffer,
         ingredients:recipe.ingredients,
         steps:recipe.instructions,
+        categories:categories
       })
       res.redirect('recipeList');
     }
@@ -321,6 +332,13 @@ app.post('/convertRecipe', async(req, res) =>{
     try{
       let steps = [];
       let ingredients = [];
+      let categories = undefined;
+
+      console.log(req.body.categories);
+      if (req.body.categories){
+        categories = req.body.categories.split(",")
+        console.log(categories);
+      }
 
       //Add all steps and ingredients into an array to be stored in the database
       let keysArray = Object.keys(req.body);
@@ -353,7 +371,8 @@ app.post('/convertRecipe', async(req, res) =>{
         "description": req.body.description,
         "steps": steps,
         "ingredients":ingredients,
-        "favourite":!!req.body.favourite
+        "favourite":!!req.body.favourite,
+        "categories":categories
       }})
 
       //if we came from editing a link, redirect to the recipe list, otherwise, redirect to the local recipe
@@ -384,9 +403,12 @@ app.post('/convertRecipe', async(req, res) =>{
       //Find by Title and then by Ingredient
       let byTitle = await recipes.find({ "title": { "$regex": "\\b" + req.body.search + "\\b", "$options": "i" } }).toArray();
       let byIngredient = await recipes.find({ "ingredients": { "$regex": "\\b" + req.body.search + "\\b", "$options": "i" } }).toArray();
+      let byCategory = await recipes.find({ "categories": { "$regex": "\\b" + req.body.search + "\\b", "$options": "i" } }).toArray();
+
 
       //Combine Results into single array
-      let combinedArray = byTitle.concat(byIngredient);
+      let combinedArray = byTitle.concat(byIngredient).concat(byCategory);
+
 
       //Filter out duplicates
       let recipeList = combinedArray.filter((recipe, index, self) =>

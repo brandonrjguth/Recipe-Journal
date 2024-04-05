@@ -40,6 +40,7 @@ textarea{
 .logoWrapper {
     display: flex;
     width: 100%;
+    gap:1rem;
     padding: 0 1rem;
     justify-content: space-between;
 }
@@ -156,6 +157,7 @@ textarea{
         border: 2px solid #ddd; /* Light grey border */
         border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
         outline: none; /* Remove default focus outline */
+        margin: 0;
     }
 
     /* Style the submit button */
