@@ -13,31 +13,40 @@
 </head>
 <body>
     
-    <%- include('partials/header') %>
+    <%- include('partials/header');%>
     <div class="content">
 
 
         <h1><%if (favourites === true){%>
-            Favourites
-        <%} else {%>Recipes<%}%></h1>
+                Favourites
+            <%} else {%>
+                Recipes
+            <%}%>
+        </h1>
         
         <!--For each recipe in the collection, add a link to the recipe as list item in the ordered list-->
         <ul>
             <% for(var i=0; i < recipeList.length; i++){%>
                 <div class="contentRow">
         
+
                     <li>
-                        <a href="<%if (recipeList[i].isImg){%>/recipeImg/<%} else {%>/recipe/<%}%><%=recipeList[i].recipeTitleShort%>"><%=recipeList[i].title%></a>
+                        <% if (recipeList[i].isLink){%>
+                        <a href="<%=recipeList[i].recipeUrl%>"><%=recipeList[i].title%></a>
+                        <%} else {%>
+                        <a href="<%if (recipeList[i].isImg){%>/recipeImg/<%} else {%>/recipe/<%}%><%=recipeList[i].title%>"><%=recipeList[i].title%></a>
+                        <%}%>
+                        
                     </li>
     
                     <div class="buttons row">
                         <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
-                            <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
                             <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                         </form>
-                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                         <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
-                            <input type="hidden" name="recipeTitleShort" value="<%=recipeList[i].recipeTitleShort%>"></input>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
                             <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                         </form>
                     </div>

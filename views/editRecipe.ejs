@@ -24,38 +24,38 @@
 
          <% if (recipeExists === true) {%>A recipe with that title already exists. Please try a new one.<%}%>
         
-        <form class="col" id='submitRecipe' action='/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe' method='post' enctype="multipart/form-data">
+        <form class="col" id='submitRecipe' action='/recipe/<%=recipe.title%>/editRecipe' method='post' enctype="multipart/form-data">
             <h1>Edit Recipe</h1>
             <div class="title row">
                 <h2>Title</h2>
-                <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe[0].title%>"></input>
+                <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe.title%>"></input>
             </div>
             <div class="favourite row">
                 <h2>Favourite</h2>
-                <input class="checkbox" type="checkbox" name="favourite" <%if (recipe[0].favourite){%>checked<%}%>></input>
+                <input class="checkbox" type="checkbox" name="favourite" <%if (recipe.favourite){%>checked<%}%>></input>
             </div>
-        <% if (recipe[0].isImg){%>
+        <% if (recipe.isImg){%>
             <input type='text' hidden name='isImg' value="true" required></input>
         <%}%>
             
 
         <!-- If the recipe is a link (contains a proper URL) render the link input for the form -->
-            <% if (recipe[0].recipeURL !== "noURL"){%>
+            <% if (recipe.recipeUrl !== "noUrl"){%>
                 <div class="Link">
                     <h2>Recipe Link</h2>
-                    <input type='text' name='link' value = <%=recipe[0].recipeURL%> required></input>
+                    <input type='text' name='link' value = <%=recipe.recipeUrl%> required></input>
                 </div>     
             <%}%>
 
         <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
-            <%if (recipe[0].recipeURL == "noURL" && !recipe[0].isImg){%>
+            <%if (recipe.recipeUrl == "noUrl" && !recipe.isImg){%>
             <div class="upload row">
                 <h2>Upload New Picture (Optional)</h2>
                 <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
             </div>
             <div class="description">
                 <h2>Description</h2>
-                <textarea type='text' name='description' required pattern="[^{}<>]{2,500}"><%=recipe[0].description%></textarea>
+                <textarea type='text' name='description' required pattern="[^{}<>]{2,500}"><%=recipe.description%></textarea>
             </div>
             <div class="ingredients row">
                 <h2>Ingredients</h2>
@@ -63,10 +63,10 @@
             </div>
 
             <div class="ingredientsList">
-                <%for (i = 0; i < recipe[0].ingredients.length; i++){%>
+                <%for (i = 0; i < recipe.ingredients.length; i++){%>
                     <div class="row ingredientsNode" id="ingredientDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
-                        <input name="ingredient<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe[0].ingredients[i]%>">
+                        <input name="ingredient<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe.ingredients[i]%>">
                         <button id="ingredientBtn<%=i+1%>">X</button>
                     </div>
                     <%}%>
@@ -78,10 +78,10 @@
             </div>
 
             <div class="stepsList">
-                <%for (i = 0; i < recipe[0].steps.length; i++){%>
+                <%for (i = 0; i < recipe.steps.length; i++){%>
                     <div class="stepsNode row" id="stepDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
-                        <textarea name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}"><%=recipe[0].steps[i]%></textarea>
+                        <textarea name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}"><%=recipe.steps[i]%></textarea>
                         <button id="stepBtn<%=i+1%>" type="button">X</button>
                     </div>
                 <%}%>
@@ -95,12 +95,12 @@
     </div>
 
     <script>
-        let recipeURL = "<%=JSON.stringify(recipe[0].recipeURL).replace(/^"|"$/g, '')%>";
-        let isImg ="<%=JSON.stringify(recipe[0]).replace(/^"|"$/g, '')%>"
+        let recipeUrl = "<%=JSON.stringify(recipe.recipeUrl).replace(/^"|"$/g, '')%>";
+        let isImg ="<%=JSON.stringify(recipe).replace(/^"|"$/g, '')%>"
         console.log(isImg);
        
         
-    if (recipeURL == "noURL" && !isImg){
+    if (recipeUrl == "noUrl" && !isImg){
         
         //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
         let stepAddButton = document.getElementById("addStep");
@@ -282,7 +282,7 @@
 
         //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
         submitBtn.addEventListener("click", function(){
-            let inputs = document.querySelectorAll("input");
+            let inputs = document.querySelectorAll("#submitRecipe input");
             let inputsFilled = true;
             let inputsValid = true;
 
@@ -299,7 +299,7 @@
                 }*/
             }
 
-            if (recipeURL !== "noURL" || isImg){
+            if (recipeUrl !== "noUrl" || isImg){
                 if (inputsFilled == true && inputsValid == true){
                     submitRecipeForm.submit("recipeLink");
                 }

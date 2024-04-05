@@ -19,24 +19,24 @@
     <div class="content">
         <div class="recipeHeroWrapper">
             <div class="recipeHero">
-                <h1 class="title"><%=recipe[0].title%></h1>
+                <h1 class="title"><%=recipe.title%></h1>
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
-                        <button><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
+                        <button><img src="/imgs/<%if (recipe.favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
-                        <button><a href="/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
-                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
+                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
                         <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                     </form>
                 </div>
               
         <div class="recipeInstructionsWrapper">
-            <img id="mainImage" src="/recipeImg/imgURL/<%= recipe[0].recipeTitleShort%>/0" alt="Recipe Image">
+            <img id="mainImage" src="/recipeImg/imgURL/<%= recipe.title%>/0" alt="Recipe Image">
             <div class="thumbnailRow">
                 <% for (i=0; i < imageNumber; i++){%>
-                    <img class="thumbnail" src="/recipeImg/imgURL/<%=recipe[0].recipeTitleShort%>/<%=i%>"></img>
+                    <img class="thumbnail" src="/recipeImg/imgURL/<%=recipe.title%>/<%=i%>"></img>
                 <%};%>            
             </div>
         </div>

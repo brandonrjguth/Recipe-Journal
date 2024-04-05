@@ -19,24 +19,24 @@
     <div class="content">
         <div class="recipeHeroWrapper">
             <div class="recipeHero">
-                <h1 class="title"><%=recipe[0].title%></h1>
+                <h1 class="title"><%=recipe.title%></h1>
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
-                        <button ><img src="/imgs/<%if (recipe[0].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
+                        <button ><img src="/imgs/<%if (recipe.favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
-                        <button><a href="/recipe/<%=recipe[0].recipeTitleShort%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
-                        <input type="hidden" name="recipeTitleShort" value="<%=recipe[0].recipeTitleShort%>"></input>
+                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
                         <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                     </form>
                 </div>
-                <%if (recipe[0].imageUrl){%>
-                <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe[0].recipeTitleShort%>/1" height="300px">
+                <%if (recipe.images){%>
+                <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">
                 <%}%>
                 <div class="description">
                     <h2>Description</h2>
-                    <p><%=recipe[0].description%></p>
+                    <p><%=recipe.description%></p>
                 </div>
             </div>
         </div>
@@ -46,16 +46,16 @@
                 <div class="ingredients">
                 <h3>Ingredients</h3>
                     <ul>
-                        <% for (let i=0; i < recipe[0].ingredients.length; i++){%>
-                            <li><%=recipe[0].ingredients[i]%></li>
+                        <% for (let i=0; i < recipe.ingredients.length; i++){%>
+                            <li><%=recipe.ingredients[i]%></li>
                         <%}%> 
                     </ul>
                 </div>
                 <div class="steps">
                     <h3>Steps</h3>
                     <ol>
-                        <% for (let i=0; i < recipe[0].steps.length; i++){%>
-                            <li><%=recipe[0].steps[i]%></li>
+                        <% for (let i=0; i < recipe.steps.length; i++){%>
+                            <li><%=recipe.steps[i]%></li>
                         <%}%> 
                     </ol>
                 </div>
