@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe List</title>
 
-    <link id="dynamicStylesheet" rel="stylesheet" type="text/css" href="/thumbs.css">
+    <link id="dynamicStylesheet" rel="stylesheet" type="text/css" href="<%= thumbnails ? '/thumbs.css' : '/recipeList.css' %>">
     <link rel="stylesheet" type="text/css" href="/main.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,19 +17,15 @@
     
     <%- include('partials/header');%>
     <div class="content">
+        <button id="toggleStylesheet">Toggle Thumbnails</button>
+
+
         <h1><%if (favourites === true){%>
                 Favourites
             <%} else {%>
                 Recipes
             <%}%>
         </h1>
-        <div class="toggle row">
-            <button id="toggleStylesheet">
-                <img src="/imgs/thumb3.svg" height="20px" width="20px">
-                <img src="/imgs/slash.svg" height="20px" width="20px">
-                <img src="/imgs/list.svg" height="20px" width="20px">
-            </button>
-        </div>
         
         <!--For each recipe in the collection, add a link to the recipe as list item in the ordered list-->
         <ul>
@@ -45,11 +41,11 @@
 
                     
                     <% if (recipeList[i].isImg){%>
-                    <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: block;" height="80%" width="100%">
+                    <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: none;" height="80%" width="100%">
                     <%} else if (recipeList[i].images == undefined) {%>
-                    <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block;" width="80%">
+                    <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: none;" width="80%">
                     <%} else {%>
-                    <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" style="display: block;" height="80%" width="100%">
+                    <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" style="display: none;" height="80%" width="100%">
                     <%}%>
                 
 
@@ -108,7 +104,7 @@
         let recipeImages = document.querySelectorAll(".recipeImg");
 
         // Initial value (you can set this based on your logic)
-        let thumbnails = true;
+        let thumbnails = false;
 
         // Function to toggle the stylesheet
         function toggleStyles() {

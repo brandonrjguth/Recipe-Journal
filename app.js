@@ -69,6 +69,15 @@ async function run() {
       }
   })
 
+  app.get("/thumbs", async(req, res) => {
+    try{
+      let recipeList = await recipes.find({favourite:true}).sort({"title":1}).toArray();
+      res.render('thumbs', {recipeList:recipeList, favourites:true, thumbnails:false});
+    }catch (err){
+      console.log(err);
+    }
+  });
+
   app.get('/newRecipePage', (req, res) => {
     res.render('newRecipe', {recipeExists: false, isImg:false, isLink:false})
   })

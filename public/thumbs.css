@@ -26,18 +26,31 @@ body{
     background-color: rgb(211, 219, 225);
 }
 
+
 .content h1{
     padding: 1rem 0rem 1rem 0rem;
 }
 
 .content ul{
-    width:90%
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(18rem, 1fr));
+    grid-template-rows: auto;
+    gap:2rem;
 }
+
+img.recipeImg {
+    max-height: 14rem;
+    width: 100%;
+    object-fit: cover;
+}
+
 
 .content ul li{
    list-style:none; 
    font-size:1.1rem;
    padding:0.25rem 0;
+   text-align:center;
 }
 
 
@@ -52,6 +65,11 @@ body{
     align-items: center;
     justify-content: space-between;
     width:100%;
+    flex-direction: column;
+    height: 20rem;
+    grid-template-columns: 1fr;
+    max-height: 20rem;
+    grid-template-rows: 2fr 10fr 1fr;
 }
 
 span{
@@ -76,12 +94,12 @@ span{
   @media only screen and (min-width: 600px) {
     @media only screen and (max-width: 1200px) {
         .content{
-            width:50%;
+            width:90%;
         }
       }
   }
   @media only screen and (min-width: 1200px) {
     .content{
-        width:35%;
+        width:90%;
     }
   }
