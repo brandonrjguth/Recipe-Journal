@@ -23,7 +23,7 @@
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
                         <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                        <button><img src="/imgs/<%if (recipe.favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                        <button id="favouriteButton"><img src="/imgs/<%if (recipe.favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
                     </form>
                         <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
@@ -44,6 +44,45 @@
     </div>
 
     <script>
+        let favouriteButton = document.querySelector("#favouriteButton")
+        let favouriteForm = document.querySelector("#favouriteRecipe")
+
+        // Get the form data
+        // Create a separate function to handle the button click
+        async function handleFavouriteClick(event) {
+            
+            event.preventDefault();
+            let data = {};
+            let formData = new FormData(favouriteForm);
+            formData.forEach((value, key) => {data[key] = value});
+
+            // Toggle the heart icon
+            let heartIcon = favouriteButton.querySelector('img');
+            let currentSrc = heartIcon.getAttribute('src');
+            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
+            heartIcon.setAttribute('src', newSrc);
+
+            try {
+                // Send the form data asynchronously using Fetch API
+                await fetch('/favouriteRecipe', {
+                    method: 'POST',
+                    headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+                });
+                // Form data sent successfully (no need to wait for a response)
+            } catch (error) {
+                console.error('Error sending form data:', error);
+            }
+        }
+
+        // Add event listener to the button
+        favouriteButton.addEventListener("click", handleFavouriteClick);
+
+
+
+
         /*Make delete button send a post request with the recipeURL which will delete current recipe and 
         redirect to the recipe list*/
         let deleteBtn = document.querySelector("#deleteBtn");

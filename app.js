@@ -22,6 +22,7 @@ const upload = multer({ storage: storage });
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
+app.use(express.json());
 
 //Mongo Atlas Connection
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -312,22 +313,12 @@ app.post('/convertRecipe', async(req, res) =>{
   //Favourite submission. Find recipe by recieved URL, if its not a favourite, make it one, else remove it from favourites
   app.post('/favouriteRecipe', async(req, res) => {
     try{
+
       let recipe = await recipes.findOne({title:req.body.title})
       if (recipe.favourite === false){
         await recipes.updateOne({title:req.body.title}, { $set: {"favourite":true}})
       } else {
         await recipes.updateOne({title:req.body.title}, { $set: {"favourite":false}})
-      }
-
-      //redirect based on page the favourite was selected from
-      if (req.get('Referrer').includes("recipeList")){
-        res.redirect("recipeList");
-      } else if (req.get('Referrer').includes('favourites')){
-        res.redirect("favourites");
-      } else if (req.get('Referrer').includes('recipeImg')){
-        res.redirect("recipeImg/" + recipe.title);
-      }else {
-        res.render("recipe", {recipe:recipe})
       }
     
     } catch (err) {

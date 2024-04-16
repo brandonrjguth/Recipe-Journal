@@ -74,33 +74,54 @@
         let deleteBtns = document.querySelectorAll(".deleteBtn");
         let deleteForm = document.querySelectorAll(".deleteRecipe");
         let favouriteForms = document.querySelectorAll(".favouriteRecipe");
+
         favouriteForms.forEach((form, index) => {
-            let favouriteButton = form.querySelector(".favouriteBtn");
+        let favouriteButton = form.querySelector(".favouriteBtn");
 
-            favouriteButton.addEventListener("click", function(event){
-                event.preventDefault();
+        // Get the form data
+        // Create a separate function to handle the button click
+        async function handleFavouriteClick(event) {
+            event.preventDefault();
+            let data = {};
+            let formData = new FormData(form);
+            formData.forEach((value, key) => {data[key] = value});
 
-                // Toggle the heart icon
-                let heartIcon = favouriteButton.querySelector('img');
-                let currentSrc = heartIcon.getAttribute('src');
-                let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
-                heartIcon.setAttribute('src', newSrc);
 
+            // Toggle the heart icon
+            let heartIcon = favouriteButton.querySelector('img');
+            let currentSrc = heartIcon.getAttribute('src');
+            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
+            heartIcon.setAttribute('src', newSrc);
+
+            try {
                 // Send the form data asynchronously using Fetch API
-                form.submit();
-            });
-        });
-        
-        for (i = 0; i < deleteBtns.length; i++) {
-            let attachedForm = i;
-            deleteBtns[i].addEventListener("click", function(){
-                //Make user confirm recipe deletion before submitting the form
-                const response = confirm("Are you sure you want to delete this recipe?")
-                if (response === true){
-                    deleteForm[attachedForm].submit();
-                }
-            })
+                await fetch('/favouriteRecipe', {
+                    method: 'POST',
+                    headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+                });
+                // Form data sent successfully (no need to wait for a response)
+            } catch (error) {
+                console.error('Error sending form data:', error);
+            }
         }
+
+        // Add event listener to the button
+        favouriteButton.addEventListener("click", handleFavouriteClick);
+        });
+            
+            for (i = 0; i < deleteBtns.length; i++) {
+                let attachedForm = i;
+                deleteBtns[i].addEventListener("click", function(){
+                    //Make user confirm recipe deletion before submitting the form
+                    const response = confirm("Are you sure you want to delete this recipe?")
+                    if (response === true){
+                        deleteForm[attachedForm].submit();
+                    }
+                })
+            }
 
 
         const toggleButton = document.getElementById('toggleStylesheet');
