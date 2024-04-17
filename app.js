@@ -54,33 +54,14 @@ async function run() {
   //---------------------------------------------------------------//
 
 
-  let seed = async function() {
+//FUNCTION FOR SEEDING NEW RECIPES MANUALLY//
+
+/*let seed = async function() {
     try {
-let title = `Thai-Style Coconut Chicken & Rice SoupT`
-
-let desc = `If you love Thai green curry, you’ll go coco for this softly spiced soup. You’ll add chicken, rice and veg to a flavourful broth, then let the oven do its thing. Stir through fragrant coriander to serve.`
-
-let ing = `80g fine green beans
-2 tomatoes
-15g fresh root ginger
-40g Thai green curry paste
-11g chicken stock mix
-15ml tamari soy sauce
-80g brown rice
-25g solid creamed coconut
-250g British diced chicken breast
-5g coriander
-1 spring onion
-1 garlic clove
-1 red onion`
-
-let step = `Preheat the oven to 220°C/200°C (fan)/ gas 7 and boil a kettle, then take your chicken out of the fridge, open the packet and let it air.
-Crush the garlic open by squashing it with the side of a knife and discard the skins. Chop the ginger in half. Roughly chop the tomatoes.
-Heat a large, wide-based hob-safe oven-proof casserole dish with a matching lid with a drizzle of vegetable oil over a medium-high heat. Peel and chop the red onion[s] into wedges. Add the onion wedges and diced chicken thigh to the dish with the Thai green curry paste and a pinch of salt.
-Trim the green beans, then chop them into bite-sized pieces and add them to the dish with the chopped tomatoes, crushed garlic and chopped ginger. Add the brown rice, tamari soy sauce and 650ml [1.2L] boiled water with a pinch of sugar and bring to the boil over a high heat. Once boiling, stir in the chicken stock with the creamed coconut until the creamed coconut has dissolved.
-Cover the dish with a lid and put it in the oven for 25 min or until the rice is tender and the chicken is cooked through (nc pink meat!) - this is your Thai green coconut chicken & rice soup.
-Once the soup is nearly ready, chop the coriander finely, including the stalks. Trim, then slice the spring onion[s] roughly.
-To serve, stir the chopped coriander through the Thai green coconut chicken & rice soup and garnish with the chopped spring onion.`
+let title = ``
+let desc = ``
+let ing = ``
+let step = ``
 
 ing = ing.split('\n')
 step = step.split(`\n`)
@@ -102,21 +83,7 @@ await recipes.insertOne({
 
     }
   }
-
-  seed();
-
-
-
-
-
-
-
-
-
-
-
-
-
+  seed();*/
 
   app.get('/', (req, res) => {
     res.redirect('recipeList');
