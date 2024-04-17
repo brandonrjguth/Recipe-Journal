@@ -5,9 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe List</title>
-
-    <link id="dynamicStylesheet" rel="stylesheet" type="text/css" href="/thumbs.css">
     <link rel="stylesheet" type="text/css" href="/main.css">
+    <link rel="stylesheet" type="text/css" href="/recipeList.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,18 +16,56 @@
     
     <%- include('partials/header');%>
     <div class="content">
-        <h1>Shopping List</h1>
-        <ul>
-            
-                <div class="contentRow">
-                    <li>
-                 
-                    </li>
-                </div>
+        <h1 class="listH1">Shopping List</h1>
+
+        <div class="listButtonRow">
+            <form class="col deleteShop" action="/deleteShop" method='post'>
+                <button>Delete List</button>
+            </form>
+            <button id="simplify">Simplified List</button>
+            <button id="detail">Detailed List</button>
+        </div>
+
+
+        <ul class="simplified"> 
+                    <%simplified.forEach((ingredient) => {%>
+                        <li class="ingredient">
+                            <%=ingredient%>
+                        </li>
+                    <%})%>
+        </ul>
+        <ul class="detailed" style="display:none">
+            <%detailed.forEach((ingredient) => {%>
+                <li class="ingredient">
+                    <%=ingredient%>
+                </li>
+            <%})%>
         </ul>
     </div>
 
     <script>
+        let ingredient= document.querySelectorAll(".ingredient");
+        let simplify = document.querySelector("#simplify");
+        let detail = document.querySelector("#detail");
+        let simplified = document.querySelector(".simplified")
+        let detailed = document.querySelector(".detailed");
+
+        ingredient.forEach((ingredient) => {
+            ingredient.addEventListener("click", function(){
+                this.classList.toggle("strikeout");
+            })
+        })
+
+        simplify.addEventListener("click", function(){
+            detailed.style.display = "none";
+            simplified.style.display = "block";
+        });
+
+        detail.addEventListener("click", function(){
+            simplified.style.display = "none";
+            detailed.style.display = "block";
+        })
+
 
      
     </script>

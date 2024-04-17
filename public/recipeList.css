@@ -54,21 +54,43 @@ body{
     width:100%;
 }
 
+.listH1{
+    align-self: start;
+}
+
+.listButtonRow{
+    display:flex;
+    align-self: start;
+    gap:5px;
+}
+
+.listButtonRow button{
+    height:fit-content;
+}
+
+.strikeout {
+    text-decoration: line-through;
+}
+
+.deleteShop{
+    align-self:start;
+    padding-bottom:2rem;
+}
 span{
     align-self:center;
     color: red;
     padding-right:0.5rem;
 }
 
-.deleteBtn, .editBtn, .favouriteBtn{
+.deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
     align-items: center;
     border:none;
     background-color: white;
 }
 
-.deleteBtn img, .editBtn img, .favouriteBtn img {
-    height: 1rem;
+.deleteBtn img, .editBtn img, .favouriteBtn img, .shoppingListBtn img  {
+    height: 1.2rem;
 }
 
 

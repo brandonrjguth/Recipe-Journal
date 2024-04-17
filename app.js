@@ -37,7 +37,6 @@ const client = new MongoClient(uri,  {
 );
 
 
-
 //Wrap everything in an async function so that we can do things asynchronously
 async function run() {
   try {
@@ -49,12 +48,75 @@ async function run() {
   //Create Database and Collection
   const db = client.db('recipeBook');
   const recipes = db.collection('recipes');
-  const images = db.collection('images');
-
 
   //---------------------------------------------------------------//
   //---------------------GET ROUTES--------------------------------//
   //---------------------------------------------------------------//
+
+
+  let seed = async function() {
+    try {
+let title = `Thai-Style Coconut Chicken & Rice SoupT`
+
+let desc = `If you love Thai green curry, you’ll go coco for this softly spiced soup. You’ll add chicken, rice and veg to a flavourful broth, then let the oven do its thing. Stir through fragrant coriander to serve.`
+
+let ing = `80g fine green beans
+2 tomatoes
+15g fresh root ginger
+40g Thai green curry paste
+11g chicken stock mix
+15ml tamari soy sauce
+80g brown rice
+25g solid creamed coconut
+250g British diced chicken breast
+5g coriander
+1 spring onion
+1 garlic clove
+1 red onion`
+
+let step = `Preheat the oven to 220°C/200°C (fan)/ gas 7 and boil a kettle, then take your chicken out of the fridge, open the packet and let it air.
+Crush the garlic open by squashing it with the side of a knife and discard the skins. Chop the ginger in half. Roughly chop the tomatoes.
+Heat a large, wide-based hob-safe oven-proof casserole dish with a matching lid with a drizzle of vegetable oil over a medium-high heat. Peel and chop the red onion[s] into wedges. Add the onion wedges and diced chicken thigh to the dish with the Thai green curry paste and a pinch of salt.
+Trim the green beans, then chop them into bite-sized pieces and add them to the dish with the chopped tomatoes, crushed garlic and chopped ginger. Add the brown rice, tamari soy sauce and 650ml [1.2L] boiled water with a pinch of sugar and bring to the boil over a high heat. Once boiling, stir in the chicken stock with the creamed coconut until the creamed coconut has dissolved.
+Cover the dish with a lid and put it in the oven for 25 min or until the rice is tender and the chicken is cooked through (nc pink meat!) - this is your Thai green coconut chicken & rice soup.
+Once the soup is nearly ready, chop the coriander finely, including the stalks. Trim, then slice the spring onion[s] roughly.
+To serve, stir the chopped coriander through the Thai green coconut chicken & rice soup and garnish with the chopped spring onion.`
+
+ing = ing.split('\n')
+step = step.split(`\n`)
+
+await recipes.insertOne({
+          title: title,
+          favourite:false,
+          isImg:false,
+          isLink:false,
+          recipeUrl: "noUrl",
+          images: null,
+          description: desc,
+          steps: step,
+          ingredients:ing,
+          categories:null
+        })
+
+    } catch {
+
+    }
+  }
+
+  seed();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   app.get('/', (req, res) => {
     res.redirect('recipeList');
@@ -136,6 +198,44 @@ async function run() {
     try{
       let recipe = await recipes.findOne({title:req.params.title})
       res.render("editRecipe", {recipe:recipe, recipeExists:false});
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  app.get('/shoppingList', async(req, res) => {
+    try{
+      let list = await recipes.find({onList:true}).toArray();
+      let ingredients = [];
+      list.forEach((listItem) => {
+        listItem.ingredients.forEach((ing) => {
+          ingredients.push(ing);
+        })
+      })
+    // Regular expression to match numbers, units, and fractions
+    let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|cups|\bg\b|grams|kg|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|½|¼|¾|\b\d+\b|,|\/+/gi;
+    
+
+    // Remove numbers, units, fractions, then sort based on cleaned
+    
+    let ingredientsWithOriginals = ingredients.map(ingredient => ({
+      original: ingredient,
+      cleaned: ingredient.replace(regex, '').trim()
+    }));
+    
+    ingredientsWithOriginals.sort((a, b) => a.cleaned.localeCompare(b.cleaned, undefined, {sensitivity: 'base'}));
+    let detailedIngredients = ingredientsWithOriginals.map(item => item.original);
+
+
+
+    //Simplified version of ingredients with no duplicates
+    let simplifiedIngredients = ingredients.map(ingredient => ingredient.toLowerCase().replace(regex, '').trim()).sort();
+    simplifiedIngredients.sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));
+    simplifiedIngredients = [...new Set(simplifiedIngredients)];
+
+
+    
+      res.render("shoppingList", {simplified:simplifiedIngredients, detailed:detailedIngredients})
     } catch (err) {
       console.error(err);
     }
@@ -424,6 +524,25 @@ app.post('/convertRecipe', async(req, res) =>{
       console.log(err);
     }
   });
+
+  app.post('/shoppingList', async(req, res) => {
+    try{
+      let result = await recipes.findOne({title:req.body.title});
+      if (result.onList){
+        await recipes.updateOne({title:req.body.title}, { $set: {"onList":false}})
+      } else {
+        await recipes.updateOne({title:req.body.title}, { $set: {"onList":true}})
+      }
+    } catch{
+
+    }
+  });
+
+  app.post("/deleteShop", async(req, res) => {
+    await recipes.updateMany({},{ $set: {"onList":false}})
+    res.redirect("shoppingList");
+  })
+  
   
   //Initiate Express listening on port
   app.listen(port, () => {

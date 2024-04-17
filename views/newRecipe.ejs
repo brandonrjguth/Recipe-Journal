@@ -191,7 +191,7 @@
         let submitRecipeForm = document.querySelector("#submitRecipe");
 
         //Only render step and ingredient node logic if it is a manually typed link
-        if (isLink === "false" && !isImg === "false"){
+        if (isLink === "false" && isImg === "false"){
 
             //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
             let stepAddButton = document.getElementById("addStep");
@@ -348,6 +348,7 @@
                 initDeleteButtons("steps");
             })
             ingredientAddButton.addEventListener("click", function(){
+                console.log("here")
                 setNumber("ingredients");
                 create("ingredients");
                 initDeleteButtons("ingredients");

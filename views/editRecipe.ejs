@@ -114,9 +114,9 @@
     </div>
 
     <script>
-        let recipeUrl = "<%=JSON.stringify(recipe.recipeUrl).replace(/^"|"$/g, '')%>";
-        let isImg ="<%=JSON.stringify(recipe.isImg).replace(/^"|"$/g, '')%>"
-        
+        let isLink = "<%=JSON.stringify(recipe.isLink).replace(/^"|"$/g, '')%>";
+        let isImg ="<%=JSON.stringify(recipe.isImg).replace(/^"|"$/g, '')%>";
+
         //--------------------------TAG SECTION LOGIC ----------------------//
         const tagUl = document.querySelector(".tagContent ul"),
         tagInput = document.querySelector(".tagContent ul input"),
@@ -189,7 +189,8 @@
     // -----------------------------       END OF TAG LOGIC       ------------------------------------//
     // ----------------------------------------------------------------------------------------------//
         
-    if (recipeUrl == "noUrl" && !isImg){
+    if (isLink === "false" && isImg === "false"){
+        console.log("here")
         
         //Assign button for adding steps/ingredients, and step area/ingredients for appending to.
         let stepAddButton = document.getElementById("addStep");

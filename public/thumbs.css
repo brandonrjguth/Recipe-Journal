@@ -13,7 +13,7 @@ body{
 
 .toggle{
     gap:0.5rem;
-    padding-bottom:1rem;
+    padding-bottom:3rem;
 }
 
 #toggleStylesheet{
@@ -39,6 +39,10 @@ body{
     gap:2rem;
 }
 
+.buttons.row{
+    justify-content: center;
+}
+
 img.recipeImg {
     max-height: 14rem;
     width: 100%;
@@ -61,7 +65,7 @@ img.recipeImg {
 }
 
 .contentRow{
-    display:flex;
+    display:grid;
     align-items: center;
     justify-content: space-between;
     width:100%;
@@ -70,6 +74,7 @@ img.recipeImg {
     grid-template-columns: 1fr;
     max-height: 20rem;
     grid-template-rows: 2fr 10fr 1fr;
+    padding-bottom:1rem;
 }
 
 span{
@@ -78,15 +83,15 @@ span{
     padding-right:0.5rem;
 }
 
-.deleteBtn, .editBtn, .favouriteBtn{
+.deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
     align-items: center;
     border:none;
     background-color: white;
 }
 
-.deleteBtn img, .editBtn img, .favouriteBtn img {
-    height: 1rem;
+.deleteBtn img, .editBtn img, .favouriteBtn img, .shoppingListBtn img {
+    height: 1.5rem;
 }
 
 
