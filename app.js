@@ -131,7 +131,8 @@ await recipes.insertOne({
   //send array of all recipes in collection to recipeList page
   app.get('/recipeList', async(req, res) => {
     try{
-    let recipeList = await recipes.find().sort({"title":1}).toArray()
+    let recipeList = await recipes.find().collation({locale: "en"}).sort({"title":1}).toArray()
+    console.log(recipeList);
     res.render('recipeList', {recipeList:recipeList, favourites:false})
     } catch (err) {
       console.error(err);
@@ -401,10 +402,8 @@ app.post('/convertRecipe', async(req, res) =>{
       let ingredients = [];
       let categories = undefined;
 
-      console.log(req.body.categories);
       if (req.body.categories){
         categories = req.body.categories.split(",")
-        console.log(categories);
       }
 
       //Add all steps and ingredients into an array to be stored in the database
@@ -434,7 +433,7 @@ app.post('/convertRecipe', async(req, res) =>{
       //update the recipe
       await recipes.updateMany({title:req.params.title}, { $set: {
         "title": req.body.title,
-        "recipeUrl": req.body.recipeUrl || "noUrl",
+        "recipeUrl": req.body.link || "noUrl",
         "description": req.body.description,
         "steps": steps,
         "ingredients":ingredients,

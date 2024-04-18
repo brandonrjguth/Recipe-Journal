@@ -45,12 +45,25 @@
 
                     
                     <% if (recipeList[i].isImg){%>
-                    <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: block;" height="90%" width="100%">
-                    <%} else if (recipeList[i].images == undefined) {%>
-                    <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block;" width="90%">
+                    <a href="/recipe/<%=recipeList[i].title%>">
+                        <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: block;">
+                    
+                    <%} else if (recipeList[i].images == undefined && recipeList[i].isLink){%>
+                    <a href="<%=recipeList[i].recipeUrl%>">
+                        <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block;">
+                    </a>
+
+                    <%} else if (recipeList[i].images == undefined && !recipeList[i].isLink){%>
+                    <a href="/recipe/<%=recipeList[i].title%>">   
+                        <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block;">
+                    </a>
+
                     <%} else {%>
-                    <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" style="display: block;" height="90%" width="100%">
+                    <a href="/recipe/<%=recipeList[i].title%>">    
+                        <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" style="display: block;">
+                    </a>
                     <%}%>
+                
                 
 
                     <div class="buttons row">
