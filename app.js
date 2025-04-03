@@ -318,7 +318,7 @@ await recipes.insertOne({
           categories:categories
         })
 
-    res.redirect("recipeList");
+    res.redirect("recipe/"+req.body.title);
     } catch (err) {
       console.error(err);
     }
@@ -371,7 +371,7 @@ app.post('/convertRecipe', async(req, res) =>{
         steps:recipe.instructions,
         categories:categories
       })
-      res.redirect('recipeList');
+      res.redirect('recipe/'+recipe.name);
     }
   } catch (err){
     console.log(err);
