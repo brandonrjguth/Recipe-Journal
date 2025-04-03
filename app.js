@@ -7,7 +7,7 @@ const sharp = require('sharp');
 const recipeScraper = require("@brandonrjguth/recipe-scraper");
 const fs = require('fs');
 const multer  = require('multer');
-require('dotenv').config();
+//require('dotenv').config();
 
 //Setup express, port
 const app = express();
