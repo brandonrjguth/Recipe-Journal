@@ -4,4 +4,6 @@ node_modules/
 fly.toml
 Dockerfile
 .dockerignore
-
+node_modules/*
+/node_modules/mongodb
+/node_modules
