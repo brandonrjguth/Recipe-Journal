@@ -96,6 +96,11 @@ button{
     flex-wrap:wrap;
   }
 
+  .recipeImg{
+    object-fit: cover;
+    max-width: 94%;
+  }
+
 @media (min-width: 768px) {
     .content{
       display:grid;
@@ -152,6 +157,9 @@ button{
     .recipeHero .recipeImg{
         grid-area:img;
         padding-right:2rem;
+        object-fit: cover;
+        max-width: 30vw;
+          
     }
 
     .title{

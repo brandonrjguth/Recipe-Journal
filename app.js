@@ -7,7 +7,7 @@ const sharp = require('sharp');
 const recipeScraper = require("@brandonrjguth/recipe-scraper");
 const fs = require('fs');
 const multer  = require('multer');
-//require('dotenv').config();
+require('dotenv').config();
 
 //Setup express, port
 const app = express();
@@ -113,7 +113,7 @@ await recipes.insertOne({
   })
 
   app.get('/convertRecipe', (req, res) =>{
-    res.render('convertRecipe', {recipeExists:false});
+    res.render('convertRecipe', {recipeExists:false, recipeSiteError:false});
   })
 
   app.get('/newRecipeLink', (req, res) => {
@@ -318,7 +318,15 @@ await recipes.insertOne({
           categories:categories
         })
 
-    res.redirect("recipe/"+req.body.title);
+
+    if (isImg){
+      res.redirect("recipeIMG/"+req.body.title)
+    } else if (isLink){
+      res.redirect("recipeList")
+    } else {
+      res.redirect("recipe/"+req.body.title);
+    }
+
     } catch (err) {
       console.error(err);
     }
@@ -375,6 +383,7 @@ app.post('/convertRecipe', async(req, res) =>{
     }
   } catch (err){
     console.log(err);
+    res.render('convertRecipe', {recipeSiteError:true, recipeExists:false})
   }
 })
 

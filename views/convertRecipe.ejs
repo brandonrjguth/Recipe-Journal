@@ -16,6 +16,7 @@
 
     <!---->
     <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
+    <% if (recipeSiteError === true){%><div class="warning">This recipe website is currently unsupported.</div><%}%>
     <div class="newRecipeWrapper">
          <!--Recipe Form-->
          <!--If the submitted recipe already exists this page is reloaded with an error message-->
@@ -23,9 +24,6 @@
             patternValidity and empty inputs for entire page before submitting-->
         <form class="col" id='submitRecipe' action='/convertRecipe' method='post'>
             <h1>Convert Recipe</h1>
-            <p>Enter a recipe link from your favourite site to save it to your recipe journal in a prettied up and slimmed down format.</p><br>
-            <p><i>Currently only supports a limited number of websites. Try any from <a>budgetbytes.com</a></i></p>
-            <br>
             <div class="favourite col">
                 <h2>Favourite</h2>
                 <input type="checkbox" class="checkbox" name="favourite"></input>
