@@ -82,14 +82,19 @@ async function run() {
     passport.use(new LocalStrategy(
       async (username, password, done) => {
         try {
-          const user = await users.findOne({ username: username });
+          // Case-insensitive username lookup using regex
+          const user = await users.findOne({ username: { $regex: `^${username}$`, $options: 'i' } });
           if (!user) {
-            return done(null, false, { message: 'Incorrect username.' });
+            // Keep the generic message for security
+            return done(null, false, { message: 'Incorrect username or password.' });
           }
+          // Compare password
           const match = await bcrypt.compare(password, user.password);
           if (!match) {
-            return done(null, false, { message: 'Incorrect password.' });
+             // Keep the generic message for security
+            return done(null, false, { message: 'Incorrect username or password.' });
           }
+          // Return the user object (with original casing) on success
           return done(null, user);
         } catch (err) {
           return done(err);
