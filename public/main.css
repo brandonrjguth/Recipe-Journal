@@ -128,6 +128,11 @@ textarea{
     text-decoration:none;
 }
 
+.mainMenu, .user-bar{
+    display: flex;
+    gap: 1rem;
+}
+
 /* --- Hamburger Menu Styles --- */
 
 /* Hide hamburger on desktop by default, style it */
@@ -186,6 +191,11 @@ textarea{
         display: block; /* Show hamburger on mobile */
     }
 
+    .mainMenu{
+        flex-direction: column;
+    }
+
+
     /* Hide desktop search bar on mobile */
     .searchBar {
         display: none;
@@ -226,10 +236,10 @@ textarea{
         flex-direction: row;
         position: static; /* Override absolute positioning */
         box-shadow: none; /* Override mobile shadow */
-        padding:0.5rem 0; /* Restore original padding */
+        padding:0.5rem; /* Restore original padding */
         gap:1rem; /* Restore original gap */
         width: auto; /* Override 100% width */
-        justify-content:center; /* Keep original centering */
+        justify-content:space-around; /* Keep original centering */
         align-items: center; /* Keep original alignment */
     }
      .menuShelf li {

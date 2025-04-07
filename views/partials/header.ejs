@@ -33,17 +33,23 @@
         <li><a href="/newRecipePage">New Recipe</a></li>
     </ul>
     <ul class="menuShelf" id="mobile-menu"> <!-- Added ID -->
-        <li><a href="/favourites">Favourites</a></li>
-        <li><a href="/recipeList">Recipes</a></li>
-        <li><a href="/recipeFrom">Create</a></li>
-        <li><a href="/shoppingList">Groceries</a></li>
-        <% if (currentUser) { %>
-            <li class="user-greeting">Welcome, <%= currentUser.username %></li> 
-            <li><a href="/logout">Logout</a></li>
+        <div class="mainMenu">
+            <li><a href="/favourites">Favourites</a></li>
+            <li><a href="/recipeList">Recipes</a></li>
+            <li><a href="/recipeFrom">Create</a></li>
+            <li><a href="/shoppingList">Groceries</a></li>
+        </div>
+
+        <div class="user-bar">
+        <% if (currentUser) { %>  
+                <li class="user-greeting"><%= currentUser.username %></li> 
+                <li class="user-greeting">|</li> 
+                <li><a href="/logout">Logout</a></li>
         <% } else { %>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>  
         <% } %>
+        </div>
     </ul>
 </div>
 
