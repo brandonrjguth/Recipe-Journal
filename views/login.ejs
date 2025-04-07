@@ -5,30 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Recipe Journal</title>
     <link rel="stylesheet" href="/main.css"> <!-- Link to your main CSS -->
+    <link rel="stylesheet" href="/recipe.css"> <!-- Assuming recipe.css has some relevant form/button styles -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+        /* Basic form styling - can be moved to a dedicated CSS file */
+        .auth-container {
+            max-width: 500px;
+            margin: 40px auto; /* Add some margin */
+            padding: 20px;
+            background-color: #fff; /* Optional: background for the form area */
+            border-radius: 8px; /* Optional: rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
             text-align: center;
         }
-        .login-container h1 {
-            margin-bottom: 20px;
-            color: #333;
+        .auth-container h1 {
+             margin-bottom: 20px;
+             color: #333;
         }
-        .form-group {
+         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
@@ -36,6 +32,7 @@
             display: block;
             margin-bottom: 5px;
             color: #555;
+            font-weight: 500;
         }
         .form-group input {
             width: 100%;
@@ -43,9 +40,10 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box; /* Include padding in width */
+            font-family: 'Poppins', sans-serif; /* Ensure font consistency */
         }
-        .btn {
-            background-color: #5cb85c;
+         .btn-submit { /* Use a more specific class */
+            background-color: rgb(221, 60, 42); /* Match header color */
             color: white;
             padding: 12px 20px;
             border: none;
@@ -54,33 +52,38 @@
             font-size: 16px;
             width: 100%;
             margin-top: 10px;
+            font-weight: 500;
         }
-        .btn:hover {
-            background-color: #4cae4c;
+        .btn-submit:hover {
+            background-color: rgb(190, 40, 25); /* Darker shade */
         }
-        .error-message {
+         .error-message {
             color: #d9534f;
             background-color: #f2dede;
             border: 1px solid #ebccd1;
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 15px;
+            text-align: left;
         }
-        .register-link {
+        .switch-link { /* Use a more specific class */
             margin-top: 20px;
             font-size: 14px;
         }
-        .register-link a {
-            color: #007bff;
+        .switch-link a {
+            color: rgb(221, 60, 42); /* Match header color */
             text-decoration: none;
+            font-weight: 500;
         }
-        .register-link a:hover {
+        .switch-link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <%- include('partials/header'); %>
+
+    <div class="auth-container"> <!-- Changed class -->
         <h1>Login</h1>
 
         <% if (typeof error !== 'undefined' && error) { %>
@@ -96,10 +99,10 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn">Login</button>
+            <button type="submit" class="btn-submit">Login</button> <!-- Changed class -->
         </form>
 
-        <div class="register-link">
+        <div class="switch-link"> <!-- Changed class -->
             Don't have an account? <a href="/register">Register here</a>
         </div>
     </div>

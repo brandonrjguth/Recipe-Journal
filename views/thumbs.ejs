@@ -57,7 +57,7 @@
                         <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                         <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
-                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].favourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button>
+                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button> <%# Updated condition %>
                         </form>
                     </div>
                 </div>
