@@ -529,7 +529,7 @@ async function run() {
         const userId = req.user._id;
         //setup initial variables to be used in recipe object
         let title = req.body.title;
-        // let favourite = !!req.body.favourite; // Obsolete - favourites handled separately
+        let favourite = req.body.favourite; 
         let isImg = false;
         let isLink = false;
         let recipeUrl = "noUrl";
@@ -546,7 +546,7 @@ async function run() {
 
         //Redirect back to page with error message if this recipe name already exists
         // Consider scoping this check to the user? Or keep titles globally unique? Currently global.
-        let result = await recipes.findOne({ title: title });
+        let result = await recipes.findOne({ title: title, userId:userId });
         if (result !== null) {
           res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false })
           return
@@ -601,10 +601,10 @@ async function run() {
         };
         await recipes.insertOne(newRecipeDoc);
 
-        // Optionally add to favourites if checkbox was checked (if you add such a checkbox)
-        // if (!!req.body.favourite) {
-        //    await userFavourites.insertOne({ userId: userId, recipeId: newRecipeDoc._id });
-        // }
+     
+        if (!!req.body.favourite) {
+           await userFavourites.insertOne({ userId: userId, recipeId: newRecipeDoc._id });
+        }
 
 
         if (isImg) {
@@ -630,7 +630,7 @@ async function run() {
         //use recipeScraper to generate recipe from URL
         const url = req.body.link;
         let recipeData = await recipeScraper(url).then(recipe => { return recipe }); // Renamed variable
-
+        let favourite = req.body.favourite; 
         let categories = undefined;
         if (req.body.categories) {
           categories = req.body.categories.split(",");
@@ -638,7 +638,7 @@ async function run() {
 
 
         //Check if recipe title already exists in DB (globally or per user?) - Currently global
-        let result = await recipes.findOne({ title: recipeData.name });
+        let result = await recipes.findOne({ title: recipeData.name, userId: userId });
         if (result !== null) {
           console.log("recipeExists");
           res.render("convertRecipe", { recipeExists: true, recipeSiteError: false }) // Pass recipeSiteError:false
@@ -668,7 +668,6 @@ async function run() {
           //Add recipe
           const newRecipeDoc = {
             title: recipeData.name,
-            // favourite:false, // Obsolete
             isImg: false, // Converted recipes are not image recipes by default
             isLink: false, // Converted recipes are not link recipes by default
             recipeUrl: "noUrl", // Store original URL? Maybe add a sourceUrl field?
@@ -681,10 +680,10 @@ async function run() {
           };
           await recipes.insertOne(newRecipeDoc);
 
-          // Optionally add to favourites if checkbox was checked
-          // if (!!req.body.favourite) {
-          //    await userFavourites.insertOne({ userId: userId, recipeId: newRecipeDoc._id });
-          // }
+          
+           if (!!req.body.favourite) {
+              await userFavourites.insertOne({ userId: userId, recipeId: newRecipeDoc._id });
+          }
 
           res.redirect('recipe/' + recipeData.name);
         }
@@ -821,7 +820,7 @@ async function run() {
         const titleToDelete = req.body.title;
 
         // Verify ownership before deleting
-        const recipeToDelete = await recipes.findOne({ title: titleToDelete });
+        const recipeToDelete = await recipes.findOne({ title: titleToDelete, userId:userId });
         if (!recipeToDelete) {
           console.log(`Delete failed: Recipe "${titleToDelete}" not found.`);
           // Recipe doesn't exist, maybe already deleted. Redirect gracefully.

@@ -2,10 +2,14 @@
     <div class="logo">
         <div class="logoWrapper">
             <a href="/" class="logoName"><img src="/imgs/logofull-none.png" class="logoName"></a>
-            <div class="searchButtonMobile">
+            <div class="searchButtonMobile"> <!-- Keep this for the search toggle -->
                 <button type="button" class="searchButton"><img src="/imgs/search-white.svg"></button>
             </div>
-            <div class="searchBar">
+             <!-- Hamburger Button (Mobile Only) -->
+            <button type="button" id="hamburger-btn" class="hamburger-button">
+                &#9776; <!-- Unicode hamburger icon -->
+            </button>
+            <div class="searchBar"> <!-- Desktop Search -->
                 <form class="row searchInput" action='/search' method='post'>
                     <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
                     <button type="submit" class="searchButton"><img src="/imgs/search-white.svg"></button>
@@ -28,16 +32,16 @@
         <li><a href="/recipeList">Recipe List</a></li>
         <li><a href="/newRecipePage">New Recipe</a></li>
     </ul>
-    <ul class="menuShelf">
-        <li><a href="/favourites">Favourites</a></li>|
-        <li><a href="/recipeList">Recipes</a></li> |
-        <li><a href="/recipeFrom">Create</a></li> |
-        <li><a href="/shoppingList">Groceries</a></li> |
+    <ul class="menuShelf" id="mobile-menu"> <!-- Added ID -->
+        <li><a href="/favourites">Favourites</a></li>
+        <li><a href="/recipeList">Recipes</a></li>
+        <li><a href="/recipeFrom">Create</a></li>
+        <li><a href="/shoppingList">Groceries</a></li>
         <% if (currentUser) { %>
-            <li>Welcome, <%= currentUser.username %></li> |
+            <li class="user-greeting">Welcome, <%= currentUser.username %></li> 
             <li><a href="/logout">Logout</a></li>
         <% } else { %>
-            <li><a href="/login">Login</a></li> |
+            <li><a href="/login">Login</a></li>
             <li><a href="/register">Register</a></li>
         <% } %>
     </ul>
@@ -48,6 +52,14 @@
     let searchBarMobile = document.querySelector(".searchBarMobile");
 
     searchButtonMobile.addEventListener("click", () => {
-        searchBarMobile.classList.remove("hidden");
-    })
+        searchBarMobile.classList.toggle("hidden"); // Use toggle instead of remove
+    });
+
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburgerBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active'); // Toggle the 'active' class
+    });
 </script>

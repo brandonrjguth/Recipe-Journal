@@ -25,6 +25,7 @@ textarea{
 }
 
 .header{
+    position: relative; /* Added for absolute positioning context */
     display:flex;
     flex-direction: column;
     box-shadow:  2px 1px 5px #000000;
@@ -127,6 +128,76 @@ textarea{
     text-decoration:none;
 }
 
+/* --- Hamburger Menu Styles --- */
+
+/* Hide hamburger on desktop by default, style it */
+.hamburger-button {
+    display: none; 
+    background: none;
+    border: none;
+    color: white; /* Or your desired icon color */
+    font-size: 1.8rem; /* Adjust size */
+    cursor: pointer;
+    padding: 0 0.5rem; /* Adjust padding */
+    align-self: center;
+}
+
+/* Mobile Styles (adjust max-width as needed) */
+@media only screen and (max-width: 599px) {
+    .menuShelf {
+        display: none; /* Hide menu by default on mobile */
+        position: absolute;
+        top: 100%; /* Position below the main header bar */
+        left: 0;
+        width: 100%;
+        background-color: #191919; /* Match desktop background */
+        flex-direction: column;
+        padding: 0; /* Remove horizontal padding */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional shadow */
+        z-index: 1000; /* Ensure it's above other content */
+    }
+
+    .menuShelf.active {
+        display: flex; /* Show when active */
+    }
+
+    .menuShelf li {
+        width: 100%;
+        text-align: center;
+        padding: 0; /* Remove padding from li */
+        border-bottom: 1px solid #333; /* Separator lines */
+        box-sizing: border-box;
+    }
+     .menuShelf li:last-child {
+        border-bottom: none; /* Remove border from last item */
+    }
+
+     .menuShelf li a, .menuShelf li.user-greeting { /* Style greeting too */
+        display: block; /* Make links fill the width */
+        padding: 12px 0; /* Add padding to links/greeting instead of li */
+        color: white;
+        text-decoration: none;
+    }
+     .menuShelf li a:hover {
+        background-color: #333; /* Optional hover effect */
+    }
+
+    .hamburger-button {
+        display: block; /* Show hamburger on mobile */
+    }
+
+    /* Hide desktop search bar on mobile */
+    .searchBar {
+        display: none;
+    }
+    /* Ensure mobile search toggle button is visible */
+     .searchButtonMobile {
+        display: flex; 
+    }
+}
+
+
+/* Desktop Styles (adjust min-width to match mobile max-width + 1px) */
 @media only screen and (min-width: 600px) {
     .searchBar{
         align-self:center;
@@ -142,9 +213,39 @@ textarea{
         display:none;
     }
 
-    .searchButtonMobile{
-        display:none;
+    /* Ensure mobile search toggle and hamburger are hidden on desktop */
+    .searchButtonMobile {
+        display: none;
     }
+    .hamburger-button {
+        display: none;
+    }
+    /* Ensure desktop menu shelf is displayed correctly */
+    .menuShelf {
+        display: flex;
+        flex-direction: row;
+        position: static; /* Override absolute positioning */
+        box-shadow: none; /* Override mobile shadow */
+        padding:0.5rem 0; /* Restore original padding */
+        gap:1rem; /* Restore original gap */
+        width: auto; /* Override 100% width */
+        justify-content:center; /* Keep original centering */
+        align-items: center; /* Keep original alignment */
+    }
+     .menuShelf li {
+        width: auto; /* Override 100% width */
+        border-bottom: none; /* Ensure no bottom border */
+        padding: 0; /* Reset padding */
+        text-align: left; /* Reset text alignment */
+    }
+     .menuShelf li a, .menuShelf li.user-greeting {
+        display: inline; /* Reset display */
+        padding: 0; /* Reset padding */
+    }
+     .menuShelf li a:hover {
+        background-color: transparent; /* Reset hover */
+    }
+
 
     .searchInput{
         box-shadow:none;
