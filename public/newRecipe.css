@@ -46,7 +46,7 @@ input[type="submit"] {
     color:red;
     text-align:center;
     font-size:1rem;
-    padding-top:2rem;
+    padding:2rem 0rem 0.5rem 0.5rem;
 }
 
 i{
