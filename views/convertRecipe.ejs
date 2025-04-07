@@ -24,11 +24,14 @@
             patternValidity and empty inputs for entire page before submitting-->
         <form class="col" id='submitRecipe' action='/convertRecipe' method='post'>
             <h1>Convert Recipe</h1>
-            <div class="favourite col">
+            <div class="favourite col form-group"> <!-- Added form-group class -->
                 <h2>Favourite</h2>
-                <input type="checkbox" class="checkbox" name="favourite"></input>
+                 <div class="custom-checkbox-wrapper">
+                    <input type="checkbox" class="checkbox custom-checkbox-input" id="favouriteCheckbox" name="favourite">
+                    <label for="favouriteCheckbox" class="custom-checkbox-label"></label> <!-- Added Label -->
+                </div>
             </div>
-            <div class="tagWrapper">
+            <div class="tagWrapper form-group"> <!-- Added form-group class -->
                 <input type="hidden" name="categories" class="categories"></input>
                 <div class="tagTitle">
                   <h2>Categories</h2>

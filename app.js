@@ -262,6 +262,18 @@ async function run() {
       }
     });
 
+    // Route for the supported sites page
+    app.get('/supported-sites', ensureAuthenticated, (req, res) => { // Protected (ensure user is logged in to see it)
+        try {
+            // Currently just renders the static EJS page
+            // Future enhancement: Could fetch the list dynamically if needed
+            res.render('supportedSites.ejs');
+        } catch (err) {
+            console.error("Error rendering supported sites page:", err);
+            res.status(500).send('Error displaying supported sites');
+        }
+    });
+
     //Find the recipe by title and render its page, ensuring user ownership and favourite status
     app.get("/recipe/:title", ensureAuthenticated, async (req, res) => { // Protected & User-Specific Check
       try {

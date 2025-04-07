@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supported Recipe Websites</title>
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+    <style>
+        .supported-sites-wrapper {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .supported-sites-wrapper h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .supported-sites-list {
+            list-style: none;
+            padding: 0;
+            column-count: 2; /* Display in two columns on wider screens */
+            column-gap: 2rem;
+        }
+        .supported-sites-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            color: #555;
+        }
+        @media (max-width: 600px) {
+            .supported-sites-list {
+                column-count: 1; /* Single column on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <div class="supported-sites-wrapper">
+        <h1>Supported Recipe Websites</h1>
+        <p style="text-align: center; margin-bottom: 2rem; color: #666;">You can import recipes by pasting links from the following websites:</p>
+        <ul class="supported-sites-list">
+            <li>101Cookbooks.com</li>
+            <li>Allrecipes.com</li>
+            <li>AmbitiousKitchen.com</li>
+            <li>AverieCooks.com</li>
+            <li>BBCGoodFood.com</li>
+            <li>BBC.com</li>
+            <li>BonAppetit.com</li>
+            <li>BudgetBytes.com</li>
+            <li>CentralTexasFoodBank.org</li>
+            <li>ChefJonWatts.com</li>
+            <li>ClosetCooking.com</li>
+            <li>CookieAndKate.com</li>
+            <li>CopyKat.com</li>
+            <li>DamnDelicious.net</li>
+            <li>EatingOnADime.com</li>
+            <li>EatingWell.com</li>
+            <li>Epicurious.com</li>
+            <li>FoodAndWine.com</li>
+            <li>FoodieWithFamily.com</li>
+            <li>FoodNetwork.com</li>
+            <li>GimmeDelicious.com</li>
+            <li>GimmeSomeOven.com</li>
+            <li>InspiredTaste.net</li>
+            <li>JamieOliver.com</li>
+            <li>JulieBlanner.com</li>
+            <li>KitchenStories.com</li>
+            <li>MelsKitchenCafe.com</li>
+            <li>MinimalistBaker.com</li>
+            <li>MyRecipes.com</li>
+            <li>NomNomPaleo.com</li>
+            <li>OmnivoresCookbook.com</li>
+            <li>PinchOfYum.com</li>
+            <li>RecipeTinEats.com</li>
+            <li>SeriousEats.com</li>
+            <li>SimplyRecipes.com</li>
+            <li>SmittenKitchen.com</li>
+            <li>TamingTwins.com</li>
+            <li>TasteOfHome.com</li>
+            <li>TastesBetterFromScratch.com</li>
+            <li>ThatLowCarbLife.com</li>
+            <li>TheBlackPeppercorn.com</li>
+            <li>ThePioneerWoman.com</li>
+            <li>TheRealFoodDrs.com</li>
+            <li>TheRecipeCritic.com</li>
+            <li>TheSpruceEats.com</li>
+            <li>WhatsGabyCooking.com</li>
+            <li>Woolworths</li>
+            <li>Yummly.com</li>
+        </ul>
+    </div>
+
+</body>
+</html>

@@ -14,40 +14,41 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 textarea {
-  font-family: 'Arial', sans-serif;
-  padding: 10px;
+  font-family: 'Poppins', sans-serif; /* Consistent font */
+  padding: 10px 12px; /* Adjusted padding */
   margin: 5px 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: inset 0 1px 3px #ddd;
+  border-radius: 6px; /* Slightly more rounded */
+  box-shadow: none; /* Remove inset shadow */
   outline: none;
-  max-width: -webkit-fill-available;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding and border in width */
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-  border-color: #66afe9;
-  box-shadow: inset 0 1px 3px #ddd, 0 0 8px rgba(102, 175, 233, .6);
+  border-color: #555; /* Darker focus border */
+  box-shadow: 0 0 5px rgba(85, 85, 85, 0.3); /* Subtle focus shadow */
 }
 
-input[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+/* Remove default submit styling if not used */
+/* input[type="submit"] { ... } */
 
 .warning{
-    color:red;
+    color: #c00; /* Darker red */
     text-align:center;
-    font-size:1rem;
-    padding:2rem 0rem 0.5rem 0.5rem;
+    font-size: 0.95rem; /* Slightly smaller */
+    padding: 1rem 0.5rem; /* Adjusted padding */
+    background-color: #fdd; /* Light red background */
+    border: 1px solid #fbb; /* Red border */
+    border-radius: 6px;
+    margin: 1rem auto; /* Center and add margin */
+    max-width: 600px; /* Limit width */
 }
+
+/* The duplicated .warning rule and orphaned lines above have been removed */
 
 i{
   font-weight:700;
@@ -63,12 +64,16 @@ input[type="submit"]:hover {
 }
 
 .newRecipeWrapper h1{
-    padding-top:1rem;
-    padding-bottom:1rem;
+    padding-top: 0; /* Remove top padding */
+    padding-bottom: 1.5rem; /* Increase bottom padding */
+    text-align: center; /* Center title */
+    font-weight: 400; /* Lighter weight */
+    color: #333;
 }
 .newRecipeWrapper h2, .newRecipeWrapper h3{
-    font-size:1rem;
-    font-weight:500;
+    font-size: 1.1rem; /* Slightly larger section titles */
+    font-weight: 500;
+    color: #444; /* Dark grey color */
 }
 
 .upload h2{
@@ -81,27 +86,85 @@ input[type="submit"]:hover {
 }
 
 #submitRecipe{
-    padding: 2rem 1rem;
-    width:100%;
-    background-color: white;
+    padding: 2rem; /* Consistent padding */
+    width: 100%;
+    background-color: #fff; /* Explicit white background */
+    border-radius: 8px; /* Consistent border-radius */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    max-width: 700px; /* Max width for the form */
+    margin: 0 auto; /* Center the form */
 }
 
+/* Remove specific padding from h2s if margin-bottom is added */
 .title h2, .favourite h2, .ingredients h2, .steps h2{
-    padding-right:0.75rem;
-   
+    padding-right: 0;
 }
 
 .favourite h2{
     padding-bottom:0.5rem;
 }
 
-.checkbox{
-   width:fit-content;
+/* General Form Group Styling */
+.form-group {
+    margin-bottom: 1.5rem; /* Add consistent spacing between form groups */
 }
 
+/* Custom Checkbox Styling */
+.custom-checkbox-wrapper {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.custom-checkbox-input {
+    opacity: 0; /* Hide the default checkbox */
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.custom-checkbox-label {
+    position: relative;
+    display: inline-block;
+    width: 44px; /* Width of the toggle */
+    height: 24px; /* Height of the toggle */
+    background-color: #ccc; /* Default background */
+    border-radius: 12px; /* Make it pill-shaped */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.custom-checkbox-label::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px; /* Size of the inner circle */
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-label {
+    background-color: #0e0e0e; /* Charcoal when checked (adjust color if needed) */
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-label::after {
+    transform: translateX(20px); /* Move the circle to the right */
+}
+
+.custom-checkbox-input:focus + .custom-checkbox-label {
+    box-shadow: 0 0 5px #6599ff; /* Focus outline */
+}
+
+/* Remove default checkbox class styling if no longer needed */
+/* .checkbox{ width:fit-content; } */
+
+
 .title, .ingredients, .steps, .favourite, .upload, .description, .submitWrapper{
-    padding-bottom:1rem;
-    padding-top:1rem;
+    padding-bottom: 0; /* Remove padding if using form-group margin */
+    padding-top: 0;
  }
 
  .upload{
@@ -112,13 +175,51 @@ input[type="submit"]:hover {
     padding-top:2rem;
  }
 
-.uploadInput{
-    width:auto;
-    padding-left:1rem;
+/* Custom File Input Styling */
+.uploadInput {
+    width: 0.1px; /* Hide the default file input visually */
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    background-color: #333; /* Info blue color */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    margin-right: 10px; /* Space between button and text */
+}
+
+.custom-file-upload:hover {
+    background-color: #5f5f5f; /* Darker blue on hover */
+}
+
+.custom-file-upload:focus-within { /* Style when the hidden input inside has focus */
+     box-shadow: 0 0 5px rgba(91, 192, 222, 0.5);
+     outline: none;
+}
+
+.file-name-display {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    padding: 0.75rem;
+    font-weight: 800;
+}
+
 
 .ingredients, .steps{
     align-items: center;
+    gap: 0.5rem;
 }
 
 .description > h2, .image > h2{
@@ -141,13 +242,15 @@ input[type="submit"]:hover {
     padding-bottom:1rem;
 }
 
+/* Style for '+' add buttons */
 .ingredients button, .steps button {
-    background-color: #00A5E0;
-    border-radius: 50%; /* Makes the button round */
+    background-color: #333; /* Charcoal */
+    border-radius: 50%;
     border: none;
     color: white;
-    width: 20px; /* Adjust size as needed */
-    height: 20px; /* Adjust size as needed */
+    font-weight: bold;
+    width: 24px; /* Slightly larger */
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,16 +260,18 @@ input[type="submit"]:hover {
 }
 
 .ingredients button:hover, .steps button:hover {
-    background-color: #008CBA; /* Slightly darker shade on hover */
+    background-color: #555; /* Lighter charcoal on hover */
 }
 
+/* Style for 'X' remove buttons */
 .ingredientsNode button, .stepsNode button {
-    background-color: #1f1f1f; /* A vibrant red color for delete buttons */
-    border-radius: 50%; /* Perfectly round shape */
+    background-color: #d9534f; /* Bootstrap danger red */
+    border-radius: 50%;
     border: none;
     color: white;
-    min-width: 1.5rem;
-    min-height: 1.5rem;
+    font-weight: bold;
+    min-width: 22px; /* Adjusted size */
+    min-height: 22px;
     margin-left: 0.5rem;
     align-self: center;
     display: flex;
@@ -178,31 +283,39 @@ input[type="submit"]:hover {
 }
 
 .ingredientsNode button:hover, .stepsNode button:hover {
-    background-color: #E74C3C; /* Slightly darker shade on hover */
-    transform: scale(1.1); /* Slight increase in size on hover */
+    background-color: #c9302c; /* Darker red on hover */
+    transform: scale(1.1);
 }
 
 .ingredientsNode button:active, .stepsNode button:active {
-    transform: scale(0.9); /* Slight decrease in size when clicked */
+    transform: scale(0.95); /* Less drastic shrink */
 }
 
-.stepsNode input{
-    height:3rem;
-    overflow-x: auto;
+/* Ensure textareas in steps are sized appropriately */
+.stepsNode textarea{
+    min-height: 3rem; /* Use min-height */
+    resize: vertical; /* Allow vertical resize */
 }
 
 .submitBtn{
-    margin:2rem 0;
-    padding:0.5rem 0;
-    background-color: #00A5E0;
-    border-radius:20px;
-    border:none;
-    color:white;
+    margin: 2rem 0 0 0; /* Adjust margin */
+    padding: 0.8rem 1.5rem; /* Match recipeFrom button padding */
+    background-color: #333; /* Dark charcoal background */
+    border-radius: 8px;     /* Match border-radius */
+    border: none;
+    color: #fff;            /* White text */
     font-family: 'Poppins', sans-serif;
-    font-weight:400;
-    font-size:1rem;
-    box-shadow:1px 1px 1px black;
-    width:8rem;
+    font-weight: 500;       /* Match font-weight */
+    font-size: 1rem;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Match shadow */
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Match transition */
+    width: auto; /* Allow button to size naturally */
+}
+
+.submitBtn:hover{
+    background-color: #444; /* Match hover */
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .submitWrapper{
@@ -211,12 +324,10 @@ input[type="submit"]:hover {
 }
 
 
-/*Tag section*/
-/* Import Google Font - Poppins */
-
+/* Tag Section Refinements */
 .tagWrapper{
     width: 100%;
-    padding:1rem 0 1.5rem 0;
+    /* padding adjusted by form-group margin */
   }
 
   .tagWrapper :where(.tagTitle, li, li i, .tagDetails){
@@ -231,72 +342,101 @@ input[type="submit"]:hover {
     margin: 10px 0;
   }
   .tagContent p{
-    font-size: 15px;
+    font-size: 0.9rem; /* Slightly smaller instruction text */
+    color: #666;
+    margin-bottom: 8px;
   }
-  .tagContent ul{
+  .tagContent ul{ /* Container for tags and input */
     display: flex;
     flex-wrap: wrap;
+    align-items: center; /* Align items vertically */
+    gap: 5px; /* Add gap between tags and input */
+    padding: 8px; /* Add padding around tags */
     margin: 12px 0;
-    border-radius: 5px;
+    border-radius: 6px; /* Match input border-radius */
+    border: 1px solid #ccc; /* Add border like inputs */
+    background-color: #fff; /* Ensure white background */
   }
 
-  .tagContent ul  li{
+  .tagContent ul li{ /* Style for individual tags */
     color: #333;
-    margin: 4px 3px;
+    margin: 2px; /* Reduced margin */
     list-style: none;
-    border-radius: 5px;
-    background: #F2F2F2;
-    padding: 5px 8px 5px 10px;
-    border: 1px solid #e3e1e1;
+    border-radius: 4px; /* Slightly less rounded */
+    background: #eee; /* Lighter grey background */
+    padding: 6px 10px; /* Adjusted padding */
+    border: 1px solid #ddd; /* Lighter border */
+    display: flex; /* Use flex for alignment */
+    align-items: center; /* Align icon vertically */
   }
-  .tagContent ul li i{
-    height: 20px;
-    width: 20px;
-    color: #808080;
+  .tagContent ul li i{ /* Style for 'x' icon */
+    height: 18px; /* Adjusted size */
+    width: 18px;
+    color: #fff; /* White icon */
     margin-left: 8px;
-    font-size: 12px;
+    font-size: 11px; /* Adjusted size */
     cursor: pointer;
     border-radius: 50%;
-    background: #dfdfdf;
+    background: #aaa; /* Grey background */
+    display: flex; /* Ensure centering */
+    align-items: center; /* Center icon */
     justify-content: center;
+    transition: background-color 0.2s ease;
   }
-  .tagContent ul input{
-    flex: 1;
-    padding: 5px;
-    border: none;
+   .tagContent ul li i:hover {
+       background-color: #d9534f; /* Red on hover */
+   }
+  .tagContent ul input{ /* Input field within the tag area */
+    flex: 1; /* Allow input to grow */
+    min-width: 150px; /* Minimum width */
+    padding: 8px; /* Match padding */
+    border: none; /* Remove border */
     outline: none;
-    font-size: 16px;
+    font-size: 0.95rem; /* Match other inputs */
+    font-family: 'Poppins', sans-serif;
+    /* Removed duplicate border rule */
   }
-  .tagWrapper .tagDetails{
-    justify-content: space-between;
-  }
-  .tagDetails button{
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 9px 15px;
-    border-radius: 5px;
-    background: #5372F0;
-    transition: background 0.3s ease;
-  }
-  .tagDetails button:hover{
-    background: #2c52ed;
-  }
-  
+  /* Remove tagDetails if not used */
+  /* .tagWrapper .tagDetails{ */
+  /*   justify-content: space-between; */
+  /* } */
+  /* .tagDetails button{ */
+  /*   border: none; */
+  /*   outline: none; */
+  /*   color: #fff; */
+  /*   font-size: 14px; */
+  /*   cursor: pointer; */
+  /*   padding: 9px 15px; */
+  /*   border-radius: 5px; */
+  /*   background: #5372F0; */
+  /*   transition: background 0.3s ease; */
+  /* } */
+  /* .tagDetails button:hover{ */
+  /*   background: #2c52ed; */
+  /* } */
+
+  /* Corrected Preset Tag Styles */
   .presetTag{
     color: #333;
-    margin: 4px 3px;
+    margin: 4px; /* Consistent margin */
     list-style: none;
-    border-radius: 5px;
+    border-radius: 4px;
     background: #F2F2F2;
-    padding: 5px 8px 5px 10px;
-    width:fit-content;
-    border: 1px solid #e3e1e1;
+    padding: 6px 10px;
+    width: fit-content;
+    border: none; /* Remove border */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    transition: color 0.2s ease;
+    font-size: 0.9rem;
+    
   }
-  
-  .presetWrapper{
+  .presetTag:hover {
+      background-color: #474747; /* Darker blue on hover */
+      color:white
+  }
+
+  .presetWrapper{ /* Container for preset tags */
     display:flex;
     flex-wrap:wrap;
   }
@@ -308,19 +448,22 @@ input[type="submit"]:hover {
 }
 @media only screen and (min-width: 600px) {
 
+    /* Update form container style in media query */
     #submitRecipe {
-        width: 50%;
-        background-color: white;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 0 20px 13px #bfbfbf;
+        width: auto; /* Remove fixed width */
+        max-width: 700px; /* Keep max-width */
+        background-color: #fff;
+        padding: 2.5rem; /* Slightly more padding on larger screens */
+        border-radius: 8px; /* Consistent radius */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Slightly stronger shadow */
+        margin: 2rem auto; /* Ensure centering with margin */
     }
 
     .newRecipeWrapper{
-        padding: 2rem 0;
+        padding: 2rem 1rem; /* Add horizontal padding */
     }
 
     body{
-        background-color: aliceblue;
+        background-color: #ecf3f9; /* Match recipeFrom background */
     }
   }

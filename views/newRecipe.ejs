@@ -30,11 +30,14 @@
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
             </div>
-            <div class="favourite col">
+            <div class="favourite col form-group"> <!-- Added form-group class -->
                 <h2>Favourite</h2>
-                <input type="checkbox" class="checkbox" name="favourite"></input>
+                <div class="custom-checkbox-wrapper">
+                    <input type="checkbox" class="checkbox custom-checkbox-input" id="favouriteCheckbox" name="favourite">
+                    <label for="favouriteCheckbox" class="custom-checkbox-label"></label> <!-- Added Label -->
+                </div>
             </div>
-            <div class="tagWrapper">
+            <div class="tagWrapper form-group"> <!-- Added form-group class -->
                 <input type="hidden" name="categories" class="categories"></input>
                 <div class="tagTitle">
                   <h2>Categories</h2>
@@ -54,16 +57,24 @@
               </div>
 
         <% if (!isLink && !isImg) {%>
-            <div class="upload col">
+            <div class="upload col form-group"> <!-- Added form-group class -->
                 <h2>Upload Picture (Optional)</h2>
-                <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
+                <label class="custom-file-upload">
+                    <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
+                    Choose File
+                </label>
+                <span class="file-name-display">No file chosen</span> <!-- Added span to display filename -->
             </div>
         <%}%>
 
         <%if (isImg){%>
-            <div class="upload col">
+            <div class="upload col form-group"> <!-- Added form-group class -->
                 <h2>Upload Picture</h2>
-                <input class="uploadInput" type="file" multiple max-length="6" name="recipeImage" accept="image/*">
+                 <label class="custom-file-upload">
+                    <input class="uploadInput" type="file" multiple max-length="6" name="recipeImage" accept="image/*">
+                    Choose Files
+                 </label>
+                 <span class="file-name-display">No files chosen</span> <!-- Added span to display filename -->
                 <input type="hidden" name="isImg" value="isImg">
             </div>
         <%}%>
@@ -76,13 +87,13 @@
         <%}%>
 
         <% if (!isLink && !isImg){%>
-            <div class="description">
+            <div class="description form-group"> <!-- Added form-group class -->
                 <h2>Description</h2>
-                <textarea name="description" rows="6" cols="10" wrap="soft" form="submitRecipe" name="description" required pattern="[^{}<>]{2,500}"></textarea>
+                <textarea name="description" rows="6" cols="10" wrap="soft" form="submitRecipe" required pattern="[^{}<>]{2,500}"></textarea> <!-- Removed duplicate name -->
             </div>
 
-        
-            <div class="ingredients row">
+
+            <div class="ingredients row form-group"> <!-- Added form-group class -->
                 <h2>Ingredients</h2>
                 <button type="button" id="addIngredient">+</button>
             </div>
@@ -96,7 +107,7 @@
                 </div>
             </div>
             
-            <div class="steps row">
+            <div class="steps row form-group"> <!-- Added form-group class -->
                 <h2>Steps</h2>
                 <button type="button" id="addStep">+</button>
             </div>
@@ -381,6 +392,20 @@
                 submitRecipeForm.submit();
             }
         })
+
+        // --- Script for Custom File Input Display ---
+        document.querySelectorAll('.uploadInput').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const fileNameDisplay = this.closest('.upload').querySelector('.file-name-display');
+                if (this.files && this.files.length > 1) {
+                    fileNameDisplay.textContent = `${this.files.length} files selected`;
+                } else if (this.files && this.files.length == 1) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = 'No file chosen';
+                }
+            });
+        });
 
     </script>
 </body>

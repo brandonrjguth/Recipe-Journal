@@ -1,18 +1,23 @@
 .recipeFrom{
-    padding:1rem;
-    background-color: #00A5E0;
-    border-radius:20px;
-    border:none;
-    color:white;
+    padding: 0.8rem 1.5rem; /* Adjusted padding */
+    background-color: #333; /* Dark charcoal background */
+    border-radius: 8px;     /* Reduced border-radius */
+    border: none;
+    color: #fff;            /* White text */
     font-family: 'Poppins', sans-serif;
-    font-weight:400;
-    font-size:1rem;
-    box-shadow:1px 1px 1px black;  
+    font-weight: 500;       /* Slightly bolder text */
+    font-size: 1rem;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Softer shadow */
+    text-decoration: none; /* Ensure no underline from parent <a> */
+    display: inline-block; /* Ensure padding and margins work correctly */
+    cursor: pointer;       /* Standard pointer cursor */
+    transition: background-color 0.2s ease; /* Smooth hover transition */
 }
 
 .recipeFrom:hover{
-    background-color: #a2cddc;
-    box-shadow:none;
+    background-color: #444; /* Slightly lighter on hover */
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); /* Adjust shadow on hover */
+    color: #fff; /* Ensure text color remains white */
 }
 .recipeFromWrapper{
     display:flex;

@@ -16,20 +16,30 @@
     <div class="recipeFromWrapper">
         <div class="recipeFromCol">
             <h1>What type of recipe would you like to add?</h1>
-            <div class="row">
+
+            <!-- Explanation Section -->
+            <div class="explanationSection" style="margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left; padding: 1rem; border: 1px solid #eee; border-radius: 8px; background-color: #f9f9f9;">
+                <h2>Convert Recipes from Popular Sites</h2>
+                <p style="margin-bottom: 0.5rem;">Paste a link from a supported website, and we'll automatically import the recipe for you! Great for quickly saving recipes you find online.</p>
+                <p style="margin-bottom: 0.5rem;">Popular sites include: Allrecipes.com, BudgetBytes.com, TamingTwins.com</p>
+                <a href="/supported-sites" style="color: #c00; text-decoration: underline; display: block; margin-bottom: 1rem;">See all supported websites</a>
+                <!-- Moved Button Inside Box -->
+                <a href="/convertRecipe" style="text-decoration: none;">
+                    <button class="recipeFrom" style="margin-top: 0.5rem;"> Convert Link to Recipe</button>
+                </a>
+            </div>
+
+            <div class="row" style="margin-top: 2rem;"> <!-- Added margin-top to separate from the box above -->
                 <a href="/newRecipeLink">
-                    <button class="recipeFrom"> External Link </button>
+                    <button class="recipeFrom"> Save Link to a Recipe </button>
                 </a>
                 <a href="/newRecipePage">
                     <button class="recipeFrom"> Handtyped Recipe </button>
-                </a> 
+                </a>
                 <a href="/newRecipePicture">
                     <button class="recipeFrom"> Picture of a Recipe </button>
-                </a> 
-                <a href="/convertRecipe">
-                    <button class="recipeFrom"> Convert Link to Recipe</button>
-                </a> 
-                
+                </a>
+
             </div>
         </div>
     </div>
