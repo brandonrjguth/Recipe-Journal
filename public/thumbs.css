@@ -25,6 +25,10 @@ body{
     background-color: rgb(211, 219, 225);
 }
 
+.contentWrapper{
+    display: flex;
+    justify-content: center;
+}
 
 .content h1{
     font-family:'Fraunces';
