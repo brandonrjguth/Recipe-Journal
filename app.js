@@ -3,9 +3,10 @@ const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const sharp = require('sharp');
 const recipeScraper = require("@brandonrjguth/recipe-scraper");
-const fs = require('fs');
+const fs = require('fs').promises; // Use the promises API
+const path = require('path');
+const sharp = require('sharp');
 const multer = require('multer');
 const session = require('express-session');
 const passport = require('passport');
@@ -175,6 +176,116 @@ async function run() {
     app.get('/', (req, res) => {
       res.redirect('recipeList');
     })
+
+    app.get('/demo', async (req, res) => {
+      const demoUsername = 'demoUser';
+      const demoPassword = 'password123';
+      let demoUserId;
+      let demoUserObject;
+
+      try {
+          console.log("Attempting demo user setup...");
+          // 1. Find or Create Demo User
+          demoUserObject = await users.findOne({ username: demoUsername });
+
+          if (!demoUserObject) {
+              console.log(`Demo user "${demoUsername}" not found, creating...`);
+              const saltRounds = 10;
+              const hashedPassword = await bcrypt.hash(demoPassword, saltRounds);
+              const newUser = { username: demoUsername, password: hashedPassword };
+              const insertResult = await users.insertOne(newUser);
+              demoUserId = insertResult.insertedId;
+              demoUserObject = await users.findOne({ _id: demoUserId });
+               if (!demoUserObject) {
+                  throw new Error("Failed to fetch newly created demo user.");
+               }
+              console.log(`Demo user "${demoUsername}" created with ID: ${demoUserId}`);
+          } else {
+              demoUserId = demoUserObject._id;
+              console.log(`Demo user "${demoUsername}" found with ID: ${demoUserId}`);
+          }
+
+          // 2. Clear Existing Demo Data
+          console.log(`Clearing data for demo user ID: ${demoUserId}`);
+          await recipes.deleteMany({ userId: demoUserId });
+          await userFavourites.deleteMany({ userId: demoUserId });
+          await userShoppingList.deleteMany({ userId: demoUserId });
+          console.log("Demo user data cleared.");
+
+          // 3. Read and Process Seed Images
+          let carbonaraImgBuffer, stirfryImgBuffer, cookiesImgBuffer;
+          try {
+              carbonaraImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/carbonara.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+          } catch (e) { console.error("Error processing carbonara.png:", e.message); carbonaraImgBuffer = null; }
+          try {
+              stirfryImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/stirfry.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+          } catch (e) { console.error("Error processing stirfry.png:", e.message); stirfryImgBuffer = null; }
+          try {
+              cookiesImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/Chocolate-Chip-Cookies.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+          } catch (e) { console.error("Error processing Chocolate-Chip-Cookies.png:", e.message); cookiesImgBuffer = null; }
+
+
+          // 4. Define Sample Recipes with Images
+          const sampleRecipes = [
+              {
+                  title: "Pasta Carbonara",
+                  description: "A classic Roman pasta dish.",
+                  ingredients: ["200g Spaghetti", "100g Pancetta or Guanciale", "2 large Eggs", "50g Pecorino Romano cheese", "Black Pepper"],
+                  steps: ["Cook spaghetti.", "Fry pancetta until crisp.", "Whisk eggs and cheese.", "Combine pasta, pancetta fat, egg mixture off heat.", "Add pasta water if needed. Serve with pepper."],
+                  categories: ["Pasta", "Italian", "Quick"],
+                  images: carbonaraImgBuffer, // Assign processed buffer
+                  userId: demoUserId
+              },
+              {
+                  title: "Chicken Stir-Fry",
+                  description: "Quick and easy chicken and vegetable stir-fry.",
+                  ingredients: ["2 Chicken Breasts, sliced", "1 tbsp Soy Sauce", "1 tsp Cornstarch", "1 tbsp Oil", "1 cup Mixed Vegetables (broccoli, carrots, peppers)", "Stir-fry sauce"],
+                  steps: ["Marinate chicken in soy sauce and cornstarch.", "Heat oil in wok.", "Stir-fry chicken until cooked.", "Add vegetables and stir-fry until tender-crisp.", "Add sauce and toss to coat."],
+                  categories: ["Stir-fry", "Asian", "Chicken"],
+                  images: stirfryImgBuffer, // Assign processed buffer
+                  userId: demoUserId
+              },
+               {
+                  title: "Chocolate Chip Cookies",
+                  description: "Classic chewy chocolate chip cookies.",
+                  ingredients: ["2 1/4 cups All-purpose Flour", "1 tsp Baking Soda", "1 tsp Salt", "1 cup Butter, softened", "3/4 cup Granulated Sugar", "3/4 cup Brown Sugar", "2 large Eggs", "1 tsp Vanilla Extract", "2 cups Chocolate Chips"],
+                  steps: ["Preheat oven to 375°F (190°C).", "Combine dry ingredients.", "Cream butter and sugars.", "Beat in eggs and vanilla.", "Gradually add dry ingredients.", "Stir in chocolate chips.", "Drop rounded tablespoons onto ungreased baking sheets.", "Bake 9-11 minutes."],
+                  categories: ["Dessert", "Cookies", "Baking"],
+                  images: cookiesImgBuffer, // Assign processed buffer
+                  userId: demoUserId
+              }
+          ];
+
+          // 5. Seed Sample Recipes
+          if (sampleRecipes.length > 0) {
+              const insertManyResult = await recipes.insertMany(sampleRecipes);
+              console.log(`Inserted ${insertManyResult.insertedCount} sample recipes for demo user.`);
+
+              // Optionally favourite one of the seeded recipes
+               const firstRecipe = await recipes.findOne({title: sampleRecipes[0].title, userId: demoUserId});
+               if(firstRecipe) {
+                   await userFavourites.insertOne({ userId: demoUserId, recipeId: firstRecipe._id });
+                   console.log(`Favourited "${firstRecipe.title}" for demo user.`);
+               }
+          }
+
+          // 6. Log In Demo User
+          console.log("Logging in demo user...");
+          req.login(demoUserObject, (err) => {
+              if (err) {
+                  console.error("Demo user login failed:", err);
+                  return res.redirect('/login');
+              }
+              console.log("Demo user logged in successfully.");
+              // 7. Redirect
+              return res.redirect('/recipeList');
+          });
+
+      } catch (err) {
+          console.error("Error during /demo route execution:", err);
+          res.status(500).send("An error occurred during the demo setup.");
+      }
+  });
 
     //Favourites route - fetches recipes favourited by the current user
     app.get("/favourites", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
