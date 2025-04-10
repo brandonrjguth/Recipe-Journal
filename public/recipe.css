@@ -166,12 +166,13 @@ button{
         background-color: #FFF7ED;
         border-radius: 20px;
         padding: 1rem;
-        width: 80%;
+        width: 100%
     }
 
     .title{
         color:#F53100;
         font-size:4rem;
+        font-weight:900;
     }
 
     .ingredientsTitle{
