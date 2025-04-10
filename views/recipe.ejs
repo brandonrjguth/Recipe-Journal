@@ -9,7 +9,10 @@
     <title>Recipe List</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <%- include('partials/header')%>
@@ -17,36 +20,38 @@
     for the selected recipt-->
 
     <div class="content">
-        <div class="recipeHeroWrapper">
+        <div class="heroImage" style="background-image:url('/recipeImg/imgThumbURL/<%=recipe.title%>')">
+        </div>
+        <div class="recipeHeroWrapper" >
             <div class="recipeHero">
-                <h1 class="title"><%=recipe.title%></h1>
-                <div class="buttons row">
-                    <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
-                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                        <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button> <%# Updated condition %>
-                    </form>
-                        <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
-                    <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
-                        <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                        <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
-                    </form>
-                </div>
-                <%if (recipe.images){%>
-                <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">
-                <%}%>
-                <div class="presets">
-                <h2>Categories</h2>
-                    <div class="presetWrapper">
-                        <%if (recipe.categories){
-                            recipe.categories.forEach((category) => {%>
-                                <p class="presetTag"><%=category%></p>
-                            <%})
-                        }%>
+                <div class="recipeHeroInner">
+                    <h1 class="title"><%=recipe.title%></h1>
+                    <div class="buttons row">
+                        <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
+                            <input type="hidden" name="title" value="<%=recipe.title%>"></input>
+                            <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button> <%# Updated condition %>
+                        </form>
+                            <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
+                            <input type="hidden" name="title" value="<%=recipe.title%>"></input>
+                            <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                        </form>
                     </div>
-                </div>
-                <div class="description">
-                    <h2>Description</h2>
-                    <p><%=recipe.description%></p>
+                    <%if (recipe.images){%>
+                    <!--<img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">-->
+                    <%}%>
+                    <div class="presets">
+                        <div class="presetWrapper">
+                            <%if (recipe.categories){
+                                recipe.categories.forEach((category) => {%>
+                                    <p class="presetTag"><%=category%></p>
+                                <%})
+                            }%>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <p><%=recipe.description%></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,7 +59,9 @@
         <div class="recipeInstructionsWrapper">
             <div class="recipeInstructions">
                 <div class="ingredients">
+                <div class="ingredientsTitle">
                 <h3>Ingredients</h3>
+                </div>
                     <ul>
                         <% for (let i=0; i < recipe.ingredients.length; i++){%>
                             <li><%=recipe.ingredients[i]%></li>

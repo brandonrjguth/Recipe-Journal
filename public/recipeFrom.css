@@ -10,38 +10,107 @@
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Softer shadow */
     text-decoration: none; /* Ensure no underline from parent <a> */
     display: inline-block; /* Ensure padding and margins work correctly */
+    background-color: var(--primary); /* Use theme accent red */
+    color: #333333; /* Use theme white */
     cursor: pointer;       /* Standard pointer cursor */
     transition: background-color 0.2s ease; /* Smooth hover transition */
 }
 
 .recipeFrom:hover{
-    background-color: #444; /* Slightly lighter on hover */
+    background-color: #d42a00; /* Darker red on hover */
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); /* Adjust shadow on hover */
-    color: #fff; /* Ensure text color remains white */
+    color: var(--white); /* Ensure text color remains white */
 }
 .recipeFromWrapper{
     display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:center;
     justify-content: center;
-    padding-top:4rem;
+    padding:1rem 0.5rem 1rem 0.5rem;
 }
 
 .recipeFromCol{
     display:flex;
     flex-direction: column;
-    background-color:white;
     padding:2rem 3vw;
-    border-radius:0;
+    border-radius: 8px; /* Consistent rounded corners */
     width:100%;
     text-align: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content:center;
+    gap:1rem;
 }
 
 .recipeFromCol h1{
     padding-bottom:2rem;
 }
 
-body{
-    background-color: #ecf3f9;
+.recipeFromWrapper h1{
+    font-family: "Fraunces";
+    font-weight: 900;
+    font-size: 5rem;
 }
+
+body{
+    background-color: var(--background); /* Use theme background */
+}
+
+/* Styles for the explanation boxes */
+.explanation-box {
+    background-color: white; /* Use theme primary/secondary */
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-width: 90%;
+    width:35rem;
+    min-width:35%;
+    text-align: left;
+    display:flex;
+    flex-direction: column;
+}
+
+.explanation-title{
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    padding-bottom:1rem;
+}
+
+.explanation-title img{
+    height:25px;
+}
+
+.explanation-box h2 {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 1.25rem; /* Slightly larger heading */
+}
+
+.explanation-box p {
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.explanation-box a {
+    color: var(--accent-red);
+    text-decoration: underline;
+    display: inline-block; /* Allow margin */
+    margin-bottom: 0.5rem; /* Space below link */
+    margin-top: auto;
+}
+
+.explanation-box a:hover {
+    text-decoration: none;
+}
+
+/* Specific styling for buttons inside the box */
+.explanation-box button.recipeFrom {
+    margin-top: 1rem;
+}
+
 
 .row {
     display: flex;
@@ -53,10 +122,12 @@ body{
 h1 {
     font-weight: 300;
     font-size: 2rem;
+    font-weight:600;
+    font-size:3rem;
+    color:#F53100 !important;
+
 }
 
 @media only screen and (min-width: 600px) {
-    .recipeFromCol{
-        border-radius:20px;
-    }
+    /* .recipeFromCol border-radius already set to 8px above */
   }

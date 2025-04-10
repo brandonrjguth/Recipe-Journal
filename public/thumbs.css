@@ -17,9 +17,8 @@ body{
 }
 
 #toggleStylesheet{
-    background-color: aliceblue;
     border-radius: 5px;
-    border: 1px solid #e1e1e1;
+    background-color: #FFF7ED;
 }
 
 #toggleStylesheet:hover{
@@ -28,7 +27,11 @@ body{
 
 
 .content h1{
-    padding: 1rem 0rem 1rem 0rem;
+    font-family:'Fraunces';
+    font-weight:900;
+    padding: 1rem 0rem 2rem 0rem;
+    color:#F53100;
+    font-size: 5rem;
 }
 
 .content ul{
@@ -88,7 +91,7 @@ span{
     display: flex;
     align-items: center;
     border:none;
-    background-color: white;
+    background-color: #FFF7ED;
 }
 
 .deleteBtn img, .editBtn img, .favouriteBtn img, .shoppingListBtn img {

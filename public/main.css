@@ -1,7 +1,34 @@
+:root {
+  --primary: #FFF7ED; /* Soft pink */
+  --secondary: #FFF7ED; /* Light coral */
+  --accent: #FFF7ED; /* Peach */
+  --background: #FFF7ED; /* Mint green */
+  --text: #333333; /* Dark gray for text */
+  --text-light: #5E5E5E; /* Lighter gray */
+  --white: #FFFFFF;
+  --border-light: #d1d1d1;
+  --focus-ring: #a8d4ff; /* Keeping this blue for now, can adjust */
+  --shadow-color: rgba(0,0,0,0.1);
+  --accent-red: #F53100; /* New accent color */
+}
+
 html, body, p, h3, h2, h1, ul, li {
     padding:0;
     margin:0;
     font-family: 'Poppins', sans-serif;
+    color: var(--text);
+}
+
+input[type="text"]{
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    background-color: var(--background); /* Apply background to html */
+}
+
+body {
+    background-color: var(--background); /* Ensure body also has background */
 }
 
 html{
@@ -10,6 +37,10 @@ html{
 
 .hidden{
     display:none !important;
+}
+
+.firstHalfEnd{
+    display:flex;
 }
 
 textarea{
@@ -25,30 +56,37 @@ textarea{
 }
 
 .header{
-    position: relative; /* Added for absolute positioning context */
+    position: relative;
     display:flex;
     flex-direction: column;
-    box-shadow:  2px 1px 5px #000000;
-    background-color: rgb(221, 60, 42);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    background-color: var(--primary);
 }
 
 .logo{
     display:flex;
-    justify-content: center;
     padding:1rem 0;
 }
 
 .logoWrapper {
     display: flex;
     width: 100%;
-    gap:1rem;
+    gap: 2rem; /* Increased gap */
     padding: 0 1rem;
     justify-content: space-between;
+    align-items: center; /* Align items vertically */
 }
 
-.logoName{
-    align-self: center;
-    height:2rem;
+.logoName {
+    text-decoration: none;
+    height: 3rem;
+    display:flex;
+}
+
+.logoName h1{
+    padding-right:0.5rem;
+    display:none;
+
 }
 
 .searchBar{
@@ -56,7 +94,7 @@ textarea{
 }
 
 .searchButton{
-    background-color: rgb(221, 60, 42);
+    background-color: transparent; /* Make background transparent */
     border:none;
     align-self: center;
     height:100%;
@@ -76,11 +114,11 @@ textarea{
 
 .searchInput{
     border-radius:4px;
-    box-shadow: 0 0 0 2px #ddd;
+    box-shadow: 0 0 0 2px var(--border-light);
 }
 
 .searchInput:focus-within {
-    box-shadow: 0 0 0 2px #a8d4ff; /* Change as needed */
+    box-shadow: 0 0 0 2px var(--focus-ring); /* Change as needed */
 }
 
 .searchBarMobileWrapper .searchInput input{
@@ -97,7 +135,7 @@ textarea{
 }
 
 .searchBarMobileWrapper .searchInput button{
-    background-color: white;
+    background-color: var(--white);
     border-radius: 4px 0 0 4px;
 }
 
@@ -119,13 +157,25 @@ textarea{
     display:flex;
     list-style: none;
     gap:1rem;
-    background-color: #191919;
-    color:white;
+    background-color: var(--secondary);
+    color: var(--text);
+    font-weight: 600;
 }
 
-.menuShelf a, .menuShelf a:visited{
-    color:white;
-    text-decoration:none;
+.menuShelf a, .menuShelf a:visited {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s ease; /* Add transition for smooth hover */
+    padding: 0.3rem 0.5rem; /* Add some padding for better hover area */
+    border-radius: 4px; /* Slightly rounded corners for hover background */
+}
+
+/* Style for the current page link and hover state */
+.mainMenu a.current,
+.mainMenu a:hover {
+    color: var(--accent-red);
+    /* Optional: Add a subtle background on hover/current */
+    /* background-color: rgba(245, 49, 0, 0.1); */
 }
 
 .mainMenu, .user-bar{
@@ -133,18 +183,41 @@ textarea{
     gap: 1rem;
 }
 
+.user-greeting{
+    color:#212121;
+    font-weight:500;
+}
+
+.firstHalfHeader, .secondHalfHeader {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    gap: 1.5rem; /* Add gap for spacing within halves */
+}
+
+.firstHalfHeader {
+    gap: 2rem; /* Larger gap specifically between logo and main menu */
+}
+
+.secondHalfHeader {
+    gap: 2rem; /* Increased gap between search and user menu */
+}
+
 /* --- Hamburger Menu Styles --- */
 
 /* Hide hamburger on desktop by default, style it */
 .hamburger-button {
-    display: none; 
+    display: none;
     background: none;
     border: none;
-    color: white; /* Or your desired icon color */
+    color: var(--text); /* Use main text color */
     font-size: 1.8rem; /* Adjust size */
     cursor: pointer;
     padding: 0 0.5rem; /* Adjust padding */
     align-self: center;
+}
+
+.menuShelf.mobileMenu{
+    display:none;
 }
 
 /* Mobile Styles (adjust max-width as needed) */
@@ -155,22 +228,23 @@ textarea{
         top: 100%; /* Position below the main header bar */
         left: 0;
         width: 100%;
-        background-color: #191919; /* Match desktop background */
+        background-color: var(--secondary); /* Match desktop background */
         flex-direction: column;
         padding: 0; /* Remove horizontal padding */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional shadow */
+        box-shadow: 0 4px 8px var(--shadow-color); /* Optional shadow */
         z-index: 1000; /* Ensure it's above other content */
     }
+    
 
     .menuShelf.active {
         display: flex; /* Show when active */
     }
 
-    .menuShelf li {
+     .menuShelf li {
         width: 100%;
         text-align: center;
         padding: 0; /* Remove padding from li */
-        border-bottom: 1px solid #333; /* Separator lines */
+        border-bottom: 1px solid var(--accent); /* Use accent for separator */
         box-sizing: border-box;
     }
      .menuShelf li:last-child {
@@ -180,11 +254,11 @@ textarea{
      .menuShelf li a, .menuShelf li.user-greeting { /* Style greeting too */
         display: block; /* Make links fill the width */
         padding: 12px 0; /* Add padding to links/greeting instead of li */
-        color: white;
+        color: var(--text);
         text-decoration: none;
     }
      .menuShelf li a:hover {
-        background-color: #333; /* Optional hover effect */
+        background-color: var(--accent); /* Use accent for hover */
     }
 
     .hamburger-button {
@@ -215,7 +289,7 @@ textarea{
     }
 
     .logoWrapper {
-        width:50%;
+        width:100%;
         justify-content: space-between;
     }
     
@@ -256,36 +330,123 @@ textarea{
         background-color: transparent; /* Reset hover */
     }
 
+    /* Style the search input container (form) */
+    .searchInput {
+        display: flex; /* Use flexbox to align icon and input */
+        align-items: center; /* Vertically center items */
+        border: 1px solid #333333; /* Subtle border */
+        border-radius: 10px; /* Rounded corners for the whole bar */
+        background-color: white;
+        padding: 0.2rem 0.5rem; /* Padding inside the container */
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
+        min-width: 280px; /* Ensure decent length */
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
 
-    .searchInput{
-        box-shadow:none;
+    .searchInput:focus-within {
+        box-shadow: 0 0 0 2px var(--focus-ring); /* Add focus ring */
+    }
+
+    li.current {
+        text-decoration: underline;
+        text-decoration-color: #F53100;
+        color: #F53100 !important;
+        text-decoration-thickness: auto;
+    }
+
+    a.current{
+        color: #F53100 !important;
+        text-decoration: underline;
+        text-decoration-color: #F53100;
+        text-decoration-thickness: auto;
+    }
+
+    /* Style the search icon */
+    .searchIcon {
+        height: 1.3rem; /* Adjust icon size */
+        margin: 0 0.5rem 0 0.3rem; /* Space around the icon */
+        opacity: 0.6; /* Slightly dim the icon */
     }
 
     /* Style the input field */
     .searchInput input[type='text'] {
-        flex-grow: 1; /* Allow input to grow and fill space */
-        padding: 0.5rem;
-        border: 2px solid #ddd; /* Light grey border */
-        border-radius: 4px 0 0 4px; /* Rounded corners on the left side */
+        flex-grow: 1; /* Allow input to fill space */
+        padding: 0.4rem 0.2rem; /* Adjust padding inside input */
+        border: none; /* No border for the input itself */
         outline: none; /* Remove default focus outline */
         margin: 0;
+        color: var(--text); /* Use standard text color */
+        font-size: 0.95rem;
     }
 
-    /* Style the submit button */
-    .searchInput button.searchButton {
-        border: none;
-        background-color: #171717; /* Bootstrap primary color */
-        color: white;
-        cursor: pointer;
-        border-radius: 0 4px 4px 0; /* Rounded corners on the right side */
-    }
+    /* Remove styles for the now non-existent button */
+    /* .searchInput button.searchButton { ... } */
+    /* .searchInput button.searchButton:hover { ... } */
+    /* .searchButton img { ... } */
+}
 
-    /* Change button background on hover */
-    .searchInput button.searchButton:hover {
-        background-color: #a8a8a8; /* Darker shade when hovered */
-    }
+/* --- User Dropdown Styles --- */
+.user-dropdown {
+    position: relative; /* Needed for absolute positioning of the menu */
+    display: inline-block; /* Keep it inline with other items */
+}
 
-    .searchButton img{
-        height: 1.4rem;
-    }
-  }
+.user-dropdown-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.user-greeting {
+    /* Inherit color/font from parent */
+}
+
+.dropdown-arrow {
+    font-size: 1.3em; /* Make arrow slightly smaller */
+    line-height: 1; /* Adjust line height if needed */
+    color:black
+}
+
+.user-dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%; /* Position below the toggle button */
+    right: 0; /* Align to the right */
+    background-color: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0; /* Small top margin */
+    min-width: 100px; /* Minimum width */
+    z-index: 1001; /* Ensure it's above other elements */
+}
+
+.user-dropdown-menu.active {
+    display: block; /* Show when active */
+}
+
+.user-dropdown-menu li {
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure list items take full width */
+}
+
+.user-dropdown-menu li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.user-dropdown-menu li a:hover {
+    background-color: var(--accent);
+}

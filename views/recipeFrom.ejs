@@ -9,38 +9,65 @@
     <link rel="stylesheet" type="text/css" href="/recipeFrom.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <%- include('partials/header') %>
     <div class="recipeFromWrapper">
+        <h1>Create</h1>
         <div class="recipeFromCol">
-            <h1>What type of recipe would you like to add?</h1>
+            
 
-            <!-- Explanation Section -->
-            <div class="explanationSection" style="margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left; padding: 1rem; border: 1px solid #eee; border-radius: 8px; background-color: #f9f9f9;">
-                <h2>Convert Recipes from Popular Sites</h2>
-                <p style="margin-bottom: 0.5rem;">Paste a link from a supported website, and we'll automatically import the recipe for you! Great for quickly saving recipes you find online.</p>
-                <p style="margin-bottom: 0.5rem;">Popular sites include: Allrecipes.com, BudgetBytes.com, TamingTwins.com</p>
-                <a href="/supported-sites" style="color: #c00; text-decoration: underline; display: block; margin-bottom: 1rem;">See all supported websites</a>
-                <!-- Moved Button Inside Box -->
-                <a href="/convertRecipe" style="text-decoration: none;">
-                    <button class="recipeFrom" style="margin-top: 0.5rem;"> Convert Link to Recipe</button>
+            <!-- Explanation Section 1: Convert Link -->
+            <div class="explanation-box">
+                <div class=explanation-title>
+                    <img src="/imgs/convert.png">
+                    <h2>Convert Recipes from Popular Sites</h2>
+                </div>
+                <p>Paste a link from a supported website, and we'll automatically import the recipe for you! </p>
+                <p>Popular sites include: Allrecipes.com, BudgetBytes.com, TamingTwins.com</p>
+                <a href="/supported-sites">See all supported websites</a>
+                <a href="/convertRecipe">
+                    <button class="recipeFrom">Convert Link to Recipe</button>
                 </a>
             </div>
 
-            <div class="row" style="margin-top: 2rem;"> <!-- Added margin-top to separate from the box above -->
+            <!-- Explanation Section 2: Save Link -->
+            <div class="explanation-box">
+                <div class=explanation-title>
+                    <img src="/imgs/link.png">
+                    <h2>Save a Recipe Link</h2>
+                </div>
+                <p>Found a recipe on an unsupported site or just want to keep the original link handy? Save it directly here.</p>
                 <a href="/newRecipeLink">
-                    <button class="recipeFrom"> Save Link to a Recipe </button>
+                    <button class="recipeFrom">Save Recipe Link</button>
                 </a>
-                <a href="/newRecipePage">
-                    <button class="recipeFrom"> Handtyped Recipe </button>
-                </a>
-                <a href="/newRecipePicture">
-                    <button class="recipeFrom"> Picture of a Recipe </button>
-                </a>
-
             </div>
+
+            <!-- Explanation Section 3: Handtyped -->
+            <div class="explanation-box">
+                <div class=explanation-title>
+                    <img src="/imgs/add.png">
+                    <h2>Add a Manual Recipe</h2>
+                </div>
+                <p>Need to archive one of grandma's old recipes? Immortalize it here by typing it out yourself.</p>
+                <a href="/newRecipePage">
+                    <button class="recipeFrom">Add Manual Recipe</button>
+                </a>
+            </div>
+
+            <!-- Explanation Section 4: Picture -->
+            <div class="explanation-box">
+                <div class=explanation-title>
+                    <img src="/imgs/photo.png">
+                    <h2>Upload a Recipe Photo</h2>
+                </div>
+                <p>Took a cheeky picture of a recipe book in the grocery store? We won't tell. Upload the image here.</p>
+                <a href="/newRecipePicture">
+                    <button class="recipeFrom">Upload Recipe Photo</button>
+                </a>
+            </div>
+
         </div>
     </div>
 </body>

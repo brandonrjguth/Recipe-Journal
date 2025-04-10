@@ -1,33 +1,45 @@
-body{
-    display:flex;
-    flex-direction: column;
-}
-
 .content{
-    padding:1rem 1rem 2rem 1rem;
+    padding:2rem 1rem 2rem 1rem;
     display:flex;
     flex-direction:column;
     align-items: center;
     align-self:center;
 }
 
+.contentWrapper{
+    display:flex;
+    justify-content: center;
+}
+
+.buttons.row > form{
+    color:#FFF7ED;
+
+}
 .toggle{
     gap:0.5rem;
     padding-bottom:1rem;
 }
 
 #toggleStylesheet{
-    background-color: aliceblue;
+    background-color: var(--accent); /* Use accent color */
+    color: var(--text);
     border-radius: 5px;
-    border: 1px solid #e1e1e1;
+    border: 1px solid var(--border-light);
+    padding: 0.3rem 0.6rem; /* Add some padding */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 #toggleStylesheet:hover{
-    background-color: rgb(211, 219, 225);
+    background-color: var(--secondary); /* Use secondary on hover */
 }
 
 .content h1{
-    padding: 1rem 0rem 1rem 0rem;
+    font-family: 'Fraunces';
+    font-weight: 900;
+    color: #F53100;
+    font-size: 5rem;
+    padding-bottom:2rem;
 }
 
 .content ul{
@@ -41,10 +53,15 @@ body{
 }
 
 
-.content a, .content a:visited{
-    color:rgb(0, 0, 0);
-    text-decoration:none;
 
+.content a, .content a:visited{
+    color: var(--text); /* Use text variable */
+    text-decoration:none;
+    transition: color 0.2s ease;
+}
+
+.content a:hover {
+    color: var(--accent-red); /* Use primary color on hover */
 }
 
 .contentRow{
@@ -61,13 +78,26 @@ body{
 .listButtonRow{
     display:flex;
     align-self: start;
-    gap:5px;
+    gap:1rem;
 }
 
 .listButtonRow button{
     height:fit-content;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 1px 1px #000000;
+    box-shadow: 1px 1xp 1px black;
+    font-family: 'Poppins';
+    background-color: var(--primary);
+    color: #000000;
+    padding: 0.5rem 0.5rem;
 }
 
+.listButtonRow button:hover{
+    background-color:var(--accent-red);
+    color:white;
+    box-shadow:none;
+}
 .strikeout {
     text-decoration: line-through;
 }
@@ -76,21 +106,42 @@ body{
     align-self:start;
     padding-bottom:2rem;
 }
-span{
+/* Removing the generic red span style, specific styling should be applied where needed */
+/* span{
     align-self:center;
     color: red;
     padding-right:0.5rem;
-}
+} */
 
 .deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
     align-items: center;
-    border:none;
-    background-color: white;
+    border: none;
+    background-color: transparent; /* Make background transparent */
+    padding: 0.2rem; /* Add slight padding */
+    border-radius: 4px; /* Add slight rounding */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
+
+.deleteBtn:hover, .editBtn:hover, .favouriteBtn:hover, .shoppingListBtn:hover {
+    background-color: var(--accent); /* Use accent on hover */
+}
+
+/* Style SVGs within buttons for better control if needed */
+.deleteBtn svg, .editBtn svg, .favouriteBtn svg, .shoppingListBtn svg {
+    fill: var(--text-light); /* Use lighter text color for icons */
+    transition: fill 0.2s ease;
+}
+
+.deleteBtn:hover svg, .editBtn:hover svg, .favouriteBtn:hover svg, .shoppingListBtn:hover svg {
+    fill: var(--text); /* Darken icon on hover */
+}
+
 
 .deleteBtn img, .editBtn img, .favouriteBtn img, .shoppingListBtn img  {
     height: 1.2rem;
+    vertical-align: middle; /* Align images better if using img tags */
 }
 
 

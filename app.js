@@ -192,7 +192,7 @@ async function run() {
         // Add the isCurrentUserFavourite flag for the view
         recipeList = recipeList.map(recipe => ({ ...recipe, isCurrentUserFavourite: true }));
 
-        res.render('recipeList', { recipeList: recipeList, favourites: true }); // Pass currentUser implicitly
+        res.render('recipeList', { recipeList: recipeList, favourites: true, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching favourites:", err);
         res.status(500).send('Error fetching favourites');
@@ -214,7 +214,7 @@ async function run() {
         // Add favourite status (always true for this route)
         recipeList = recipeList.map(recipe => ({ ...recipe, isCurrentUserFavourite: true }));
 
-        res.render('thumbs', { recipeList: recipeList, favourites: true, thumbnails: false }); // Pass currentUser implicitly
+        res.render('thumbs', { recipeList: recipeList, favourites: true, thumbnails: false, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching thumbs for favourites:", err);
         res.status(500).send('Error fetching favourite thumbnails');
@@ -223,23 +223,23 @@ async function run() {
 
 
     app.get('/newRecipePage', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false })
+      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPage: req.path }) // Pass currentPage
     })
 
     app.get('/convertRecipe', ensureAuthenticated, (req, res) => { // Protected
-      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false });
+      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false, currentPage: req.path }); // Pass currentPage
     })
 
     app.get('/newRecipeLink', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false })
+      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false, currentPage: req.path }) // Pass currentPage
     })
 
     app.get('/newRecipePicture', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false })
+      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false, currentPage: req.path }) // Pass currentPage
     })
 
     app.get('/recipeFrom', ensureAuthenticated, (req, res) => { // Protected
-      res.render('recipeFrom', { recipeExists: false })
+      res.render('recipeFrom', { recipeExists: false, currentPage: req.path }) // Pass currentPage
     })
 
     //send array of recipes belonging to the logged-in user to recipeList page, indicating favourite status
@@ -260,7 +260,7 @@ async function run() {
         }));
 
         // console.log(recipeList); // Optional
-        res.render('recipeList', { recipeList: recipeList, favourites: false }); // Pass currentUser implicitly
+        res.render('recipeList', { recipeList: recipeList, favourites: false, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching recipe list:", err);
         res.status(500).send('Error fetching recipe list');
@@ -272,61 +272,57 @@ async function run() {
         try {
             // Currently just renders the static EJS page
             // Future enhancement: Could fetch the list dynamically if needed
-            res.render('supportedSites.ejs');
+            res.render('supportedSites.ejs', { currentPage: req.path }); // Pass currentPage
         } catch (err) {
             console.error("Error rendering supported sites page:", err);
             res.status(500).send('Error displaying supported sites');
         }
     });
 
-    //Find the recipe by title and render its page, ensuring user ownership and favourite status
-    app.get("/recipe/:title", ensureAuthenticated, async (req, res) => { // Protected & User-Specific Check
-      try {
-        const userId = req.user._id;
-        let fullRecipe = await recipes.findOne({ title: req.params.title });
+  //Find the recipe by title FOR THE CURRENT USER and render its page, adding favourite status
+  app.get("/recipe/:title", ensureAuthenticated, async(req, res) => { // Protected & User-Specific Fetch
+    try{
+      const userId = req.user._id;
+      // Find the recipe matching title AND userId
+      let fullRecipe = await recipes.findOne({title: req.params.title, userId: userId}); 
 
-        if (!fullRecipe) {
-          // Handle recipe not found (optional, could redirect or show 404)
-          return res.redirect('/recipeList');
-        }
-        // Convert both to strings for reliable comparison
-        if (!fullRecipe.userId || fullRecipe.userId.toString() !== userId.toString()) {
-          console.log(`User ${userId} attempted to access recipe owned by ${fullRecipe.userId}`);
-          // Redirect if user doesn't own the recipe
-          return res.redirect('/recipeList');
-        }
+      if (!fullRecipe) {
+        // Handle recipe not found for this user
+        console.log(`Recipe "${req.params.title}" not found for user ${userId}`);
+        return res.redirect('/recipeList'); 
+      }
+      // Ownership is guaranteed by the query, no need for the extra check here.
 
         // Check if the current user has favourited this recipe
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: fullRecipe._id });
         fullRecipe.isCurrentUserFavourite = !!isFavourite; // Add flag to recipe object
 
-        res.render("recipe", { recipe: fullRecipe }); // Pass currentUser implicitly, recipe now has favourite flag
+        res.render("recipe", { recipe: fullRecipe, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching recipe:", err);
         res.status(500).send('Error fetching recipe');
       }
     })
 
-    //Find an image recipe and display its page, ensuring user ownership and favourite status
-    app.get("/recipeImg/:title", ensureAuthenticated, async (req, res) => { // Protected & User-Specific Check
-      try {
-        const userId = req.user._id;
-        let fullRecipe = await recipes.findOne({ title: req.params.title });
-
-        if (!fullRecipe) {
-          return res.redirect('/recipeList');
-        }
-        if (!fullRecipe.userId || fullRecipe.userId.toString() !== userId.toString()) {
-          console.log(`User ${userId} attempted to access image recipe owned by ${fullRecipe.userId}`);
-          return res.redirect('/recipeList');
-        }
+  //Find an image recipe by title FOR THE CURRENT USER and display its page, adding favourite status
+  app.get("/recipeImg/:title", ensureAuthenticated, async(req, res) => { // Protected & User-Specific Fetch
+    try{
+      const userId = req.user._id;
+       // Find the recipe matching title AND userId
+      let fullRecipe = await recipes.findOne({title: req.params.title, userId: userId}); 
+      
+      if (!fullRecipe) {
+         console.log(`Image Recipe "${req.params.title}" not found for user ${userId}`);
+        return res.redirect('/recipeList');
+      }
+      // Ownership is guaranteed by the query.
 
         // Check if the current user has favourited this recipe
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: fullRecipe._id });
         fullRecipe.isCurrentUserFavourite = !!isFavourite; // Add flag to recipe object
 
         let imageNumber = fullRecipe.images ? fullRecipe.images.length : 0; // Handle case where images might be null/undefined
-        res.render("recipeImg", { recipe: fullRecipe, imageNumber: imageNumber }); // Pass currentUser implicitly, recipe now has favourite flag
+        res.render("recipeImg", { recipe: fullRecipe, imageNumber: imageNumber, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching image recipe:", err);
         res.status(500).send('Error fetching image recipe');
@@ -351,7 +347,7 @@ async function run() {
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: recipe._id });
         recipe.isCurrentUserFavourite = !!isFavourite;
 
-        res.render("editRecipe", { recipe: recipe, recipeExists: false }); // Pass currentUser implicitly
+        res.render("editRecipe", { recipe: recipe, recipeExists: false, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching recipe for edit:", err);
         res.status(500).send('Error fetching recipe for edit');
@@ -381,8 +377,7 @@ async function run() {
           })
         })
         // Regular expression to match numbers, units, and fractions
-        let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|cups|\bg\b|grams|handful|crushed|to garnish|low-fat|\d+g|\d+l|\d+ml|kg|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|½|¼|¾|\b\d+\b|,|\/+/gi;
-
+        let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|cups|\bg\b|grams|handful|crushed|to garnish|low-fat|\d+g|\d+l|\d+ml|kg|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|½|¼|¾|\b\d+\b|,|\/+|\(|\)|\babout\b|\binch\b|\b-inch\b/gi;
 
         // Remove numbers, units, fractions, then sort based on cleaned
 
@@ -403,7 +398,7 @@ async function run() {
 
 
 
-        res.render("shoppingList", { simplified: simplifiedIngredients, detailed: detailedIngredients })
+        res.render("shoppingList", { simplified: simplifiedIngredients, detailed: detailedIngredients, currentPage: req.path }) // Pass currentPage
       } catch (err) {
         console.error("Error fetching shopping list:", err);
         res.status(500).send('Error fetching shopping list');
@@ -421,12 +416,12 @@ async function run() {
       // Note: req.flash requires connect-flash middleware, which we haven't installed.
       // For simplicity, we'll just render the view without flash messages for now.
       // If you want flash messages, we'd need to `npm install connect-flash` and configure it.
-      res.render('login', { error: null }); // Pass null initially
+      res.render('login', { error: null , currentPage:false}); // Pass null initially
     });
 
     // Display registration page
     app.get('/register', (req, res) => {
-      res.render('register', { error: null }); // Pass null initially
+      res.render('register', { error: null, currentPage:false}); // Pass null initially
     });
 
     // Handle logout
@@ -903,7 +898,10 @@ async function run() {
 
 
         recipeList.sort((a, b) => a.title.localeCompare(b.title));
-        res.render('recipeList', { recipeList: recipeList, favourites: false }) // Pass currentUser implicitly
+        // Note: req.path for a POST route might not be what's expected for highlighting.
+        // It might be better to hardcode '/recipeList' or pass a specific variable.
+        // Using '/recipeList' for now as it renders the recipe list view.
+        res.render('recipeList', { recipeList: recipeList, favourites: false, currentPage: '/recipeList' }) // Pass hardcoded currentPage for search results
       } catch (err) {
         console.log("Search error:", err);
         res.status(500).send('Error during search');

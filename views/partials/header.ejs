@@ -1,20 +1,58 @@
 <div class="header">
     <div class="logo">
         <div class="logoWrapper">
-            <a href="/" class="logoName"><img src="/imgs/logofull-none.png" class="logoName"></a>
-            <div class="searchButtonMobile"> <!-- Keep this for the search toggle -->
-                <button type="button" class="searchButton"><img src="/imgs/search-white.svg"></button>
+            <div class="firstHalfHeader">
+                <!--<a href="/" class="logoName"><img src="/imgs/logofull-mix2.png" class="logoName"></a>-->
+                <a href="/" class="logoName"><h1>Recipe Journal</h1>
+                <img src="/imgs/logonew.png" class="logoName">
+            </a>
+                <ul class="menuShelf" id="desktop-menu"> <!-- Added ID -->
+                    <div class="mainMenu">
+                        <li><a href="/favourites" class="<%= currentPage === '/favourites' ? 'current' : '' %>">Favourites</a></li>
+                        <li><a href="/recipeList" class="<%= currentPage === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
+                        <li><a href="/recipeFrom" class="<%= currentPage === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
+                        <li><a href="/shoppingList" class="<%= currentPage === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
+                    </div>
+                </ul>
+                <div class="firstHalfEnd">
+                    <div class="searchButtonMobile"> <!-- Keep this for the search toggle -->
+                        <button type="button" class="searchButton"><img src="/imgs/search.svg"></button>
+                    </div>
+                    <!-- Hamburger Button (Mobile Only) -->
+                    <button type="button" id="hamburger-btn" class="hamburger-button">
+                        &#9776; <!-- Unicode hamburger icon -->
+                    </button>
+                </div>
             </div>
-             <!-- Hamburger Button (Mobile Only) -->
-            <button type="button" id="hamburger-btn" class="hamburger-button">
-                &#9776; <!-- Unicode hamburger icon -->
-            </button>
-            <div class="searchBar"> <!-- Desktop Search -->
-                <form class="row searchInput" action='/search' method='post'>
-                    <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
-                    <button type="submit" class="searchButton"><img src="/imgs/search-white.svg"></button>
-                </form>
+            
+            <div class="secondHalfHeader">
+                <div class="searchBar"> <!-- Desktop Search -->
+                    <form class="searchInput" action='/search' method='post'> <!-- Removed .row, form is the container now -->
+                        <img src="/imgs/search.svg" class="searchIcon" alt="Search"> <!-- Moved icon inside -->
+                        <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
+                        <!-- Removed the separate button -->
+                    </form>
+                </div>
+                <ul class="menuShelf user-menu-container"> <!-- Added class for easier targeting -->
+                    <div class="user-bar">
+                        <% if (currentUser) { %>
+                            <li class="user-dropdown">
+                                <button type="button" class="user-dropdown-toggle">
+                                    <span class="user-greeting"><%= currentUser.username %></span>
+                                    <span class="dropdown-arrow">&#9662;</span> <!-- Down arrow -->
+                                </button>
+                                <ul class="user-dropdown-menu">
+                                    <li><a href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        <% } else { %>
+                                <li><a href="/login">Login</a></li>
+                                <li><a href="/register">Register</a></li>
+                        <% } %>
+                    </div>
+                </ul>
             </div>
+            
         </div>
 
     </div>
@@ -27,12 +65,8 @@
             </form>
         </div>
     </div>
-    <ul class="menu">
-        <li><a href="/">Favourites</a></li>
-        <li><a href="/recipeList">Recipe List</a></li>
-        <li><a href="/newRecipePage">New Recipe</a></li>
-    </ul>
-    <ul class="menuShelf" id="mobile-menu"> <!-- Added ID -->
+
+    <ul class="menuShelf mobileMenu" id="mobile-menu"> <!-- Added ID -->
         <div class="mainMenu">
             <li><a href="/favourites">Favourites</a></li>
             <li><a href="/recipeList">Recipes</a></li>
@@ -68,4 +102,22 @@
     hamburgerBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('active'); // Toggle the 'active' class
     });
+
+    // User Dropdown Toggle
+    const userDropdownToggle = document.querySelector('.user-dropdown-toggle');
+    const userDropdownMenu = document.querySelector('.user-dropdown-menu');
+
+    if (userDropdownToggle && userDropdownMenu) {
+        userDropdownToggle.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent click from closing menu immediately
+            userDropdownMenu.classList.toggle('active');
+        });
+
+        // Close dropdown if clicking outside
+        document.addEventListener('click', (event) => {
+            if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+                userDropdownMenu.classList.remove('active');
+            }
+        });
+    }
 </script>

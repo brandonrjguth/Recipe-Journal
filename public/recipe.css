@@ -15,13 +15,27 @@ h2{
     font-size:1rem;
 }
 
-.content{
-    padding:0 1rem;
-    align-self:center;
-}
 
 .title, .recipeImg, .steps, .ingredients{
     padding-top:2rem;
+}
+
+.recipeHeroWrapper{
+    padding: 1rem 1rem 0rem 1rem
+}
+.recipeInstructionsWrapper{
+    padding: 0rem 1rem;
+}
+
+
+.title{
+    color:#F53100;
+    padding-top:0rem;
+    font-family: "Fraunces";
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 3.3rem;
+    padding-bottom: 1.5rem; 
 }
 
 .description, .presets{
@@ -32,10 +46,25 @@ p.presetTag {
     font-size:0.8rem;
 }
 
+.ingredientsTitle{
+    padding-top: 1rem;
+    color: white;
+    border-radius: 20px 20px 0px 0px;
+    width: 100%;
+}
+
+.ingredientsTitle h3 {
+    color:#F53100;
+}
+
+.steps h3{
+    color:#F53100;
+}
+
 .content ul{
     margin-left:1.5rem;
     margin-top:0;
-    padding-top:0.5rem;
+    padding: 2rem 1rem;
 }
 
 ol li{
@@ -44,10 +73,11 @@ ol li{
 }
 
 .content ol{
-    padding-inline-start:0;
-    margin-left:1rem;
-    margin-top:0;
-    padding-top:0.5rem;
+    padding-inline-start: 0;
+    margin-left: 1.5rem;
+    margin-top: 0;
+    padding: 2rem 1rem;
+    margin-bottom: 0;
 }
 
 .buttons{
@@ -78,17 +108,26 @@ button{
 .recipeHero{
     width: 100%;
     padding: 0;
+
 }
 
 .presetTag{
-    color: #333;
+    color: #431407;
+    background-color:#FECACA;
     margin: 4px 3px;
     list-style: none;
     border-radius: 5px;
-    background: #F2F2F2;
     padding: 5px 8px 5px 10px;
     width:fit-content;
     border: 1px solid #e3e1e1;
+  }
+
+  .heroImage{
+    height:15rem;
+    width:100%;
+    grid-area: heroImg;
+    background-size:cover;
+    background-position:center;
   }
   
   .presetWrapper{
@@ -107,6 +146,7 @@ button{
       grid-template-columns:1fr 1fr 1fr;
       grid-template-rows: max-content;
       grid-template-areas:
+      "heroImg heroImg heroImg"
       "hero hero hero"
       "inst inst inst";
       padding:0;
@@ -122,7 +162,29 @@ button{
         width:100%;
     }
 
-    
+    .recipeHeroInner {
+        background-color: #FFF7ED;
+        border-radius: 20px;
+        padding: 1rem;
+        width: 80%;
+    }
+
+    .title{
+        color:#F53100;
+        font-size:4rem;
+    }
+
+    .ingredientsTitle{
+        background-color: #F53100;
+    }
+
+    .steps h3, .ingredients h3{
+        color:#F53100;
+    }    
+
+    .steps h3{
+        padding-left: 1rem;
+    }
 
     .recipeHero{
         display:grid;
@@ -134,14 +196,14 @@ button{
         "img des des"
         "img des des"
         "img des des" ;
-        padding:2rem 0 4rem 0;
+        padding:1rem 0 1rem 0;
         justify-content:start;
         width:70%;
     }
 
     .recipeInstructionsWrapper{
         grid-area:inst;
-        background-color: #ecf3f9;
+        background-color: #FFF7ED;
         display:flex;
         justify-content: center;
         width:100%
@@ -149,7 +211,7 @@ button{
     .recipeInstructions{
         display:flex;
         justify-content: center;
-        padding: 2rem 0;
+        padding: 1rem 0;
         gap:2rem;
         width:70%;
     }
@@ -170,18 +232,25 @@ button{
         grid-area:step;
         background-color: white;
         width:60%;
-        padding: 3rem;
+        padding: 1rem 0rem;
         border-radius: 20px;
         height: fit-content;
+        border:2px solid #F53100;
     }
 
     .ingredients{
-        grid-area:ing;
+        grid-area: ing;
         background-color: white;
-        width: 30%;
+        width: 40%;
         height: fit-content;
-        border-radius: 20px;
-        padding:3rem 1.5rem;
+        border-radius: 22px;
+        padding: 0rem 0rem 0rem 0rem;
+        border: 2px solid #F53100;
+    }
+
+    .ingredients h3{
+        padding: 0rem 1rem 1rem 1rem;
+        color: white;
     }
     
     .description{
@@ -202,11 +271,11 @@ button{
 
   @media (min-width: 1000px) {
     .recipeHero{
-        padding:2rem 0;
+        padding:1rem 0;
         max-width:80%;
     }
     .recipeInstructions{
-        padding:2rem 0;
+        padding:0rem 0;
         max-width:80%;
     }
   }
@@ -214,7 +283,7 @@ button{
 
   @media (min-width: 1300px) {
     .recipeHero{
-        padding:2rem 0;
+        padding:0rem 0;
         max-width:70%;
     }
     .recipeInstructions{
@@ -225,11 +294,11 @@ button{
 
   @media (min-width: 1500px) {
     .recipeHero{
-        padding:2rem 0;
+        padding:0rem 0;
         max-width:60%;
     }
     .recipeInstructions{
-        padding:2rem 0;
+        padding:0rem 0;
         max-width:60%;
     }
   }
