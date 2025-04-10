@@ -24,7 +24,7 @@ h2{
     padding: 1rem 1rem 0rem 1rem
 }
 .recipeInstructionsWrapper{
-    padding: 0rem 1rem;
+    padding: 1rem 1rem;
 }
 
 
@@ -184,6 +184,8 @@ button{
 
     .steps h3{
         padding-left: 1rem;
+        border-bottom: 2px solid var(--accent-red);
+        padding-bottom: 1rem;
     }
 
     .recipeHero{
