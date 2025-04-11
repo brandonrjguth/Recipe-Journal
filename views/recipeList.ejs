@@ -45,7 +45,7 @@
 
                     
                     <% if (recipeList[i].isImg){%>
-                    <a href="/recipe/<%=recipeList[i].title%>">
+                    <a href="/recipeImg/<%=recipeList[i].title%>">
                         <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: block; object-fit:cover">
                     
                     <%} else if (recipeList[i].images == undefined && recipeList[i].isLink){%>

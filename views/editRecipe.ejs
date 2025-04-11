@@ -32,14 +32,14 @@
                 <h2>Title</h2>
                 <input type='text' name='title' required pattern="[^{}<>]{2,50}" value="<%=recipe.title%>"></input>
             </div>
-            <div class="favourite col">
+            <div class="favourite col form-group">
                 <h2>Favourite</h2>
                 <div class="custom-checkbox-wrapper">
                     <input type="checkbox" class="checkbox custom-checkbox-input" id="favouriteCheckbox" name="favourite" <%if (recipe.isCurrentUserFavourite === true){%>checked<%}%>>
                     <label for="favouriteCheckbox" class="custom-checkbox-label"></label> <!-- Added Label -->
                 </div>
             </div>
-            <div class="tagWrapper">
+            <div class="tagWrapper form-group">
                 <input type="hidden" name="categories" class="categories" value=""></input>
                 <div class="tagTitle">
                   <h2>Categories</h2>
@@ -58,64 +58,64 @@
                 </div>
               </div>
 
-        <% if (recipe.isImg){%>
-            <input type='text' hidden name='isImg' value="true" required></input>
-        <%}%>
-            
+        
+<!-- If the recipe is a local recipe (contains no URL), show appropriate inputs -->
+    <% if (recipe.recipeUrl == "noUrl") { %>
 
-        <!-- If the recipe is a link (contains a proper URL) render the link input for the form -->
-            <% if (recipe.recipeUrl !== "noUrl"){%>
-                <div class="Link">
-                    <h2>Recipe Link</h2>
-                    <input type='text' name='link' value = <%=recipe.recipeUrl%> required></input>
-                </div>     
-            <%}%>
-
-        <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
-            <%if (recipe.recipeUrl == "noUrl" && !recipe.isImg){%>
-            <div class="upload col form-group"> <!-- Added form-group class -->
+        <div class="upload col form-group">
+            <% if (recipe.isImg) { %>
+                <!-- Input for 'isImg' recipes: Multiple files allowed, replaces all existing -->
+                <h2>Upload New Pictures (Optional - Replaces All Existing)</h2>
+                <label class="custom-file-upload">
+                    <input type="file" class="uploadInput" name="recipeImage" accept="image/*" multiple> <!-- Key change: 'multiple' added -->
+                    Choose Files
+                </label>
+            <% } else { %>
+                <!-- Input for normal recipes: Single file allowed -->
                 <h2>Upload New Picture (Optional)</h2>
                 <label class="custom-file-upload">
-                    <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
+                    <input type="file" class="uploadInput" name="recipeImage" accept="image/*"> <!-- No 'multiple' -->
                     Choose File
                 </label>
-                <span class="file-name-display">No file chosen</span> <!-- Added span to display filename -->
-            </div>
-            <div class="description">
+            <% } %>
+            <span class="file-name-display">No file chosen</span>
+        </div>
+
+        <!-- Description, Ingredients, Steps are only shown for NON-'isImg' recipes -->
+        <% if (!recipe.isImg) { %>
+            <div class="description form-group">
                 <h2>Description</h2>
                 <textarea type='text' name='description' required pattern="[^{}<>]{2,500}"><%=recipe.description%></textarea>
             </div>
-            <div class="ingredients row">
+            <div class="ingredients row form-group">
                 <h2>Ingredients</h2>
                 <button type="button" id="addIngredient">+</button>
             </div>
-
             <div class="ingredientsList">
                 <%for (i = 0; i < recipe.ingredients.length; i++){%>
                     <div class="row ingredientsNode" id="ingredientDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
                         <input name="ingredient<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}" value="<%=recipe.ingredients[i]%>">
-                        <button id="ingredientBtn<%=i+1%>">X</button>
+                        <button type="button" id="ingredientBtn<%=i+1%>">X</button> <!-- Make sure this button has type="button" -->
                     </div>
-                    <%}%>
+                <%}%>
             </div>
-            
-            <div class="steps row">
+            <div class="steps row form-group">
                 <h2>Steps</h2>
                 <button type="button" id="addStep">+</button>
             </div>
-
             <div class="stepsList">
                 <%for (i = 0; i < recipe.steps.length; i++){%>
                     <div class="stepsNode row" id="stepDiv<%=i+1%>">
                         <h3><%=i+1%></h3>
-                        <textarea name="step<%=i+1%>" type="text" required="" pattern="[^{}<>]{2,70}"><%=recipe.steps[i]%></textarea>
+                        <!-- Use textarea for steps if they can be long -->
+                        <textarea name="step<%=i+1%>" required="" pattern="[^{}<>]{2,300}"><%=recipe.steps[i]%></textarea>
                         <button id="stepBtn<%=i+1%>" type="button">X</button>
                     </div>
                 <%}%>
             </div>
-
-            <%}%>
+        <% } %>
+    <% } %>
             <div class="submitWrapper">
                 <button type='button' class='submitBtn'>SUBMIT</button>
             </div>
@@ -408,7 +408,7 @@
            
             if (inputsFilled == true && inputsValid == true){
                 categories.value = tags;
-                submitRecipeForm.submit("recipeLink");
+                submitRecipeForm.submit();
             }
         })
 

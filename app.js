@@ -860,7 +860,8 @@ async function run() {
 
 
     //Edit recipe, ensuring ownership before update
-    app.post("/recipe/:title/editRecipe", ensureAuthenticated, upload.single('recipeImage'), async (req, res) => { // Protected & User-Specific Check
+    app.post("/recipe/:title/editRecipe", ensureAuthenticated, upload.array('recipeImage', 6), async (req, res) => { // Protected & User-Specific Check
+      
       try {
         const userId = req.user._id;
         const originalTitle = req.params.title;
@@ -930,22 +931,42 @@ async function run() {
           await userFavourites.deleteOne({ _id: existingFavourite._id });
         }
 
-        //If there is a new thumbnail, compress and store it in the update object
-        if (req.file) {
-          let imageBuffer = await sharp(req.file.buffer)
-            .resize(1400)
-            .jpeg({ quality: 80 })
-            .toBuffer();
-          updateData.images = imageBuffer; // Add/overwrite images field
-        }
+        // Check if any new files were uploaded in this request
+        if (req.files && req.files.length > 0) {
+          console.log(`Processing ${req.files.length} uploaded file(s).`);
+          if (originalRecipe.isImg) {
+              // If it's an image recipe and new files are uploaded, replace the entire array
+              updateData.images = await Promise.all(req.files.map(async (file) => {
+                  return await sharp(file.buffer)
+                      .resize(1400)
+                      .jpeg({ quality: 80 })
+                      .toBuffer();
+              }));
+              console.log("Updated images array for isImg recipe.");
+          } else {
+              // If it's a normal recipe and a new file is uploaded, replace the single image
+              // upload.array gives req.files[0], even for single uploads
+              updateData.images = await sharp(req.files[0].buffer)
+                  .resize(1400)
+                  .jpeg({ quality: 80 })
+                  .toBuffer();
+              console.log("Updated single image for normal recipe.");
+          }
+      } else {
+          console.log("No new image files uploaded.");
+          // If no files are uploaded, updateData.images remains unset,
+          // so the $set operation won't touch the existing images field.
+      }
 
         // Update the recipe using its _id
         await recipes.updateOne({ _id: originalRecipe._id }, { $set: updateData });
 
-
+        console.log(originalRecipe.isImg);
         // Redirect based on the *new* title
-        if (req.body.link || req.body.isImg) { // isImg might be obsolete here if edit form doesn't change type
+        if (req.body.link) { // isImg might be obsolete here if edit form doesn't change type
           res.redirect("/recipeList");
+        } else if (originalRecipe.isImg){
+          res.redirect("/recipeImg/" +req.body.title);
         } else {
           res.redirect("/recipe/" + req.body.title); // Use the new title
         }
