@@ -413,17 +413,17 @@ textarea{
     .searchInput {
         display: flex; /* Use flexbox to align icon and input */
         align-items: center; /* Vertically center items */
-        border: 1px solid #333333; /* Subtle border */
-        border-radius: 10px; /* Rounded corners for the whole bar */
+        border-radius: 20px; /* Rounded corners for the whole bar */
         background-color: white;
         padding: 0.2rem 0.5rem; /* Padding inside the container */
         box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
         min-width: 280px; /* Ensure decent length */
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 20%);
     }
 
     .searchInput:focus-within {
-        box-shadow: 0 0 0 2px var(--focus-ring); /* Add focus ring */
+        box-shadow: 0 0 0 2px var(--accent-red); /* Add focus ring */
     }
 
     li.current {
