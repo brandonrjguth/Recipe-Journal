@@ -1015,29 +1015,24 @@ async function run() {
     // Current implementation searches globally. Modify if needed.
     app.post('/search', ensureAuthenticated, async (req, res) => { // Added ensureAuthenticated
       try {
-        const userId = req.user._id; // Get current user ID if needed for filtering
+        const userId = req.user._id; // Get current user ID
         const searchTerm = req.body.search;
 
-        // Example: Modify to search only user's recipes
-        // const query = {
-        //    userId: userId,
-        //    $or: [
-        //        { "title": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } },
-        //        { "ingredients": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } },
-        //        { "categories": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } }
-        //    ]
-        // };
-        // let recipeList = await recipes.find(query).toArray();
+        // Construct a query to search only the user's recipes
+        const query = {
+           userId: userId, // Filter by the logged-in user's ID
+           $or: [
+               // Case-insensitive search for the term within title, ingredients, or categories
+               { "title": { "$regex": searchTerm, "$options": "i" } }, // Simpler regex, consider word boundaries if needed: "\\b" + searchTerm + "\\b"
+               { "ingredients": { "$regex": searchTerm, "$options": "i" } },
+               { "categories": { "$regex": searchTerm, "$options": "i" } }
+           ]
+        };
 
-        // Current global search:
-        let byTitle = await recipes.find({ "title": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } }).toArray();
-        let byIngredient = await recipes.find({ "ingredients": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } }).toArray();
-        let byCategory = await recipes.find({ "categories": { "$regex": "\\b" + searchTerm + "\\b", "$options": "i" } }).toArray();
+        // Execute the single query
+        let recipeList = await recipes.find(query).toArray();
 
-        let combinedArray = byTitle.concat(byIngredient).concat(byCategory);
-        let uniqueRecipeMap = new Map();
-        combinedArray.forEach(recipe => uniqueRecipeMap.set(recipe._id.toString(), recipe));
-        let recipeList = Array.from(uniqueRecipeMap.values());
+        // Deduplication is no longer needed as we perform a single query
 
         // Add favourite status for the current user to search results
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
