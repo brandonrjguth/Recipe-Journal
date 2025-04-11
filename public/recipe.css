@@ -16,12 +16,8 @@ h2{
 }
 
 
-.title, .recipeImg, .steps, .ingredients{
-    padding-top:2rem;
-}
-
 .recipeHeroWrapper{
-    padding: 1rem 1rem 0rem 1rem
+    padding: 1.5rem 1rem 0rem 1rem
 }
 .recipeInstructionsWrapper{
     padding: 1rem 1rem;
@@ -64,7 +60,7 @@ p.presetTag {
 .content ul{
     margin-left:1.5rem;
     margin-top:0;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
 }
 
 ol li{
@@ -76,7 +72,7 @@ ol li{
     padding-inline-start: 0;
     margin-left: 1.5rem;
     margin-top: 0;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
     margin-bottom: 0;
 }
 
@@ -160,13 +156,12 @@ button{
         justify-self: center;
         justify-content: center;
         width:100%;
-        padding:1rem 0rem
     }
 
     .recipeHeroInner {
         background-color: #FFF7ED;
         border-radius: 20px;
-        padding: 1rem;
+        padding:1rem 1rem 0rem 1rem;
         width: 100%
     }
 
@@ -200,7 +195,6 @@ button{
         "img des des"
         "img des des"
         "img des des" ;
-        padding:1rem 0 1rem 0;
         justify-content:start;
         width:70%;
     }
@@ -211,7 +205,6 @@ button{
         display:flex;
         justify-content: center;
         width:100%;
-        padding:1rem 0rem;
     }
     .recipeInstructions{
         display:flex;
@@ -276,11 +269,9 @@ button{
 
   @media (min-width: 1000px) {
     .recipeHero{
-        padding:1rem 0;
         max-width:80%;
     }
     .recipeInstructions{
-        padding:0rem 0;
         max-width:80%;
     }
   }
@@ -288,22 +279,18 @@ button{
 
   @media (min-width: 1300px) {
     .recipeHero{
-        padding:0rem 0;
         max-width:70%;
     }
     .recipeInstructions{
-        padding:2rem 0;
         max-width:70%;
     }
   }
 
   @media (min-width: 1500px) {
     .recipeHero{
-        padding:0rem 0;
         max-width:60%;
     }
     .recipeInstructions{
-        padding:0rem 0;
         max-width:60%;
     }
   }

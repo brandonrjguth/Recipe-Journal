@@ -17,7 +17,7 @@
     <%- include('partials/header') %>
 
     <!---->
-    <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
+    
     <div class="newRecipeWrapper">
 
          <!--Recipe Form-->
@@ -26,6 +26,7 @@
             patternValidity and empty inputs for entire page before submitting-->
         
         <form class="col" id='submitRecipe' action='/newRecipe' method='post' enctype="multipart/form-data">
+            <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
             <h1>New Recipe</h1>
 
             <div class="title col">

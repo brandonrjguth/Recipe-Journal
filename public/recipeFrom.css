@@ -52,10 +52,6 @@
     padding:1rem;
 }
 
-.explanationLesserRow .explanation-box{
-    width:20rem;
-}
-
 .recipeFromCol h1{
     padding-bottom:2rem;
 }
@@ -140,6 +136,10 @@ h1 {
 
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 990px) {
     /* .recipeFromCol border-radius already set to 8px above */
+
+    .explanationLesserRow .explanation-box{
+        width:20rem;
+    }
   }

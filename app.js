@@ -679,7 +679,7 @@ async function run() {
         // Consider scoping this check to the user? Or keep titles globally unique? Currently global.
         let result = await recipes.findOne({ title: title, userId:userId });
         if (result !== null) {
-          res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false })
+          res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false, currentPage: false })
           return
         }
 
@@ -820,7 +820,7 @@ async function run() {
         }
       } catch (err) {
         console.log("Error converting recipe:", err); // Log the actual error
-        res.render('convertRecipe', { recipeSiteError: true, recipeExists: false })
+        res.render('convertRecipe', { recipeSiteError: true, recipeExists: false, currentPage: false})
       }
     })
 

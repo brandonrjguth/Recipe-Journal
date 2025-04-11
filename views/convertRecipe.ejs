@@ -17,14 +17,16 @@
     <%- include('partials/header') %>
 
     <!---->
-    <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
-    <% if (recipeSiteError === true){%><div class="warning">This recipe website is currently unsupported.</div><%}%>
+   
     <div class="newRecipeWrapper">
+
          <!--Recipe Form-->
          <!--If the submitted recipe already exists this page is reloaded with an error message-->
          <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
             patternValidity and empty inputs for entire page before submitting-->
         <form class="col" id='submitRecipe' action='/convertRecipe' method='post'>
+            <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
+            <% if (recipeSiteError === true){%><div class="warning">This recipe website is currently unsupported.</div><%}%>
             <h1>Convert Recipe</h1>
             <div class="favourite col form-group"> <!-- Added form-group class -->
                 <h2>Favourite</h2>
