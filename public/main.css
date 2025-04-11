@@ -71,7 +71,6 @@ textarea{
 .logoWrapper {
     display: flex;
     width: 100%;
-    gap: 2rem; /* Increased gap */
     padding: 0 1rem;
     justify-content: space-between;
     align-items: center; /* Align items vertically */
@@ -196,6 +195,8 @@ textarea{
 
 .firstHalfHeader {
     gap: 2rem; /* Larger gap specifically between logo and main menu */
+    width: 100%;
+    justify-content: space-between;
 }
 
 .secondHalfHeader {
@@ -288,9 +289,14 @@ textarea{
         display:flex;
     }
 
+    .firstHalfHeader{
+        width:auto;
+    }
+
     .logoWrapper {
         width:100%;
         justify-content: space-between;
+        gap:2rem;
     }
     
     .searchBarMobile{
