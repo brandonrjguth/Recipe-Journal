@@ -33,9 +33,9 @@ body{
 .content h1{
     font-family:'Fraunces';
     font-weight:900;
-    padding: 1rem 0rem 2rem 0rem;
+    padding: 1rem 1rem 2rem 1rem;
     color:#F53100;
-    font-size: 5rem;
+    font-size: 4rem;
 }
 
 .content ul{
@@ -109,10 +109,16 @@ span{
         .content{
             width:90%;
         }
+        .content h1{
+            font-size: 5rem;
+        }
       }
   }
   @media only screen and (min-width: 1200px) {
     .content{
         width:90%;
+    }
+    .content h1{
+        font-size: 5rem;
     }
   }

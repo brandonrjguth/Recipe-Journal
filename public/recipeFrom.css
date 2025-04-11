@@ -33,7 +33,7 @@
 .recipeFromCol{
     display:flex;
     flex-direction: column;
-    padding:2rem 3vw;
+    padding:2rem;
     border-radius: 8px; /* Consistent rounded corners */
     width:100%;
     text-align: center;
@@ -41,6 +41,19 @@
     flex-wrap: wrap;
     justify-content:center;
     gap:1rem;
+}
+
+.explanationLesserRow{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    width:100%;
+    justify-content: center;
+    padding:1rem;
+}
+
+.explanationLesserRow .explanation-box{
+    width:20rem;
 }
 
 .recipeFromCol h1{
@@ -65,7 +78,6 @@ body{
     padding: 1.5rem;
     max-width: 90%;
     width:35rem;
-    min-width:35%;
     text-align: left;
     display:flex;
     flex-direction: column;

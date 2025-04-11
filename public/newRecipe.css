@@ -63,7 +63,7 @@ input[type="submit"]:hover {
 .newRecipeWrapper{
     display: flex;
     justify-content: center;
-    padding-top:2rem;
+    padding: 2rem 0.5rem;
 }
 
 .newRecipeWrapper h1{

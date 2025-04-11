@@ -454,7 +454,6 @@ async function run() {
           return res.redirect('/recipeList');
         }
 
-        // Check if the current user has favourited this recipe (for consistency, though maybe not needed on edit page)
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: recipe._id });
         recipe.isCurrentUserFavourite = !!isFavourite;
 
@@ -857,6 +856,14 @@ async function run() {
         const userId = req.user._id;
         const originalTitle = req.params.title;
 
+        // Find the recipe document to get its ID
+        const recipe = await recipes.findOne({ title: originalTitle });
+        if (!recipe) {
+          return res.status(404).send('Recipe not found'); // Or handle error differently
+        }
+
+        const recipeId = recipe._id;
+
         // First, verify ownership of the original recipe
         const originalRecipe = await recipes.findOne({ title: originalTitle });
         if (!originalRecipe) {
@@ -872,6 +879,7 @@ async function run() {
         let steps = [];
         let ingredients = [];
         let categories = undefined;
+        let favourite = req.body.favourite; 
 
         if (req.body.categories) {
           categories = req.body.categories.split(",")
@@ -897,10 +905,21 @@ async function run() {
           "description": req.body.description,
           "steps": steps,
           "ingredients": ingredients,
-          // "favourite":!!req.body.favourite, // Obsolete - remove if still present
           "categories": categories
         };
 
+        // Check if the user has already favourited this recipe
+        const existingFavourite = await userFavourites.findOne({ userId: userId, recipeId: recipeId }); 
+
+        //If the recipe has been favourited and its not already a favourite then add.
+        if (!!req.body.favourite && !existingFavourite) {
+          await userFavourites.insertOne({ userId: userId, recipeId: recipeId });
+        } 
+
+        //If the recipe isn't favourited and it was a favourite, remove
+        else if (!req.body.favourite && existingFavourite){
+          await userFavourites.deleteOne({ _id: existingFavourite._id });
+        }
 
         //If there is a new thumbnail, compress and store it in the update object
         if (req.file) {
@@ -913,15 +932,6 @@ async function run() {
 
         // Update the recipe using its _id
         await recipes.updateOne({ _id: originalRecipe._id }, { $set: updateData });
-
-        // Handle favourite checkbox if added to edit form
-        // const shouldBeFavourite = !!req.body.favourite;
-        // const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: originalRecipe._id });
-        // if (shouldBeFavourite && !isFavourite) {
-        //     await userFavourites.insertOne({ userId: userId, recipeId: originalRecipe._id });
-        // } else if (!shouldBeFavourite && isFavourite) {
-        //     await userFavourites.deleteOne({ _id: isFavourite._id });
-        // }
 
 
         // Redirect based on the *new* title

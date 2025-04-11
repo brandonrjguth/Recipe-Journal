@@ -33,7 +33,7 @@ h2{
     padding-top:0rem;
     font-family: "Fraunces";
     font-size: 3rem;
-    font-weight: bold;
+    font-weight: 900;
     line-height: 3.3rem;
     padding-bottom: 1.5rem; 
 }
@@ -160,6 +160,7 @@ button{
         justify-self: center;
         justify-content: center;
         width:100%;
+        padding:1rem 0rem
     }
 
     .recipeHeroInner {
@@ -209,7 +210,8 @@ button{
         background-color: #FFF7ED;
         display:flex;
         justify-content: center;
-        width:100%
+        width:100%;
+        padding:1rem 0rem;
     }
     .recipeInstructions{
         display:flex;

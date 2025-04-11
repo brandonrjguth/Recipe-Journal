@@ -34,7 +34,10 @@
             </div>
             <div class="favourite col">
                 <h2>Favourite</h2>
-                <input class="checkbox" type="checkbox" name="favourite" <%if (recipe.favourite){%>checked<%}%>></input>
+                <div class="custom-checkbox-wrapper">
+                    <input type="checkbox" class="checkbox custom-checkbox-input" id="favouriteCheckbox" name="favourite" <%if (recipe.isCurrentUserFavourite === true){%>checked<%}%>>
+                    <label for="favouriteCheckbox" class="custom-checkbox-label"></label> <!-- Added Label -->
+                </div>
             </div>
             <div class="tagWrapper">
                 <input type="hidden" name="categories" class="categories" value=""></input>
@@ -70,9 +73,13 @@
 
         <!-- If the recipe is a local recipe (contains no URL) render the image, description, ingredients, and steps for the form -->
             <%if (recipe.recipeUrl == "noUrl" && !recipe.isImg){%>
-            <div class="upload col">
+            <div class="upload col form-group"> <!-- Added form-group class -->
                 <h2>Upload New Picture (Optional)</h2>
-                <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
+                <label class="custom-file-upload">
+                    <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
+                    Choose File
+                </label>
+                <span class="file-name-display">No file chosen</span> <!-- Added span to display filename -->
             </div>
             <div class="description">
                 <h2>Description</h2>
@@ -403,9 +410,22 @@
                 categories.value = tags;
                 submitRecipeForm.submit("recipeLink");
             }
-           
-          
         })
+
+        
+        // --- Script for Custom File Input Display ---
+        document.querySelectorAll('.uploadInput').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const fileNameDisplay = this.closest('.upload').querySelector('.file-name-display');
+                if (this.files && this.files.length > 1) {
+                    fileNameDisplay.textContent = `${this.files.length} files selected`;
+                } else if (this.files && this.files.length == 1) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = 'No file chosen';
+                }
+            });
+        });
     </script>
 </body>
 </html>
