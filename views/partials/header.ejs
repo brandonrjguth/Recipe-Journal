@@ -14,24 +14,24 @@
                         <li><a href="/shoppingList" class="<%= currentPage === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
                     </div>
                 </ul>
+                <!-- Hamburger Button (Mobile Only) - Moved search toggle away -->
                 <div class="firstHalfEnd">
-                    <div class="searchButtonMobile"> <!-- Keep this for the search toggle -->
-                        <button type="button" class="searchButton"><img src="/imgs/search.svg"></button>
-                    </div>
-                    <!-- Hamburger Button (Mobile Only) -->
-                    <button type="button" id="hamburger-btn" class="hamburger-button">
-                        &#9776; <!-- Unicode hamburger icon -->
-                    </button>
                 </div>
             </div>
             
             <div class="secondHalfHeader">
-                <div class="searchBar"> <!-- Desktop Search -->
-                    <form class="searchInput" action='/search' method='post'> <!-- Removed .row, form is the container now -->
-                        <img src="/imgs/search.svg" class="searchIcon" alt="Search"> <!-- Moved icon inside -->
-                        <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
-                        <!-- Removed the separate button -->
-                    </form>
+                <!-- Search Elements Container -->
+                <div class="search-container">
+                    <div class="searchBar"> <!-- Desktop Search -->
+                        <form class="searchInput" action='/search' method='post'>
+                            <img src="/imgs/search.svg" class="searchIcon" alt="Search">
+                            <input type='text' name='search' required pattern="[^{}<>]{2,50}" placeholder="Search For Recipe"></input>
+                        </form>
+                    </div>
+                    <!-- Mobile Search Toggle Button - Moved here -->
+                    <div class="searchButtonMobile">
+                        <button type="button" class="searchButton"><img src="/imgs/search.svg"></button>
+                    </div>
                 </div>
                 <ul class="menuShelf user-menu-container"> <!-- Added class for easier targeting -->
                     <div class="user-bar">
@@ -52,7 +52,9 @@
                     </div>
                 </ul>
             </div>
-            
+            <button type="button" id="hamburger-btn" class="hamburger-button">
+                &#9776; <!-- Unicode hamburger icon -->
+            </button>
         </div>
 
     </div>

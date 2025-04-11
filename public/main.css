@@ -80,6 +80,8 @@ textarea{
     text-decoration: none;
     height: 3rem;
     display:flex;
+    /* Prevent extreme shrinking */
+    min-width: 100px; /* Adjust as needed */
 }
 
 .logoName h1{
@@ -221,8 +223,8 @@ textarea{
     display:none;
 }
 
-/* Mobile Styles (adjust max-width as needed) */
-@media only screen and (max-width: 599px) {
+/* Mobile Styles (Trigger hamburger earlier) */
+@media only screen and (max-width: 700px) {
     .menuShelf {
         display: none; /* Hide menu by default on mobile */
         position: absolute;
@@ -279,11 +281,83 @@ textarea{
      .searchButtonMobile {
         display: flex; 
     }
+
+    .searchButton img{
+
+        height: 2.3rem;
+        padding-top: 0.2rem;
+    
+    }
 }
 
 
-/* Desktop Styles (adjust min-width to match mobile max-width + 1px) */
-@media only screen and (min-width: 600px) {
+/* Intermediate Styles (Collapse search bar only) */
+@media only screen and (min-width: 700px) and (max-width: 990px) {
+    /* Keep desktop menu visible */
+    .menuShelf {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        box-shadow: none;
+        padding: 0.5rem;
+        gap: 1rem;
+        width: auto;
+        justify-content: space-around;
+        align-items: center;
+    }
+     .menuShelf li {
+        width: auto;
+        border-bottom: none;
+        padding: 0;
+        text-align: left;
+    }
+     .menuShelf li a, .menuShelf li.user-greeting {
+        display: inline;
+        padding: 0;
+    }
+     .menuShelf li a:hover {
+        background-color: transparent;
+    }
+    .mainMenu, .user-bar { /* Ensure these are row-based */
+        flex-direction: row;
+    }
+
+    /* Hide desktop search bar */
+    .searchBar {
+        display: none;
+    }
+
+    /* Show mobile search toggle button */
+    .searchButtonMobile {
+        display: flex;
+    }
+    /* Ensure mobile search bar itself is hidden initially */
+    .searchBarMobile {
+        display: none;
+    }
+
+    /* Hide hamburger button */
+    .hamburger-button {
+        display: none;
+    }
+
+    /* Adjust wrapper layout if needed */
+    .logoWrapper {
+        width: 100%;
+        justify-content: space-between;
+        gap: 1rem; /* May need smaller gap */
+    }
+    .firstHalfHeader {
+        width: auto;
+        gap: 1rem; /* May need smaller gap */
+    }
+    .secondHalfHeader {
+        gap: 1rem; /* May need smaller gap */
+    }
+}
+
+/* Full Desktop Styles (Show everything) */
+@media only screen and (min-width: 991px) {
     .searchBar{
         align-self:center;
         display:flex;
