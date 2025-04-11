@@ -388,7 +388,7 @@ async function run() {
     });
 
     // Route for the supported sites page
-    app.get('/supported-sites', ensureAuthenticated, (req, res) => { // Protected (ensure user is logged in to see it)
+    app.get('/supportedSites', ensureAuthenticated, (req, res) => { // Protected (ensure user is logged in to see it)
         try {
             // Currently just renders the static EJS page
             // Future enhancement: Could fetch the list dynamically if needed
