@@ -234,7 +234,10 @@ async function run() {
                   steps: ["Cook spaghetti.", "Fry pancetta until crisp.", "Whisk eggs and cheese.", "Combine pasta, pancetta fat, egg mixture off heat.", "Add pasta water if needed. Serve with pepper."],
                   categories: ["Pasta", "Italian", "Quick"],
                   images: carbonaraImgBuffer, // Assign processed buffer
-                  userId: demoUserId
+                  userId: demoUserId,
+                  isLink:false,
+                  isImg:false,
+                  recipeUrl:"noUrl"
               },
               {
                   title: "Chicken Stir-Fry",
@@ -243,7 +246,10 @@ async function run() {
                   steps: ["Marinate chicken in soy sauce and cornstarch.", "Heat oil in wok.", "Stir-fry chicken until cooked.", "Add vegetables and stir-fry until tender-crisp.", "Add sauce and toss to coat."],
                   categories: ["Stir-fry", "Asian", "Chicken"],
                   images: stirfryImgBuffer, // Assign processed buffer
-                  userId: demoUserId
+                  userId: demoUserId,
+                  isLink:false,
+                  isImg:false,
+                  recipeUrl:"noUrl"
               },
                {
                   title: "Chocolate Chip Cookies",
@@ -252,7 +258,10 @@ async function run() {
                   steps: ["Preheat oven to 375°F (190°C).", "Combine dry ingredients.", "Cream butter and sugars.", "Beat in eggs and vanilla.", "Gradually add dry ingredients.", "Stir in chocolate chips.", "Drop rounded tablespoons onto ungreased baking sheets.", "Bake 9-11 minutes."],
                   categories: ["Dessert", "Cookies", "Baking"],
                   images: cookiesImgBuffer, // Assign processed buffer
-                  userId: demoUserId
+                  userId: demoUserId,
+                  isLink:false,
+                  isImg:false,
+                  recipeUrl:"noUrl"
               }
           ];
 
@@ -444,7 +453,7 @@ async function run() {
     app.get('/recipe/:title/editRecipe', ensureAuthenticated, async (req, res) => { // Protected & User-Specific Check
       try {
         const userId = req.user._id;
-        let recipe = await recipes.findOne({ title: req.params.title });
+        let recipe = await recipes.findOne({ title: req.params.title, userId:userId });
 
         if (!recipe) {
           return res.redirect('/recipeList');
