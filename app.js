@@ -119,7 +119,7 @@ async function run() {
       }
     }
     // To run this function manually (e.g., from a specific route or script):
-    generateThumbnails().catch(console.error);
+    //generateThumbnails().catch(console.error);
 
 
     // --- Session Configuration ---
