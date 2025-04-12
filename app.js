@@ -296,23 +296,45 @@ async function run() {
       }
   });
 
-    //Favourites route - fetches recipes favourited by the current user
+    // Favourites route - fetches recipes favourited by the current user with pagination
     app.get("/favourites", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
         const userId = req.user._id;
+        const page = parseInt(req.query.page) || 1; // Get page from query, default to 1
+        const limit = parseInt(req.query.limit) || 12; // Get limit from query, default to 12
+        const skip = (page - 1) * limit;
+
         // Find all favourite entries for the current user
         const favouriteEntries = await userFavourites.find({ userId: userId }).toArray();
         // Extract the recipe IDs
         const recipeIds = favouriteEntries.map(fav => fav.recipeId);
-
-        // Fetch the actual recipe documents using the extracted IDs
         const recipeObjectIds = recipeIds.map(id => typeof id === 'string' ? new ObjectId(id) : id);
-        let recipeList = await recipes.find({ _id: { $in: recipeObjectIds } }).sort({ "title": 1 }).toArray();
 
-        // Add the isCurrentUserFavourite flag for the view
+        // Base query for favourite recipes
+        const query = { _id: { $in: recipeObjectIds } };
+
+        // Fetch the paginated recipe documents using the extracted IDs
+        let recipeList = await recipes.find(query)
+                                      .sort({ "title": 1 })
+                                      .skip(skip)
+                                      .limit(limit)
+                                      .toArray();
+
+        // Get the total count of favourite recipes for pagination controls
+        const totalRecipes = await recipes.countDocuments(query);
+        const totalPages = Math.ceil(totalRecipes / limit);
+
+        // Add the isCurrentUserFavourite flag for the view (always true for this route)
         recipeList = recipeList.map(recipe => ({ ...recipe, isCurrentUserFavourite: true }));
 
-        res.render('recipeList', { recipeList: recipeList, favourites: true, currentPage: req.path }); // Pass currentPage
+        res.render('recipeList', {
+          recipeList: recipeList,
+          favourites: true,
+          currentPage: page,
+          totalPages: totalPages,
+          limit: limit,
+          currentPath: req.path // Keep original path for potential other uses
+        });
       } catch (err) {
         console.error("Error fetching favourites:", err);
         res.status(500).send('Error fetching favourites');
@@ -362,25 +384,47 @@ async function run() {
       res.render('recipeFrom', { recipeExists: false, currentPage: req.path }) // Pass currentPage
     })
 
-    //send array of recipes belonging to the logged-in user to recipeList page, indicating favourite status
+    // Send paginated array of recipes belonging to the logged-in user to recipeList page, indicating favourite status
     app.get('/recipeList', ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
         const userId = req.user._id;
-        // Get user's recipes
-        let recipeList = await recipes.find({ userId: userId }).collation({ locale: "en" }).sort({ "title": 1 }).toArray();
+        const page = parseInt(req.query.page) || 1; // Get page from query, default to 1
+        const limit = parseInt(req.query.limit) || 12; // Get limit from query, default to 12
+        const skip = (page - 1) * limit;
+
+        // Base query for user's recipes
+        const query = { userId: userId };
+
+        // Get paginated user's recipes
+        let recipeList = await recipes.find(query)
+                                      .collation({ locale: "en" })
+                                      .sort({ "title": 1 })
+                                      .skip(skip)
+                                      .limit(limit)
+                                      .toArray();
+
+        // Get the total count of user's recipes for pagination controls
+        const totalRecipes = await recipes.countDocuments(query);
+        const totalPages = Math.ceil(totalRecipes / limit);
 
         // Get user's favourite recipe IDs for quick lookup
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
         const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString())); // Store as strings for easy comparison
 
-        // Add favourite status to each recipe
+        // Add favourite status to each recipe on the current page
         recipeList = recipeList.map(recipe => ({
           ...recipe,
           isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
         }));
 
-        // console.log(recipeList); // Optional
-        res.render('recipeList', { recipeList: recipeList, favourites: false, currentPage: req.path }); // Pass currentPage
+        res.render('recipeList', {
+          recipeList: recipeList,
+          favourites: false,
+          currentPage: page,
+          totalPages: totalPages,
+          limit: limit,
+          currentPath: req.path // Keep original path for potential other uses
+        });
       } catch (err) {
         console.error("Error fetching recipe list:", err);
         res.status(500).send('Error fetching recipe list');
@@ -1020,29 +1064,38 @@ async function run() {
       }
     });
 
-
-    //Search Recipe by Title or Ingredient (Should this be user-specific?)
-    // Current implementation searches globally. Modify if needed.
-    app.post('/search', ensureAuthenticated, async (req, res) => { // Added ensureAuthenticated
+    // GET route for subsequent pages of search results
+    app.get('/search', ensureAuthenticated, async (req, res) => {
       try {
-        const userId = req.user._id; // Get current user ID
-        const searchTerm = req.body.search;
+        const userId = req.user._id;
+        // Search term comes from the query string for GET requests
+        const searchTerm = req.query.search || '';
+        // Pagination parameters come from the query string
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 12;
+        const skip = (page - 1) * limit;
 
-        // Construct a query to search only the user's recipes
+        // Base query for user's recipes matching the search term
         const query = {
-           userId: userId, // Filter by the logged-in user's ID
-           $or: [
-               // Case-insensitive search for the term within title, ingredients, or categories
-               { "title": { "$regex": searchTerm, "$options": "i" } }, // Simpler regex, consider word boundaries if needed: "\\b" + searchTerm + "\\b"
-               { "ingredients": { "$regex": searchTerm, "$options": "i" } },
-               { "categories": { "$regex": searchTerm, "$options": "i" } }
-           ]
+          userId: userId,
+          $or: [
+            { "title": { "$regex": searchTerm, "$options": "i" } },
+            { "ingredients": { "$regex": searchTerm, "$options": "i" } },
+            { "categories": { "$regex": searchTerm, "$options": "i" } }
+          ]
         };
 
-        // Execute the single query
-        let recipeList = await recipes.find(query).toArray();
+        // Get paginated search results
+        let recipeList = await recipes.find(query)
+                                      .collation({ locale: "en" })
+                                      .sort({ "title": 1 })
+                                      .skip(skip)
+                                      .limit(limit)
+                                      .toArray();
 
-        // Deduplication is no longer needed as we perform a single query
+        // Get the total count of matching search results for pagination
+        const totalRecipes = await recipes.countDocuments(query);
+        const totalPages = Math.ceil(totalRecipes / limit);
 
         // Add favourite status for the current user to search results
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
@@ -1052,17 +1105,80 @@ async function run() {
           isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
         }));
 
-
-        recipeList.sort((a, b) => a.title.localeCompare(b.title));
-        // Note: req.path for a POST route might not be what's expected for highlighting.
-        // It might be better to hardcode '/recipeList' or pass a specific variable.
-        // Using '/recipeList' for now as it renders the recipe list view.
-        res.render('recipeList', { recipeList: recipeList, favourites: false, currentPage: '/recipeList' }) // Pass hardcoded currentPage for search results
+        // Render the same list template, passing pagination and search term
+        res.render('recipeList', {
+          recipeList: recipeList,
+          favourites: false, // Indicate it's not the favourites page
+          currentPage: page,
+          totalPages: totalPages,
+          limit: limit,
+          currentPath: '/search', // Use '/search' as the base path for pagination links
+          searchTerm: searchTerm // Pass search term for pagination links
+        });
       } catch (err) {
-        console.log("Search error:", err);
+        console.error("Search GET error:", err); // Differentiate log message
         res.status(500).send('Error during search');
       }
     });
+
+
+    // Search Recipe by Title, Ingredient, or Category with Pagination (Initial POST)
+    app.post('/search', ensureAuthenticated, async (req, res) => {
+      try {
+        const userId = req.user._id;
+        // Search term comes from the POST body for the initial search
+        const searchTerm = req.body.search || '';
+        // Initial page is always 1 for a new POST search
+        const page = 1; // Default to page 1 for initial POST search
+        const limit = parseInt(req.query.limit) || 12; // Allow limit override if needed, but usually default
+        const skip = (page - 1) * limit; // skip will be 0
+
+        // Base query for user's recipes matching the search term
+        const query = {
+          userId: userId,
+          $or: [
+            { "title": { "$regex": searchTerm, "$options": "i" } },
+            { "ingredients": { "$regex": searchTerm, "$options": "i" } },
+            { "categories": { "$regex": searchTerm, "$options": "i" } }
+          ]
+        };
+
+        // Get paginated search results
+        let recipeList = await recipes.find(query)
+                                      .collation({ locale: "en" }) // Keep collation for sorting consistency
+                                      .sort({ "title": 1 })
+                                      .skip(skip)
+                                      .limit(limit)
+                                      .toArray();
+
+        // Get the total count of matching search results for pagination
+        const totalRecipes = await recipes.countDocuments(query);
+        const totalPages = Math.ceil(totalRecipes / limit);
+
+        // Add favourite status for the current user to search results
+        const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
+        const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString()));
+        recipeList = recipeList.map(recipe => ({
+          ...recipe,
+          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
+        }));
+
+        // Render the same list template, passing pagination and search term
+        res.render('recipeList', {
+          recipeList: recipeList,
+          favourites: false, // Indicate it's not the favourites page
+          currentPage: page,
+          totalPages: totalPages,
+          limit: limit,
+          currentPath: '/search', // Use '/search' as the base path for pagination links
+          searchTerm: searchTerm // Pass search term for pagination links
+        });
+      } catch (err) {
+        console.error("Search POST error:", err); // Differentiate log message
+        res.status(500).send('Error during search');
+      }
+    });
+
 
     // Toggle recipe on/off shopping list for the current user
     app.post('/shoppingList', ensureAuthenticated, async (req, res) => { // Protected & User-Specific

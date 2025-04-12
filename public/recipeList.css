@@ -145,6 +145,52 @@
     vertical-align: middle; /* Align images better if using img tags */
 }
 
+/* --- Pagination Styles --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0 1rem 0; /* Add some padding */
+    gap: 0.5rem; /* Space between elements */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.pagination a,
+.pagination span {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    background-color: var(--background);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.pagination a:hover {
+    background-color: var(--accent);
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+.pagination .current {
+    background-color: var(--accent-red);
+    color: var(--background); /* White text on red background */
+    border-color: var(--accent-red);
+    font-weight: bold;
+}
+
+.pagination .disabled {
+    color: var(--text-light); /* Lighter text for disabled */
+    background-color: var(--background-alt); /* Slightly different background */
+    cursor: default;
+    border-color: var(--border-light);
+}
+
+.pagination .disabled:hover {
+    background-color: var(--background-alt); /* No hover effect */
+    color: var(--text-light);
+}
 
 
   @media only screen and (min-width: 600px) {
@@ -152,10 +198,12 @@
         .content{
             width:50%;
         }
-        .content h1{
-            font-size:5rem;
-        }
-      }
+    .content h1{
+        font-size:5rem;
+    }
+  }
+
+
   }
   @media only screen and (min-width: 1200px) {
     .content{

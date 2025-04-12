@@ -6,11 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe List</title>
 
-    <link id="dynamicStylesheet" rel="stylesheet" type="text/css" href="/thumbs.css">
-    <link rel="stylesheet" type="text/css" href="/main.css"> 
+    <link id="dynamicStylesheet" rel="stylesheet" type="text/css" href="/thumbs.css"> <!-- Default to thumbs initially -->
+    <link rel="stylesheet" type="text/css" href="/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    <script>
+      // Inline script to prevent FOUC
+      (function() {
+        const storageKey = 'recipeViewStyle';
+        const savedStyle = localStorage.getItem(storageKey) || 'thumbs'; // Default to thumbs
+        const stylesheet = document.getElementById('dynamicStylesheet');
+        if (stylesheet) {
+          stylesheet.href = savedStyle === 'thumbs' ? '/thumbs.css' : '/recipeList.css';
+        }
+      })();
+    </script>
 </head>
 <body>
     
@@ -86,6 +97,79 @@
                 </div>
             <%}%>
         </ul>
+
+        <% if (totalPages > 1) { %>
+            <div class="pagination">
+                <%# Construct base URL for pagination links %>
+                <% let paginationBaseUrl = `${currentPath}?limit=${limit}`; %>
+                <%# If it's a search result page, add the search term %>
+                <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
+                    <% paginationBaseUrl += `&search=${encodeURIComponent(searchTerm)}`; %>
+                <% } %>
+
+                <%# Previous Button - Ensure numerical comparison %>
+                <% if (Number(currentPage) > 1) { %>
+                    <a href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) - 1 %>">&laquo;</a>
+                <% } else { %>
+                    
+                <% } %>
+
+                <%# Page Number Links - New Logic %>
+                <% const currentNum = Number(currentPage); %>
+                <% const totalNum = Number(totalPages); %>
+
+                <%# Page 1 %>
+                <% if (currentNum === 1) { %>
+                    <span class="current">1</span>
+                <% } else { %>
+                    <a href="<%= paginationBaseUrl %>&page=1">1</a>
+                <% } %>
+
+                <%# Ellipsis before current page range - make it a link %>
+                <% if (currentNum > 3) { %>
+                    <% const prevEllipsisPage = Math.max(1, currentNum - 3); %>
+                    <a href="<%= paginationBaseUrl %>&page=<%= prevEllipsisPage %>" class="ellipsis">...</a>
+                <% } %>
+
+                <%# Page before current %>
+                <% if (currentNum > 2) { %>
+                    <a href="<%= paginationBaseUrl %>&page=<%= currentNum - 1 %>"><%= currentNum - 1 %></a>
+                <% } %>
+
+                <%# Current page (if not 1 and not totalPages) %>
+                <% if (currentNum !== 1 && currentNum !== totalNum) { %>
+                    <span class="current"><%= currentNum %></span>
+                <% } %>
+
+                <%# Page after current %>
+                <% if (currentNum < totalNum - 1) { %>
+                    <a href="<%= paginationBaseUrl %>&page=<%= currentNum + 1 %>"><%= currentNum + 1 %></a>
+                <% } %>
+
+                <%# Ellipsis after current page range - make it a link %>
+                <% if (currentNum < totalNum - 2) { %>
+                    <% const nextEllipsisPage = Math.min(totalNum, currentNum + 3); %>
+                    <a href="<%= paginationBaseUrl %>&page=<%= nextEllipsisPage %>" class="ellipsis">...</a>
+                <% } %>
+
+                <%# Last Page (if totalPages > 1) %>
+                <% if (totalNum > 1) { %>
+                    <% if (currentNum === totalNum) { %>
+                        <span class="current"><%= totalNum %></span>
+                    <% } else { %>
+                        <a href="<%= paginationBaseUrl %>&page=<%= totalNum %>"><%= totalNum %></a>
+                    <% } %>
+                <% } %>
+
+                <%# Next Button - Ensure numerical comparison %>
+                <% if (currentNum < totalNum) { %>
+                    <a class="next" href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) + 1 %>">&raquo;</a>
+                <% } else { %>
+                   
+                <% } %>
+            </div>
+        <% } %>
+
     </div>
 </div>
 
@@ -185,23 +269,44 @@
         }
 
 
-        //Toggle Thumbnails Button
+        // --- Stylesheet Toggle Logic with localStorage ---
         const toggleButton = document.getElementById('toggleStylesheet');
         const dynamicStylesheet = document.getElementById('dynamicStylesheet');
-        let recipeImages = document.querySelectorAll(".recipeImg");
+        const recipeImages = document.querySelectorAll(".recipeImg");
+        const storageKey = 'recipeViewStyle'; // Key for localStorage
 
-        // Initial value (you can set this based on your logic)
-        let thumbnails = true;
-
-        // Function to toggle the stylesheet
-        function toggleStyles() {
-            thumbnails = !thumbnails;
-            dynamicStylesheet.href = thumbnails ? '/thumbs.css' : '/recipeList.css';
-            recipeImages.forEach((recipe) =>{
-                recipe.style.display = thumbnails ? 'block' : 'none';
-            })
-
+        // Function to apply the selected style AND save preference
+        function applyAndSaveStyle(style) {
+            const isThumbs = style === 'thumbs';
+            dynamicStylesheet.href = isThumbs ? '/thumbs.css' : '/recipeList.css';
+            recipeImages.forEach((recipe) => {
+                // Only toggle display if the element exists (might not on initial load before full DOM ready)
+                if (recipe) {
+                    recipe.style.display = isThumbs ? 'block' : 'none';
+                }
+            });
+            // Save the preference
+            localStorage.setItem(storageKey, style);
         }
+
+        // Function to toggle the stylesheet and save preference
+        function toggleStyles() {
+            const currentStyle = localStorage.getItem(storageKey) || 'thumbs'; // Default to thumbs if nothing saved
+            const newStyle = currentStyle === 'thumbs' ? 'list' : 'thumbs';
+            applyAndSaveStyle(newStyle);
+        }
+
+        // Apply initial display based on the style set in the head (needed for images)
+        // This runs after the DOM is more likely ready
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentStyle = localStorage.getItem(storageKey) || 'thumbs';
+            const isThumbs = currentStyle === 'thumbs';
+            const recipeImagesLoaded = document.querySelectorAll(".recipeImg"); // Re-select in case DOM wasn't ready before
+             recipeImagesLoaded.forEach((recipe) => {
+                recipe.style.display = isThumbs ? 'block' : 'none';
+            });
+        });
+
 
         // Add event listener to the button
         toggleButton.addEventListener('click', toggleStyles);
