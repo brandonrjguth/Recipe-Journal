@@ -145,6 +145,10 @@ textarea{
     padding: 0.3rem;
 }
 
+.mobileMenu{
+    padding-bottom: 1rem;
+}
+
 .menu{
     display:none;
     list-style: none;
@@ -233,7 +237,6 @@ textarea{
         width: 100%;
         background-color: var(--secondary); /* Match desktop background */
         flex-direction: column;
-        padding: 0; /* Remove horizontal padding */
         box-shadow: 0 4px 8px var(--shadow-color); /* Optional shadow */
         z-index: 1000; /* Ensure it's above other content */
     }
