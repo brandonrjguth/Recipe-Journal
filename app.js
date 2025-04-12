@@ -86,7 +86,7 @@ async function run() {
               // Generate the thumbnail
               const thumbnailBuffer = await sharp(sourceImageBuffer)
                 .resize(400) // Resize width to 400px
-                .jpeg({ quality: 75 }) // Set JPEG quality
+                .jpeg({ quality: 60 }) // Set JPEG quality
                 .toBuffer();
 
               // Update the recipe document
@@ -119,7 +119,7 @@ async function run() {
       }
     }
     // To run this function manually (e.g., from a specific route or script):
-    //generateThumbnails().catch(console.error);
+    generateThumbnails().catch(console.error);
 
 
     // --- Session Configuration ---

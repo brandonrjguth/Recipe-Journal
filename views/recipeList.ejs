@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
     <script>
-      // Inline script to prevent FOUC
+      // Inline script to prevent FOUC for stylesheet
       (function() {
         const storageKey = 'recipeViewStyle';
         const savedStyle = localStorage.getItem(storageKey) || 'thumbs'; // Default to thumbs
@@ -22,9 +22,24 @@
         }
       })();
     </script>
+    <style>
+        /* You can place the essential CSS directly here or ensure it's in thumbs.css/main.css */
+        img.recipeImg {
+            opacity: 0; /* Start invisible */
+            transition: opacity 0.15s ease-in-out; /* Adjust timing */
+            /* Ensure other styles like object-fit, width, height are set */
+        }
+        img.recipeImg.loaded {
+            opacity: 1; /* Fade in */
+        }
+        img.recipeImg.error {
+             opacity: 1; /* Make errors visible */
+             /* Add alternative styling if needed */
+        }
+    </style>
 </head>
 <body>
-    
+
     <%- include('partials/header');%>
     <div class="contentWrapper">
     <div class="content">
@@ -36,13 +51,13 @@
         </h1>
         <div class="toggle row">
             <button id="toggleStylesheet">
-                <img src="/imgs/thumb3.svg" height="20px" width="20px">
-                <img src="/imgs/slash.svg" height="20px" width="20px">
-                <img src="/imgs/list.svg" height="20px" width="20px">
+                <img src="/imgs/thumb3.svg" height="20px" width="20px" alt="Thumbnail view icon">
+                <img src="/imgs/slash.svg" height="20px" width="20px" alt="Slash icon">
+                <img src="/imgs/list.svg" height="20px" width="20px" alt="List view icon">
             </button>
         </div>
-        
-        <!--For each recipe in the collection, add a link to the recipe as list item in the ordered list-->
+
+        <!--Recipe List-->
         <ul>
             <% for(var i=0; i < recipeList.length; i++){%>
                 <div class="contentRow">
@@ -54,43 +69,59 @@
                         <%}%>
                     </li>
 
-                    
+                    <%# --- Image Section with onload --- %>
                     <% if (recipeList[i].isImg){%>
-                    <a href="/recipeImg/<%=recipeList[i].title%>">
-                        <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" loading="lazy" style="object-fit: cover;">
-                    
+                        <a href="/recipeImg/<%=recipeList[i].title%>">
+                            <img class="recipeImg"
+                                 src="/recipeImg/imgURL/<%=recipeList[i].title%>/0"
+                                 style="object-fit: cover;"
+                                 alt="<%= recipeList[i].title %>"
+                                 onload="this.classList.add('loaded')"
+                                 onerror="this.classList.add('error')">
+                        </a>
                     <%} else if (recipeList[i].images == undefined && recipeList[i].isLink){%>
-                    <a href="<%=recipeList[i].recipeUrl%>">
-                        <img class="recipeImg" src="../imgs/placeholder.jpg" loading="lazy">
-                    </a>
-
+                        <a href="<%=recipeList[i].recipeUrl%>">
+                            <img class="recipeImg"
+                                 src="../imgs/placeholder.jpg"
+                                 alt="Placeholder"
+                                 onload="this.classList.add('loaded')"
+                                 onerror="this.classList.add('error')">
+                        </a>
                     <%} else if (recipeList[i].images == undefined && !recipeList[i].isLink){%>
-                    <a href="/recipe/<%=recipeList[i].title%>">   
-                        <img class="recipeImg" src="../imgs/placeholder.jpg" loading="lazy">
-                    </a>
-
+                        <a href="/recipe/<%=recipeList[i].title%>">
+                            <img class="recipeImg"
+                                 src="../imgs/placeholder.jpg"
+                                 alt="Placeholder"
+                                 onload="this.classList.add('loaded')"
+                                 onerror="this.classList.add('error')">
+                        </a>
                     <%} else {%>
-                    <a href="/recipe/<%=recipeList[i].title%>">    
-                        <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" loading="lazy" style="object-fit: cover;">
-                    </a>
+                        <a href="/recipe/<%=recipeList[i].title%>">
+                            <img class="recipeImg"
+                                 src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>"
+                                 style="object-fit: cover;"
+                                 alt="<%= recipeList[i].title %>"
+                                 onload="this.classList.add('loaded')"
+                                 onerror="this.classList.add('error')">
+                        </a>
                     <%}%>
-                
-                
+                    <%# --- End Image Section --- %>
+
 
                     <div class="buttons row">
                         <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
-                            <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
-                            <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>">
+                            <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg" alt="Delete"></button>
                         </form>
-                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg" alt="Edit"></a></button>
                         <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
-                            <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
-                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>">
+                            <button type="button" class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>" alt="Favourite"></button>
                         </form>
                         <%if (!recipeList[i].isImg && !recipeList[i].isLink){%>
                         <form class="col shoppingList" action='/shoppingList' method='post'>
-                            <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
-                            <button class="shoppingListBtn"><img src="/imgs/<%if (recipeList[i].onList === true){%>basketChecked.svg<%} else {%>basket.svg<%}%>"></button>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>">
+                            <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipeList[i].onList === true){%>basketChecked.svg<%} else {%>basket.svg<%}%>" alt="Add to shopping list"></button>
                         </form>
                         <%}%>
                     </div>
@@ -98,284 +129,130 @@
             <%}%>
         </ul>
 
+        <%# --- Pagination (Unchanged) --- %>
         <% if (totalPages > 1) { %>
             <div class="pagination">
-                <%# Construct base URL for pagination links %>
                 <% let paginationBaseUrl = `${currentPath}?limit=${limit}`; %>
-                <%# If it's a search result page, add the search term %>
                 <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
                     <% paginationBaseUrl += `&search=${encodeURIComponent(searchTerm)}`; %>
                 <% } %>
-
-                <%# Previous Button - Ensure numerical comparison %>
-                <% if (Number(currentPage) > 1) { %>
-                    <a href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) - 1 %>">&laquo;</a>
-                <% } else { %>
-                    
-                <% } %>
-
-                <%# Page Number Links - New Logic %>
-                <% const currentNum = Number(currentPage); %>
-                <% const totalNum = Number(totalPages); %>
-
-                <%# Page 1 %>
-                <% if (currentNum === 1) { %>
-                    <span class="current">1</span>
-                <% } else { %>
-                    <a href="<%= paginationBaseUrl %>&page=1">1</a>
-                <% } %>
-
-                <%# Ellipsis before current page range - make it a link %>
-                <% if (currentNum > 3) { %>
-                    <% const prevEllipsisPage = Math.max(1, currentNum - 3); %>
-                    <a href="<%= paginationBaseUrl %>&page=<%= prevEllipsisPage %>" class="ellipsis">...</a>
-                <% } %>
-
-                <%# Page before current %>
-                <% if (currentNum > 2) { %>
-                    <a href="<%= paginationBaseUrl %>&page=<%= currentNum - 1 %>"><%= currentNum - 1 %></a>
-                <% } %>
-
-                <%# Current page (if not 1 and not totalPages) %>
-                <% if (currentNum !== 1 && currentNum !== totalNum) { %>
-                    <span class="current"><%= currentNum %></span>
-                <% } %>
-
-                <%# Page after current %>
-                <% if (currentNum < totalNum - 1) { %>
-                    <a href="<%= paginationBaseUrl %>&page=<%= currentNum + 1 %>"><%= currentNum + 1 %></a>
-                <% } %>
-
-                <%# Ellipsis after current page range - make it a link %>
-                <% if (currentNum < totalNum - 2) { %>
-                    <% const nextEllipsisPage = Math.min(totalNum, currentNum + 3); %>
-                    <a href="<%= paginationBaseUrl %>&page=<%= nextEllipsisPage %>" class="ellipsis">...</a>
-                <% } %>
-
-                <%# Last Page (if totalPages > 1) %>
-                <% if (totalNum > 1) { %>
-                    <% if (currentNum === totalNum) { %>
-                        <span class="current"><%= totalNum %></span>
-                    <% } else { %>
-                        <a href="<%= paginationBaseUrl %>&page=<%= totalNum %>"><%= totalNum %></a>
-                    <% } %>
-                <% } %>
-
-                <%# Next Button - Ensure numerical comparison %>
-                <% if (currentNum < totalNum) { %>
-                    <a class="next" href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) + 1 %>">&raquo;</a>
-                <% } else { %>
-                   
-                <% } %>
+                <% if (Number(currentPage) > 1) { %><a href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) - 1 %>">«</a><% } %>
+                <% const currentNum = Number(currentPage); %><% const totalNum = Number(totalPages); %>
+                <% if (currentNum === 1) { %><span class="current">1</span><% } else { %><a href="<%= paginationBaseUrl %>&page=1">1</a><% } %>
+                <% if (currentNum > 3) { %><% const prevEllipsisPage = Math.max(1, currentNum - 3); %><a href="<%= paginationBaseUrl %>&page=<%= prevEllipsisPage %>" class="ellipsis">...</a><% } %>
+                <% if (currentNum > 2) { %><a href="<%= paginationBaseUrl %>&page=<%= currentNum - 1 %>"><%= currentNum - 1 %></a><% } %>
+                <% if (currentNum !== 1 && currentNum !== totalNum) { %><span class="current"><%= currentNum %></span><% } %>
+                <% if (currentNum < totalNum - 1) { %><a href="<%= paginationBaseUrl %>&page=<%= currentNum + 1 %>"><%= currentNum + 1 %></a><% } %>
+                <% if (currentNum < totalNum - 2) { %><% const nextEllipsisPage = Math.min(totalNum, currentNum + 3); %><a href="<%= paginationBaseUrl %>&page=<%= nextEllipsisPage %>" class="ellipsis">...</a><% } %>
+                <% if (totalNum > 1) { %><% if (currentNum === totalNum) { %><span class="current"><%= totalNum %></span><% } else { %><a href="<%= paginationBaseUrl %>&page=<%= totalNum %>"><%= totalNum %></a><% } %><% } %>
+                <% if (currentNum < totalNum) { %><a class="next" href="<%= paginationBaseUrl %>&page=<%= Number(currentPage) + 1 %>">»</a><% } %>
             </div>
         <% } %>
+        <%# --- End Pagination --- %>
 
     </div>
 </div>
 
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM ready - Simplified Script");
 
-        let deleteBtns = document.querySelectorAll(".deleteBtn");
-        let deleteForm = document.querySelectorAll(".deleteRecipe");
-        let favouriteForms = document.querySelectorAll(".favouriteRecipe");
-        let shoppingForms = document.querySelectorAll(".shoppingList");
-
-        //Shopping list form using fetch to prevent refresh
-        shoppingForms.forEach((form, index) => {
-        let shoppingListButton = form.querySelector(".shoppingListBtn");
-
-        // Get the form data
-        // Create a separate function to handle the button click
-        async function handleShoppingListClick(event) {
-            event.preventDefault();
-            let data = {};
-            let formData = new FormData(form);
-            formData.forEach((value, key) => {data[key] = value});
-
-
-            // Toggle the heart icon
-            let shoppingIcon = shoppingListButton.querySelector('img');
-            let currentSrc = shoppingIcon.getAttribute('src');
-            let newSrc = currentSrc.includes('basket.svg') ? '/imgs/basketChecked.svg' : '/imgs/basket.svg';
-            shoppingIcon.setAttribute('src', newSrc);
-
-            try {
-                // Send the form data asynchronously using Fetch API
-                await fetch('/shoppingList', {
-                    method: 'POST',
-                    headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-                });
-                // Form data sent successfully (no need to wait for a response)
-            } catch (error) {
-                console.error('Error sending form data:', error);
-            }
-        }
-
-        // Add event listener to the button
-        shoppingListButton.addEventListener("click", handleShoppingListClick);
-        });
-            
-
-        //Favourite form using fetch to prevent refresh
-        favouriteForms.forEach((form, index) => {
-        let favouriteButton = form.querySelector(".favouriteBtn");
-
-        // Get the form data
-        // Create a separate function to handle the button click
-        async function handleFavouriteClick(event) {
-            event.preventDefault();
-            let data = {};
-            let formData = new FormData(form);
-            formData.forEach((value, key) => {data[key] = value});
-
-
-            // Toggle the heart icon
-            let heartIcon = favouriteButton.querySelector('img');
-            let currentSrc = heartIcon.getAttribute('src');
-            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.png' : '/imgs/heart-f-filled-red.png';
-            heartIcon.setAttribute('src', newSrc);
-
-            try {
-                // Send the form data asynchronously using Fetch API
-                await fetch('/favouriteRecipe', {
-                    method: 'POST',
-                    headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-                });
-                // Form data sent successfully (no need to wait for a response)
-            } catch (error) {
-                console.error('Error sending form data:', error);
-            }
-        }
-
-        // Add event listener to the button
-        favouriteButton.addEventListener("click", handleFavouriteClick);
-        });
-            
-        for (i = 0; i < deleteBtns.length; i++) {
-            let attachedForm = i;
-            deleteBtns[i].addEventListener("click", function(){
-                //Make user confirm recipe deletion before submitting the form
-                const response = confirm("Are you sure you want to delete this recipe?")
-                if (response === true){
-                    deleteForm[attachedForm].submit();
-                }
-            })
-        }
-
-
-        // --- Stylesheet Toggle Logic with localStorage ---
+        // --- Selectors for Buttons ---
         const toggleButton = document.getElementById('toggleStylesheet');
         const dynamicStylesheet = document.getElementById('dynamicStylesheet');
-        const recipeImages = document.querySelectorAll(".recipeImg");
-        const storageKey = 'recipeViewStyle'; // Key for localStorage
+        const storageKey = 'recipeViewStyle';
+        const deleteBtns = document.querySelectorAll(".deleteBtn");
+        const deleteForm = document.querySelectorAll(".deleteRecipe");
+        const favouriteForms = document.querySelectorAll(".favouriteRecipe");
+        const shoppingForms = document.querySelectorAll(".shoppingList");
 
-        // Function to apply the selected style AND save preference
+        // --- Stylesheet Toggle Logic ---
         function applyAndSaveStyle(style) {
             const isThumbs = style === 'thumbs';
+            if (!dynamicStylesheet) {
+                 console.error("Dynamic stylesheet element not found!"); return;
+            }
             dynamicStylesheet.href = isThumbs ? '/thumbs.css' : '/recipeList.css';
-            recipeImages.forEach((recipe) => {
-                // Only toggle display if the element exists (might not on initial load before full DOM ready)
-                if (recipe) {
-                    recipe.style.display = isThumbs ? 'block' : 'none';
-                }
-            });
-            // Save the preference
+
+            // Apply display style directly - This is still needed for the toggle
+            const currentRecipeImages = document.querySelectorAll(".recipeImg");
+             currentRecipeImages.forEach((recipe) => {
+                 // Make sure images are visible when thumbs view is active
+                 recipe.style.display = isThumbs ? 'block' : 'none';
+             });
+
             localStorage.setItem(storageKey, style);
+            console.log(`Applied style: ${style}. Image display set to: ${isThumbs ? 'block' : 'none'}`);
         }
 
-        // Function to toggle the stylesheet and save preference
         function toggleStyles() {
-            const currentStyle = localStorage.getItem(storageKey) || 'thumbs'; // Default to thumbs if nothing saved
+            const currentStyle = localStorage.getItem(storageKey) || 'thumbs';
             const newStyle = currentStyle === 'thumbs' ? 'list' : 'thumbs';
+            console.log(`Toggling style from ${currentStyle} to ${newStyle}`);
             applyAndSaveStyle(newStyle);
         }
 
-        // Apply initial display based on the style set in the head (needed for images)
-        // This runs after the DOM is more likely ready
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentStyle = localStorage.getItem(storageKey) || 'thumbs';
-            const isThumbs = currentStyle === 'thumbs';
-            const recipeImagesLoaded = document.querySelectorAll(".recipeImg"); // Re-select in case DOM wasn't ready before
-             recipeImagesLoaded.forEach((recipe) => {
-                recipe.style.display = isThumbs ? 'block' : 'none';
+        // Apply initial style on load (needed for the toggle)
+        const initialStyle = localStorage.getItem(storageKey) || 'thumbs';
+        // Check if applyAndSaveStyle needs to be called before applying display
+        // Or just apply the display part directly based on initialStyle
+         const initialIsThumbs = initialStyle === 'thumbs';
+         document.querySelectorAll(".recipeImg").forEach(img => {
+             img.style.display = initialIsThumbs ? 'block' : 'none';
+         });
+        console.log(`Initial style set based on localStorage: ${initialStyle}`);
+
+
+        // Add listener to the toggle button
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleStyles);
+        } else {
+             console.error("Toggle stylesheet button not found!");
+        }
+
+        // --- Button Handlers (Delete, Favourite, Shopping List) ---
+
+        // Shopping list form using fetch
+        shoppingForms.forEach((form) => {
+            const shoppingListButton = form.querySelector(".shoppingListBtn");
+            if (!shoppingListButton) return;
+            async function handleShoppingListClick(event) {
+                event.preventDefault(); let data = {}; new FormData(form).forEach((v, k) => { data[k] = v });
+                const icon = shoppingListButton.querySelector('img'); let originalSrc = '';
+                if (icon) { originalSrc = icon.getAttribute('src'); icon.setAttribute('src', originalSrc.includes('basket.svg') ? '/imgs/basketChecked.svg' : '/imgs/basket.svg'); }
+                try { await fetch('/shoppingList', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
+                catch (error) { console.error('Error sending SL data:', error); if (icon && originalSrc) icon.setAttribute('src', originalSrc); }
+            }
+            shoppingListButton.addEventListener("click", handleShoppingListClick);
+        });
+
+        // Favourite form using fetch
+        favouriteForms.forEach((form) => {
+            const favouriteButton = form.querySelector(".favouriteBtn");
+            if (!favouriteButton) return;
+            async function handleFavouriteClick(event) {
+                event.preventDefault(); let data = {}; new FormData(form).forEach((v, k) => { data[k] = v });
+                const icon = favouriteButton.querySelector('img'); let originalSrc = '';
+                if (icon) { originalSrc = icon.getAttribute('src'); icon.setAttribute('src', originalSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.png' : '/imgs/heart-f-filled-red.png'); }
+                try { await fetch('/favouriteRecipe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
+                catch (error) { console.error('Error sending Fav data:', error); if (icon && originalSrc) icon.setAttribute('src', originalSrc); }
+            }
+            favouriteButton.addEventListener("click", handleFavouriteClick);
+        });
+
+        // Delete confirmation
+        deleteBtns.forEach((button, index) => {
+            button.addEventListener("click", function() {
+                if (deleteForm && deleteForm[index]) {
+                    const response = confirm("Are you sure you want to delete this recipe?");
+                    if (response === true) deleteForm[index].submit();
+                } else { console.error(`Delete button no form index ${index}`); }
             });
         });
 
+    }); // End DOMContentLoaded
+</script>
 
-        // Add event listener to the button
-        toggleButton.addEventListener('click', toggleStyles);
 
-        document.addEventListener('DOMContentLoaded', () => {
-        // ... (your other existing JS for buttons, toggles, etc.) ...
-
-        const lazyImages = document.querySelectorAll('img.recipeImg[loading="lazy"]');
-
-        const handleImageLoad = (img) => {
-            // THIS IS THE KEY: 'load' fires after layout AND rendering properties (like object-fit)
-            // are generally processed for the image.
-            img.classList.add('is-loaded');
-        };
-
-        const handleImageError = (img) => {
-            // Optional: Handle cases where the image fails to load
-            img.classList.add('is-error');
-            console.warn('Image failed to load:', img.src);
-        };
-
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-
-                        // Check if already loaded (important for cached images)
-                        if (img.complete && img.naturalHeight > 0) { // 'complete' alone can be true before layout sometimes
-                            // Use a tiny timeout to ensure render queue completes, might help edge cases
-                            setTimeout(() => handleImageLoad(img), 0);
-                        } else {
-                            // Assign load/error handlers BEFORE setting src if you were swapping data-src
-                            // Since src is already set, just add listeners
-                            img.onload = () => handleImageLoad(img);
-                            img.onerror = () => handleImageError(img);
-                        }
-                        obs.unobserve(img); // Unobserve once handled
-                    }
-                });
-            }, { rootMargin: "0px 0px 500px 0px" }); // Adjust rootMargin as needed
-
-            lazyImages.forEach(img => {
-                // If the image is somehow already complete when observer runs
-                if (img.complete && img.naturalHeight > 0) {
-                    setTimeout(() => handleImageLoad(img), 0);
-                } else {
-                    img.onload = () => handleImageLoad(img);
-                    img.onerror = () => handleImageError(img);
-                    observer.observe(img); // Start observing
-                }
-            });
-
-        } else {
-            // Fallback for very old browsers (no IntersectionObserver)
-            lazyImages.forEach(img => {
-                if (img.complete && img.naturalHeight > 0) {
-                    handleImageLoad(img);
-                } else {
-                    img.onload = () => handleImageLoad(img);
-                    img.onerror = () => handleImageError(img);
-                    // Force browser to check load state again if needed
-                    img.src = img.src;
-                }
-            });
-        }
-    });
-
-    </script>
-        
 </body>
 </html>
