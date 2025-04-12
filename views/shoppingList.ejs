@@ -29,49 +29,74 @@
                 <button id="detail">Detailed List</button>
             </div>
 
+            <%# Generate a safe ID from the simplified name %>
+            <% const createSyncId = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); %>
 
-            <ul class="simplified"> 
-                        <%simplified.forEach((ingredient) => {%>
-                            <li class="ingredient">
-                                <%=ingredient%>
-                            </li>
-                        <%})%>
-            </ul>
-            <ul class="detailed" style="display:none">
-                <%detailed.forEach((ingredient) => {%>
-                    <li class="ingredient">
-                        <%=ingredient%>
+            <%# Simplified List %>
+            <ul class="simplified">
+                <% shoppingListData.forEach((item) => { %>
+                    <% const syncId = createSyncId(item.simplifiedName); %>
+                    <li class="ingredient" data-sync-id="<%= syncId %>">
+                        <%= item.simplifiedName %>
                     </li>
-                <%})%>
+                <% }) %>
+            </ul>
+
+            <%# Detailed List %>
+            <ul class="detailed" style="display:none">
+                <% shoppingListData.forEach((item) => { %>
+                    <% const syncId = createSyncId(item.simplifiedName); %>
+                    <% item.detailedItems.forEach((detailedIngredient) => { %>
+                        <li class="ingredient" data-sync-id="<%= syncId %>">
+                            <%= detailedIngredient %>
+                        </li>
+                    <% }) %>
+                <% }) %>
             </ul>
         </div>
     </div>
 
     <script>
-        let ingredient= document.querySelectorAll(".ingredient");
-        let simplify = document.querySelector("#simplify");
-        let detail = document.querySelector("#detail");
-        let simplified = document.querySelector(".simplified")
-        let detailed = document.querySelector(".detailed");
+        const simplifiedList = document.querySelector(".simplified");
+        const detailedList = document.querySelector(".detailed");
+        const simplifyBtn = document.querySelector("#simplify");
+        const detailBtn = document.querySelector("#detail");
 
-        ingredient.forEach((ingredient) => {
-            ingredient.addEventListener("click", function(){
-                this.classList.toggle("strikeout");
-            })
-        })
+        // Get all ingredient items from both lists
+        const allIngredients = document.querySelectorAll(".ingredient");
 
-        simplify.addEventListener("click", function(){
-            detailed.style.display = "none";
-            simplified.style.display = "block";
+        allIngredients.forEach(item => {
+            item.addEventListener("click", function() {
+                const syncId = this.dataset.syncId; // Get the sync ID from the clicked item
+                if (!syncId) return; // Exit if no sync ID found
+
+                // Toggle the strikeout class on the clicked item
+                const shouldBeStruckOut = this.classList.toggle("strikeout");
+
+                // Find all other items with the same sync ID
+                const correspondingItems = document.querySelectorAll(`.ingredient[data-sync-id="${syncId}"]`);
+
+                // Synchronize the strikeout state
+                correspondingItems.forEach(relatedItem => {
+                    if (shouldBeStruckOut) {
+                        relatedItem.classList.add("strikeout");
+                    } else {
+                        relatedItem.classList.remove("strikeout");
+                    }
+                });
+            });
         });
 
-        detail.addEventListener("click", function(){
-            simplified.style.display = "none";
-            detailed.style.display = "block";
-        })
+        // Button logic to toggle list visibility
+        simplifyBtn.addEventListener("click", function() {
+            detailedList.style.display = "none";
+            simplifiedList.style.display = "block";
+        });
 
-
-     
+        detailBtn.addEventListener("click", function() {
+            simplifiedList.style.display = "none";
+            detailedList.style.display = "block";
+        });
     </script>
         
 </body>

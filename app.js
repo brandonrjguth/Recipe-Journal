@@ -500,24 +500,34 @@ async function run() {
 
         // Remove numbers, units, fractions, then sort based on cleaned
 
-        let ingredientsWithOriginals = ingredients.map(ingredient => ({
-          original: ingredient,
-          cleaned: ingredient.replace(regex, '').trim()
-        }));
+        // Group ingredients by their cleaned name
+        let groupedIngredients = {};
+        ingredients.forEach(ingredient => {
+            let cleaned = ingredient.replace(regex, '').trim().toLowerCase(); // Clean and lowercase for grouping
+            if (!cleaned) return; // Skip empty ingredients after cleaning
 
-        ingredientsWithOriginals.sort((a, b) => a.cleaned.localeCompare(b.cleaned, undefined, { sensitivity: 'base' }));
-        let detailedIngredients = ingredientsWithOriginals.map(item => item.original);
+            if (!groupedIngredients[cleaned]) {
+                groupedIngredients[cleaned] = {
+                    simplifiedName: cleaned.charAt(0).toUpperCase() + cleaned.slice(1), // Capitalize first letter for display
+                    detailedItems: []
+                };
+            }
+            groupedIngredients[cleaned].detailedItems.push(ingredient); // Add original detailed string
+        });
+
+        // Convert grouped object into an array and sort by simplified name
+        let shoppingListData = Object.values(groupedIngredients).sort((a, b) =>
+            a.simplifiedName.localeCompare(b.simplifiedName, undefined, { sensitivity: 'base' })
+        );
+
+        // Sort detailed items within each group (optional, but keeps original detailed sort logic somewhat)
+        shoppingListData.forEach(group => {
+            group.detailedItems.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        });
 
 
-
-        //Simplified version of ingredients with no duplicates
-        let simplifiedIngredients = ingredients.map(ingredient => ingredient.toLowerCase().replace(regex, '').trim()).sort();
-        simplifiedIngredients.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        simplifiedIngredients = [...new Set(simplifiedIngredients)];
-
-
-
-        res.render("shoppingList", { simplified: simplifiedIngredients, detailed: detailedIngredients, currentPage: req.path }) // Pass currentPage
+        // Pass the structured data to the template
+        res.render("shoppingList", { shoppingListData: shoppingListData, currentPage: req.path }); // Pass currentPage
       } catch (err) {
         console.error("Error fetching shopping list:", err);
         res.status(500).send('Error fetching shopping list');
