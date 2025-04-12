@@ -50,12 +50,27 @@ body{
     justify-content: center;
 }
 
+
+
+
 img.recipeImg {
-    max-height: 14rem;
+    display: block;
     width: 100%;
-    height:14rem;
+    height: 13rem; /* Fill the container */
     object-fit: cover;
-    aspect-ratio: 16 / 9;
+    opacity: 0; /* START INVISIBLE */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in */
+    will-change: opacity; /* Hint for performance */
+    /* background-color: #e0e0e0; */ /* Background on IMG won't help here */
+}
+
+img.recipeImg.is-loaded { /* Class added by JS */
+    opacity: 1; /* FADE IN */
+}
+
+img.recipeImg.is-error { /* Optional: Style for broken images */
+    opacity: 1; /* Make sure errors are visible */
+    /* Maybe show the container background or add an icon */
 }
 
 
@@ -73,17 +88,27 @@ img.recipeImg {
 
 }
 
-.contentRow{
-    display:grid;
-    align-items: center;
-    justify-content: space-between;
+.content{
     width:100%;
-    flex-direction: column;
-    height: 20rem;
+}
+
+
+.contentRow {
+    display: grid;
+    align-items: center; /* Maybe change to stretch if needed */
+    justify-content: space-between;
+    width: 100%;
+    /* Ensure the grid row for the image can accommodate 14rem + padding/gaps */
+    /* Your existing grid-template-rows: 2fr 10fr 1fr; might need adjustment */
+    /* Consider explicit row sizes or adjust fractions */
+    grid-template-rows: auto minmax(14rem, auto) auto; /* Title, Image Area, Buttons */
+     /* OR grid-template-rows: auto 1fr auto; and let the image height push it */
+    height: auto; /* Let the row height be determined by content */
+    /* max-height: 20rem; */ /* Be careful this doesn't conflict */
     grid-template-columns: 1fr;
-    max-height: 20rem;
-    grid-template-rows: 2fr 10fr 1fr;
-    padding-bottom:1rem;
+    padding-bottom: 1rem;
+    /* Add overflow: hidden; to the image's direct container (the <a> tag) */
+    /* or potentially the .contentRow itself if appropriate */
 }
 
 span{

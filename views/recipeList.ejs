@@ -57,21 +57,21 @@
                     
                     <% if (recipeList[i].isImg){%>
                     <a href="/recipeImg/<%=recipeList[i].title%>">
-                        <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" style="display: block; object-fit:cover">
+                        <img class="recipeImg" src="/recipeImg/imgURL/<%=recipeList[i].title%>/0" loading="lazy" style="object-fit: cover;">
                     
                     <%} else if (recipeList[i].images == undefined && recipeList[i].isLink){%>
                     <a href="<%=recipeList[i].recipeUrl%>">
-                        <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block; object-fit:cover">
+                        <img class="recipeImg" src="../imgs/placeholder.jpg" loading="lazy">
                     </a>
 
                     <%} else if (recipeList[i].images == undefined && !recipeList[i].isLink){%>
                     <a href="/recipe/<%=recipeList[i].title%>">   
-                        <img class="recipeImg" src="../imgs/placeholder.jpg" height="80%" style="display: block; object-fit:cover">
+                        <img class="recipeImg" src="../imgs/placeholder.jpg" loading="lazy">
                     </a>
 
                     <%} else {%>
                     <a href="/recipe/<%=recipeList[i].title%>">    
-                        <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" style="display: block; object-fit:cover">
+                        <img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipeList[i].title%>" loading="lazy" style="object-fit: cover;">
                     </a>
                     <%}%>
                 
@@ -85,7 +85,7 @@
                         <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                         <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>"></input>
-                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button> <%# Updated condition %>
+                            <button class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
                         </form>
                         <%if (!recipeList[i].isImg && !recipeList[i].isLink){%>
                         <form class="col shoppingList" action='/shoppingList' method='post'>
@@ -235,7 +235,7 @@
             // Toggle the heart icon
             let heartIcon = favouriteButton.querySelector('img');
             let currentSrc = heartIcon.getAttribute('src');
-            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
+            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.png' : '/imgs/heart-f-filled-red.png';
             heartIcon.setAttribute('src', newSrc);
 
             try {
@@ -310,6 +310,70 @@
 
         // Add event listener to the button
         toggleButton.addEventListener('click', toggleStyles);
+
+        document.addEventListener('DOMContentLoaded', () => {
+        // ... (your other existing JS for buttons, toggles, etc.) ...
+
+        const lazyImages = document.querySelectorAll('img.recipeImg[loading="lazy"]');
+
+        const handleImageLoad = (img) => {
+            // THIS IS THE KEY: 'load' fires after layout AND rendering properties (like object-fit)
+            // are generally processed for the image.
+            img.classList.add('is-loaded');
+        };
+
+        const handleImageError = (img) => {
+            // Optional: Handle cases where the image fails to load
+            img.classList.add('is-error');
+            console.warn('Image failed to load:', img.src);
+        };
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+
+                        // Check if already loaded (important for cached images)
+                        if (img.complete && img.naturalHeight > 0) { // 'complete' alone can be true before layout sometimes
+                            // Use a tiny timeout to ensure render queue completes, might help edge cases
+                            setTimeout(() => handleImageLoad(img), 0);
+                        } else {
+                            // Assign load/error handlers BEFORE setting src if you were swapping data-src
+                            // Since src is already set, just add listeners
+                            img.onload = () => handleImageLoad(img);
+                            img.onerror = () => handleImageError(img);
+                        }
+                        obs.unobserve(img); // Unobserve once handled
+                    }
+                });
+            }, { rootMargin: "0px 0px 500px 0px" }); // Adjust rootMargin as needed
+
+            lazyImages.forEach(img => {
+                // If the image is somehow already complete when observer runs
+                if (img.complete && img.naturalHeight > 0) {
+                    setTimeout(() => handleImageLoad(img), 0);
+                } else {
+                    img.onload = () => handleImageLoad(img);
+                    img.onerror = () => handleImageError(img);
+                    observer.observe(img); // Start observing
+                }
+            });
+
+        } else {
+            // Fallback for very old browsers (no IntersectionObserver)
+            lazyImages.forEach(img => {
+                if (img.complete && img.naturalHeight > 0) {
+                    handleImageLoad(img);
+                } else {
+                    img.onload = () => handleImageLoad(img);
+                    img.onerror = () => handleImageError(img);
+                    // Force browser to check load state again if needed
+                    img.src = img.src;
+                }
+            });
+        }
+    });
 
     </script>
         

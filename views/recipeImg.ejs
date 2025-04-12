@@ -25,7 +25,7 @@
                 <div class="buttons row">
                     <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
                         <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                        <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.svg<%} else {%>heart-f-filled.svg<%}%>"></button> <%# Updated condition %>
+                        <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
                     </form>
                         <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
                     <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
@@ -61,7 +61,7 @@
             // Toggle the heart icon
             let heartIcon = favouriteButton.querySelector('img');
             let currentSrc = heartIcon.getAttribute('src');
-            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.svg' : '/imgs/heart-f-filled-red.svg';
+            let newSrc = currentSrc.includes('heart-f-filled-red') ? '/imgs/heart-f-filled.png' : '/imgs/heart-f-filled-red.png';
             heartIcon.setAttribute('src', newSrc);
 
             try {

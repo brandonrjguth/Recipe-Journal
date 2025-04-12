@@ -59,6 +59,69 @@ async function run() {
     const userFavourites = db.collection('userFavourites'); // Collection for user favourites
     const userShoppingList = db.collection('userShoppingList'); // Collection for user shopping list items
 
+    // --- Function to Generate Thumbnails for All Recipes ---
+    async function generateThumbnails() {
+      console.log("Starting thumbnail generation process...");
+      let updatedCount = 0;
+      let errorCount = 0;
+      const cursor = recipes.find({}); // Get a cursor for all recipes
+
+      try {
+        while (await cursor.hasNext()) {
+          const recipe = await cursor.next();
+          let sourceImageBuffer = null;
+
+          try {
+            // Determine the source image
+            if (recipe.isImg && Array.isArray(recipe.images) && recipe.images.length > 0) {
+              // Image recipe: use the first image's buffer
+              sourceImageBuffer = recipe.images[0].buffer; // Assuming images[0] stores the buffer directly
+            } else if (!recipe.isImg && recipe.images) {
+              // Normal recipe: use the single image buffer
+              sourceImageBuffer = recipe.images.buffer; // Assuming images stores the buffer directly
+            }
+
+            // Check if we have a valid buffer to process
+            if (sourceImageBuffer && Buffer.isBuffer(sourceImageBuffer)) {
+              // Generate the thumbnail
+              const thumbnailBuffer = await sharp(sourceImageBuffer)
+                .resize(400) // Resize width to 400px
+                .jpeg({ quality: 75 }) // Set JPEG quality
+                .toBuffer();
+
+              // Update the recipe document
+              const updateResult = await recipes.updateOne(
+                { _id: recipe._id },
+                { $set: { thumbnail: thumbnailBuffer } }
+              );
+
+              if (updateResult.modifiedCount === 1) {
+                updatedCount++;
+                // console.log(`Successfully generated thumbnail for: ${recipe.title}`);
+              } else if (updateResult.matchedCount === 1 && updateResult.modifiedCount === 0) {
+                // Matched but didn't modify (thumbnail might be identical already)
+                // console.log(`Thumbnail already up-to-date or no change needed for: ${recipe.title}`);
+              } else {
+                 console.log(`Could not find or update recipe: ${recipe.title} (ID: ${recipe._id})`);
+              }
+            } else {
+              // console.log(`Skipping recipe with no suitable source image: ${recipe.title}`);
+            }
+          } catch (err) {
+            errorCount++;
+            console.error(`Error processing thumbnail for recipe "${recipe.title}" (ID: ${recipe._id}):`, err.message);
+            // Continue to the next recipe even if one fails
+          }
+        }
+      } finally {
+        await cursor.close(); // Ensure the cursor is closed
+        console.log(`Thumbnail generation finished. Updated: ${updatedCount}, Errors: ${errorCount}`);
+      }
+    }
+    // To run this function manually (e.g., from a specific route or script):
+    //generateThumbnails().catch(console.error);
+
+
     // --- Session Configuration ---
     // Secret should be in .env file for production
     const secret = process.env.SESSION_SECRET || 'a default secret for development';
@@ -625,6 +688,17 @@ async function run() {
       try {
         let fullRecipe = await recipes.findOne({ title: req.params.title })
         // Add ownership check here too? Maybe less critical if URL isn't easily guessable.
+        const img = fullRecipe.thumbnail;
+        res.send(img.buffer);
+      } catch (err) {
+        console.error(err);
+      }
+    })
+
+    app.get("/recipeImg/imgHeroURL/:title", async (req, res) => {
+      try {
+        let fullRecipe = await recipes.findOne({ title: req.params.title })
+        // Add ownership check here too? Maybe less critical if URL isn't easily guessable.
         const img = fullRecipe.images;
         res.send(img.buffer);
       } catch (err) {
@@ -741,9 +815,14 @@ async function run() {
         if (!req.body.isImg && req.files.length == 1) {
           images = await sharp(req.files[0].buffer)
             .resize(1400)
-            .jpeg({ quality: 80 })
+            .jpeg({ quality: 75 })
             .toBuffer();
+          thumbImageBuffer = await sharp(req.files[0].buffer)
+          .resize(400)
+          .jpeg({ quality: 75 })
+          .toBuffer(); 
         }
+
         if (req.body.isImg) {
           isImg = true;
           images = await Promise.all(req.files.map(async (file) => {
@@ -752,6 +831,11 @@ async function run() {
               .jpeg({ quality: 80 })
               .toBuffer();
           }));
+
+          thumbImageBuffer = await sharp(req.files[0].buffer)
+          .resize(400)
+          .jpeg({ quality: 75 })
+          .toBuffer();
         };
 
         //If there is a link, set it as the url
@@ -778,6 +862,7 @@ async function run() {
           isLink: isLink,
           recipeUrl: recipeUrl,
           images: images,
+          thumbnail:thumbImageBuffer,
           description: req.body.description,
           steps: steps,
           ingredients: ingredients,
@@ -843,6 +928,11 @@ async function run() {
                 .resize(1400)
                 .jpeg({ quality: 80 })
                 .toBuffer();
+              thumbImageBuffer = await sharp(image.data)
+              .resize(400)
+              .jpeg({ quality: 75 })
+              .toBuffer();
+
             } catch (imgError) {
               console.error("Failed to fetch or process recipe image:", imgError.message);
               // Continue without image if fetching/processing fails
@@ -858,6 +948,7 @@ async function run() {
             recipeUrl: "noUrl", // Store original URL? Maybe add a sourceUrl field?
             description: recipeData.description,
             images: imageBuffer, // Use processed image buffer (or null)
+            thumbnail: thumbImageBuffer,
             ingredients: recipeData.ingredients,
             steps: recipeData.instructions,
             categories: categories,
@@ -993,9 +1084,15 @@ async function run() {
               updateData.images = await Promise.all(req.files.map(async (file) => {
                   return await sharp(file.buffer)
                       .resize(1400)
-                      .jpeg({ quality: 80 })
+                      .jpeg({ quality: 75 })
                       .toBuffer();
               }));
+              updateData.thumbnail = await Promise.all(req.files.map(async (file) => {
+                return await sharp(file.buffer)
+                    .resize(400)
+                    .jpeg({ quality: 75 })
+                    .toBuffer();
+            }));
               console.log("Updated images array for isImg recipe.");
           } else {
               // If it's a normal recipe and a new file is uploaded, replace the single image
@@ -1004,6 +1101,12 @@ async function run() {
                   .resize(1400)
                   .jpeg({ quality: 80 })
                   .toBuffer();
+              updateData.thumbnail = await sharp(req.files[0].buffer)
+              .resize(400)
+              .jpeg({ quality: 75 })
+              .toBuffer();
+
+
               console.log("Updated single image for normal recipe.");
           }
       } else {
