@@ -540,7 +540,7 @@ async function run() {
           })
         })
         // Regular expression to match numbers, units, and fractions
-        let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|cups|\bg\b|grams|handful|crushed|to garnish|low-fat|\d+g|\d+l|\d+ml|kg|knob|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|^-|\s-|-\s|$|½|¼|¾|\b\d+\s+-\s+\d+\b|\b\d+-\d+\b|\b\d+\b|,|\/+|\(|\)|\babout\b|\binch\b|\b-inch\b/gi;
+        let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|\btotal\b|cups|\bg\b|grams|handful|crushed|to garnish|low-fat|\d+g|\d+l|\d+ml|kg|knob|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|^-|\s-|-\s|$|½|¼|¾|\b\d+\s+-\s+\d+\b|\b\d+-\d+\b|\b\d+\b|,|\/+|\(|\)|\*|\babout\b|\binch\b|\b-inch\b|\bpeeled\b|\band\b|\bvery\b|\bfinely\b|\bi\b|\buse\b|\bfrozen\b|\bready\b|\bprepared\b|\bor\b|\ba\b/gi;
 
         // Remove numbers, units, fractions, then sort based on cleaned
 
