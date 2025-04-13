@@ -282,8 +282,8 @@ async function run() {
               carbonaraThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/carbonara.png'))).resize(400).jpeg({ quality: 80 }).toBuffer();
           } catch (e) { console.error("Error processing carbonara.png:", e.message); carbonaraImgBuffer = null; }
           try {
-              stirfryImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/stirfry.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
-              stirfryThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/stirfry.png'))).resize(400).jpeg({ quality: 80 }).toBuffer();
+              friedChickenImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/fried-chicken.jpg'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+              friedChickenThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/fried-chicken.jpg'))).resize(400).jpeg({ quality: 80 }).toBuffer();
           } catch (e) { console.error("Error processing stirfry.png:", e.message); stirfryImgBuffer = null; }
           try {
               cookiesImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/Chocolate-Chip-Cookies.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
@@ -307,13 +307,13 @@ async function run() {
                   recipeUrl:"noUrl"
               },
               {
-                  title: "Chicken Stir-Fry",
-                  description: "Quick and easy chicken and vegetable stir-fry.",
-                  ingredients: ["2 Chicken Breasts, sliced", "1 tbsp Soy Sauce", "1 tsp Cornstarch", "1 tbsp Oil", "1 cup Mixed Vegetables (broccoli, carrots, peppers)", "Stir-fry sauce"],
-                  steps: ["Marinate chicken in soy sauce and cornstarch.", "Heat oil in wok.", "Stir-fry chicken until cooked.", "Add vegetables and stir-fry until tender-crisp.", "Add sauce and toss to coat."],
-                  categories: ["Stir-fry", "Asian", "Chicken"],
-                  images: stirfryImgBuffer, // Assign processed buffer
-                  thumbnail:stirfryThumbBuffer,
+                title: "Kentucky-Style Fried Chicken",
+                description: "Crispy, seasoned fried chicken with a flavorful coating and juicy interior, inspired by Kentucky-style cooking.",
+                ingredients: ["4 Chicken Thighs", "4 Chicken Drumsticks", "2 cups Buttermilk", "1 tbsp Hot Sauce", "2 cups All-Purpose Flour", "1 tbsp Paprika", "1 tbsp Garlic Powder", "1 tbsp Onion Powder", "1 tsp Salt", "1 tsp Black Pepper", "1 tsp Cayenne Pepper", "1 tsp Dried Thyme", "1 tsp Dried Oregano", "Oil for frying (vegetable or peanut oil)"],
+                steps: ["In a bowl, mix buttermilk and hot sauce.", "Add chicken pieces to the buttermilk mixture and marinate for at least 2 hours, preferably overnight.", "In a separate bowl, combine flour, paprika, garlic powder, onion powder, salt, black pepper, cayenne pepper, thyme, and oregano.", "Heat oil in a deep fryer or large skillet to 350°F (175°C).", "Remove chicken from the buttermilk and dredge in the flour mixture, coating evenly.", "Fry chicken in hot oil for 12-15 minutes, turning occasionally, until golden brown and cooked through (internal temperature should reach 165°F or 75°C).", "Remove chicken and drain on paper towels."],
+                categories: ["Fried", "Southern", "Chicken"],
+                  images: friedChickenImgBuffer, // Assign processed buffer
+                  thumbnail:friedChickenThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
                   isImg:false,
