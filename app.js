@@ -393,8 +393,16 @@ async function run() {
         const totalRecipes = await recipes.countDocuments(query);
         const totalPages = Math.ceil(totalRecipes / limit);
 
-        // Add the isCurrentUserFavourite flag for the view (always true for this route)
-        recipeList = recipeList.map(recipe => ({ ...recipe, isCurrentUserFavourite: true }));
+        // Get user's shopping list IDs for quick lookup
+        const shoppingListEntries = await userShoppingList.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
+        const shoppingListRecipeIds = new Set(shoppingListEntries.map(item => item.recipeId.toString()));
+
+        // Add the isCurrentUserFavourite and isOnCurrentUserList flags
+        recipeList = recipeList.map(recipe => ({
+          ...recipe,
+          isCurrentUserFavourite: true, // Always true for favourites page
+          isOnCurrentUserList: shoppingListRecipeIds.has(recipe._id.toString())
+        }));
 
         res.render('recipeList', {
           recipeList: recipeList,
@@ -478,12 +486,17 @@ async function run() {
 
         // Get user's favourite recipe IDs for quick lookup
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
-        const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString())); // Store as strings for easy comparison
+        const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString()));
 
-        // Add favourite status to each recipe on the current page
+        // Get user's shopping list IDs for quick lookup
+        const shoppingListEntries = await userShoppingList.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
+        const shoppingListRecipeIds = new Set(shoppingListEntries.map(item => item.recipeId.toString()));
+
+        // Add favourite and shopping list status to each recipe on the current page
         recipeList = recipeList.map(recipe => ({
           ...recipe,
-          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
+          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString()),
+          isOnCurrentUserList: shoppingListRecipeIds.has(recipe._id.toString())
         }));
 
         res.render('recipeList', {
@@ -528,9 +541,14 @@ async function run() {
 
         // Check if the current user has favourited this recipe
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: fullRecipe._id });
-        fullRecipe.isCurrentUserFavourite = !!isFavourite; // Add flag to recipe object
+        fullRecipe.isCurrentUserFavourite = !!isFavourite; // Add favourite flag
 
-        res.render("recipe", { recipe: fullRecipe, currentPage: req.path }); // Pass currentPage
+        // Check if the current user has this recipe on their shopping list
+        const isOnList = await userShoppingList.findOne({ userId: userId, recipeId: fullRecipe._id });
+        fullRecipe.isOnCurrentUserList = !!isOnList; // Add shopping list flag
+        console.log(fullRecipe.isOnCurrentUserList);
+
+        res.render("recipe", { recipe: fullRecipe, currentPage: req.path }); // Pass updated recipe object
       } catch (err) {
         console.error("Error fetching recipe:", err);
         res.status(500).send('Error fetching recipe');
@@ -1209,9 +1227,16 @@ async function run() {
         // Add favourite status for the current user to search results
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
         const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString()));
+
+        // Get user's shopping list IDs for quick lookup
+        const shoppingListEntries = await userShoppingList.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
+        const shoppingListRecipeIds = new Set(shoppingListEntries.map(item => item.recipeId.toString()));
+
+        // Add favourite and shopping list status to each recipe
         recipeList = recipeList.map(recipe => ({
           ...recipe,
-          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
+          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString()),
+          isOnCurrentUserList: shoppingListRecipeIds.has(recipe._id.toString())
         }));
 
         // Render the same list template, passing pagination and search term
@@ -1267,9 +1292,16 @@ async function run() {
         // Add favourite status for the current user to search results
         const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
         const favouriteRecipeIds = new Set(favouriteEntries.map(fav => fav.recipeId.toString()));
+
+         // Get user's shopping list IDs for quick lookup
+        const shoppingListEntries = await userShoppingList.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
+        const shoppingListRecipeIds = new Set(shoppingListEntries.map(item => item.recipeId.toString()));
+
+        // Add favourite and shopping list status to each recipe
         recipeList = recipeList.map(recipe => ({
           ...recipe,
-          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString())
+          isCurrentUserFavourite: favouriteRecipeIds.has(recipe._id.toString()),
+          isOnCurrentUserList: shoppingListRecipeIds.has(recipe._id.toString())
         }));
 
         // Render the same list template, passing pagination and search term

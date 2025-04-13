@@ -109,19 +109,19 @@
 
 
                     <div class="buttons row">
-                        <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
-                            <input type="hidden" name="title" value="<%=recipeList[i].title%>">
-                            <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg" alt="Delete"></button>
-                        </form>
-                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg" alt="Edit"></a></button>
                         <form class="col favouriteRecipe" action='/favouriteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>">
                             <button type="button" class="favouriteBtn"><img src="/imgs/<%if (recipeList[i].isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>" alt="Favourite"></button>
                         </form>
+                        <button class="editBtn"><a href="/recipe/<%=recipeList[i].title%>/editRecipe"><img src="/imgs/edit.svg" alt="Edit"></a></button>
                         <%if (!recipeList[i].isImg && !recipeList[i].isLink){%>
                         <form class="col shoppingList" action='/shoppingList' method='post'>
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>">
-                            <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipeList[i].onList === true){%>basketChecked.svg<%} else {%>basket.svg<%}%>" alt="Add to shopping list"></button>
+                            <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipeList[i].isOnCurrentUserList === true){%>cart2-filled-smooth.svg<%} else {%>cart2-smooth.svg<%}%>" alt="Add to shopping list"></button> <%# Updated condition and image names %>
+                        </form>
+                        <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
+                            <input type="hidden" name="title" value="<%=recipeList[i].title%>">
+                            <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg" alt="Delete"></button>
                         </form>
                         <%}%>
                     </div>
@@ -219,9 +219,19 @@
             async function handleShoppingListClick(event) {
                 event.preventDefault(); let data = {}; new FormData(form).forEach((v, k) => { data[k] = v });
                 const icon = shoppingListButton.querySelector('img'); let originalSrc = '';
-                if (icon) { originalSrc = icon.getAttribute('src'); icon.setAttribute('src', originalSrc.includes('basket.svg') ? '/imgs/basketChecked.svg' : '/imgs/basket.svg'); }
+                if (icon) {
+                    originalSrc = icon.getAttribute('src');
+                    // Toggle icon based on current state using the correct filenames
+                    icon.setAttribute('src', originalSrc.includes('cart2-smooth.svg') ? '/imgs/cart2-filled-smooth.svg' : '/imgs/cart2-smooth.svg');
+                }
                 try { await fetch('/shoppingList', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); }
-                catch (error) { console.error('Error sending SL data:', error); if (icon && originalSrc) icon.setAttribute('src', originalSrc); }
+                catch (error) {
+                    console.error('Error sending SL data:', error);
+                    // Revert icon if fetch fails
+                    if (icon && originalSrc) {
+                        icon.setAttribute('src', originalSrc);
+                    }
+                }
             }
             shoppingListButton.addEventListener("click", handleShoppingListClick);
         });

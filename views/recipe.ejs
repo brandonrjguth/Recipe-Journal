@@ -32,10 +32,17 @@
                             <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
                         </form>
                             <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                        <% if (!recipe.isImg && !recipe.isLink) { %> <%# Check if recipe is not an image or link %>
+                            <form class="col shoppingList" action='/shoppingList' method='post'>
+                                <input type="hidden" name="title" value="<%=recipe.title%>">
+                                <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipe.isOnCurrentUserList === true){%>cart2-filled-smooth.svg<%} else {%>cart2-smooth.svg<%}%>" alt="Add to shopping list"></button> <%# Updated condition and image names %>
+                            </form>
+                        <% } %>
                         <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipe.title%>"></input>
                             <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
                         </form>
+
                     </div>
                     <%if (recipe.images){%>
                     <!--<img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">-->
@@ -137,7 +144,43 @@
                 deleteForm.submit();
             }
         })
+
+        // --- Shopping List Button Handler ---
+        const shoppingListForm = document.querySelector(".shoppingList"); // Select the single form
+        const shoppingListButton = document.querySelector(".shoppingListBtn"); // Select the single button
+
+        if (shoppingListForm && shoppingListButton) { // Check if the elements exist (in case the button isn't rendered)
+            async function handleShoppingListClick(event) {
+                event.preventDefault();
+                let data = {};
+                new FormData(shoppingListForm).forEach((v, k) => { data[k] = v }); // Use the specific form
+
+                const icon = shoppingListButton.querySelector('img');
+                let originalSrc = '';
+                if (icon) {
+                    originalSrc = icon.getAttribute('src');
+                    // Toggle icon based on current state using the correct filenames
+                    icon.setAttribute('src', originalSrc.includes('cart2-smooth.svg') ? '/imgs/cart2-filled-smooth.svg' : '/imgs/cart2-smooth.svg');
+                }
+
+                try {
+                    await fetch('/shoppingList', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    // Optionally update recipe.onList state here if needed for immediate UI feedback without page reload
+                } catch (error) {
+                    console.error('Error sending shopping list data:', error);
+                    // Revert icon if fetch fails
+                    if (icon && originalSrc) {
+                        icon.setAttribute('src', originalSrc);
+                    }
+                }
+            }
+            shoppingListButton.addEventListener("click", handleShoppingListClick);
+        }
     </script>
-        
+
 </body>
 </html>
