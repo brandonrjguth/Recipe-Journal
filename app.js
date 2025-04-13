@@ -279,13 +279,16 @@ async function run() {
           let carbonaraImgBuffer, stirfryImgBuffer, cookiesImgBuffer;
           try {
               carbonaraImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/carbonara.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+              carbonaraThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/carbonara.png'))).resize(400).jpeg({ quality: 80 }).toBuffer();
           } catch (e) { console.error("Error processing carbonara.png:", e.message); carbonaraImgBuffer = null; }
           try {
               stirfryImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/stirfry.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
+              stirfryThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/stirfry.png'))).resize(400).jpeg({ quality: 80 }).toBuffer();
           } catch (e) { console.error("Error processing stirfry.png:", e.message); stirfryImgBuffer = null; }
           try {
               cookiesImgBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/Chocolate-Chip-Cookies.png'))).resize(1400).jpeg({ quality: 80 }).toBuffer();
-          } catch (e) { console.error("Error processing Chocolate-Chip-Cookies.png:", e.message); cookiesImgBuffer = null; }
+              cookiesThumbBuffer = await sharp(await fs.readFile(path.join(__dirname, 'public/imgs/Chocolate-Chip-Cookies.png'))).resize(400).jpeg({ quality: 80 }).toBuffer();
+            } catch (e) { console.error("Error processing Chocolate-Chip-Cookies.png:", e.message); cookiesImgBuffer = null; }
 
 
           // 4. Define Sample Recipes with Images
@@ -297,6 +300,7 @@ async function run() {
                   steps: ["Cook spaghetti.", "Fry pancetta until crisp.", "Whisk eggs and cheese.", "Combine pasta, pancetta fat, egg mixture off heat.", "Add pasta water if needed. Serve with pepper."],
                   categories: ["Pasta", "Italian", "Quick"],
                   images: carbonaraImgBuffer, // Assign processed buffer
+                  thumbnail:carbonaraThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
                   isImg:false,
@@ -309,6 +313,7 @@ async function run() {
                   steps: ["Marinate chicken in soy sauce and cornstarch.", "Heat oil in wok.", "Stir-fry chicken until cooked.", "Add vegetables and stir-fry until tender-crisp.", "Add sauce and toss to coat."],
                   categories: ["Stir-fry", "Asian", "Chicken"],
                   images: stirfryImgBuffer, // Assign processed buffer
+                  thumbnail:stirfryThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
                   isImg:false,
@@ -321,6 +326,7 @@ async function run() {
                   steps: ["Preheat oven to 375°F (190°C).", "Combine dry ingredients.", "Cream butter and sugars.", "Beat in eggs and vanilla.", "Gradually add dry ingredients.", "Stir in chocolate chips.", "Drop rounded tablespoons onto ungreased baking sheets.", "Bake 9-11 minutes."],
                   categories: ["Dessert", "Cookies", "Baking"],
                   images: cookiesImgBuffer, // Assign processed buffer
+                  thumbnail:cookiesThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
                   isImg:false,
