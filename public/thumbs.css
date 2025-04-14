@@ -116,11 +116,7 @@ img.recipeImg.error { /* Optional class for error state */
     /* or potentially the .contentRow itself if appropriate */
 }
 
-span{
-    align-self:center;
-    color: red;
-    padding-right:0.5rem;
-}
+
 
 .deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
@@ -150,37 +146,23 @@ span{
     border-radius: 4px;
     text-decoration: none;
     color: var(--text);
-    background-color: var(--background);
+    background-color: var(--primary);
     transition: background-color 0.2s ease, color 0.2s ease;
     font-size: 0.9rem;
 }
 
 .pagination a:hover {
-    background-color: var(--accent);
+    background-color: var(--primary);
     color: var(--text);
-    border-color: var(--accent);
+    border-color: var(--primary);
 }
 
 .pagination .current {
     background-color: var(--accent-red);
-    color: var(--background); /* White text on red background */
+    color: var(--primary); /* White text on red background */
     border-color: var(--accent-red);
     font-weight: bold;
 }
-
-.pagination .disabled {
-    color: var(--text-light); /* Lighter text for disabled */
-    background-color: var(--background-alt); /* Slightly different background */
-    cursor: default;
-    border-color: var(--border-light);
-}
-
-.pagination .disabled:hover {
-    background-color: var(--background-alt); /* No hover effect */
-    color: var(--text-light);
-}
-
-
 
   @media only screen and (min-width: 600px) {
     @media only screen and (max-width: 1200px) {

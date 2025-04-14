@@ -21,7 +21,7 @@
 }
 
 #toggleStylesheet{
-    background-color: var(--accent); /* Use accent color */
+    background-color: var(--primary); /* Use accent color */
     color: var(--text);
     border-radius: 5px;
     border: 1px solid var(--border-light);
@@ -31,7 +31,7 @@
 }
 
 #toggleStylesheet:hover{
-    background-color: var(--secondary); /* Use secondary on hover */
+    background-color: var(--primary); /* Use secondary on hover */
 }
 
 .content h1{
@@ -126,7 +126,7 @@
 }
 
 .deleteBtn:hover, .editBtn:hover, .favouriteBtn:hover, .shoppingListBtn:hover {
-    background-color: var(--accent); /* Use accent on hover */
+    background-color: var(--primary); /* Use accent on hover */
 }
 
 /* Style SVGs within buttons for better control if needed */
@@ -162,36 +162,23 @@
     border-radius: 4px;
     text-decoration: none;
     color: var(--text);
-    background-color: var(--background);
+    background-color: var(--primary);
     transition: background-color 0.2s ease, color 0.2s ease;
     font-size: 0.9rem;
 }
 
 .pagination a:hover {
-    background-color: var(--accent);
+    background-color: var(--primary);
     color: var(--text);
-    border-color: var(--accent);
+    border-color: var(--primary);
 }
 
 .pagination .current {
     background-color: var(--accent-red);
-    color: var(--background); /* White text on red background */
+    color: var(--primary); /* White text on red background */
     border-color: var(--accent-red);
     font-weight: bold;
 }
-
-.pagination .disabled {
-    color: var(--text-light); /* Lighter text for disabled */
-    background-color: var(--background-alt); /* Slightly different background */
-    cursor: default;
-    border-color: var(--border-light);
-}
-
-.pagination .disabled:hover {
-    background-color: var(--background-alt); /* No hover effect */
-    color: var(--text-light);
-}
-
 
   @media only screen and (min-width: 600px) {
     @media only screen and (max-width: 1200px) {

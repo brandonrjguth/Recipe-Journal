@@ -160,7 +160,7 @@ input[type="submit"]:hover {
 }
 
 .custom-checkbox-input:focus + .custom-checkbox-label {
-    box-shadow: 0 0 0 3px var(--accent); /* Use accent for focus ring */
+    box-shadow: 0 0 0 3px var(--primary); /* Use accent for focus ring */
 }
 
 /* Remove default checkbox class styling if no longer needed */
@@ -194,7 +194,7 @@ input[type="submit"]:hover {
     display: inline-block;
     padding: 0.6rem 1.2rem;
     cursor: pointer;
-    background-color: var(--secondary); /* Use secondary color */
+    background-color: var(--primary); /* Use secondary color */
     color: var(--text); /* Use text color */
     border: none;
     border-radius: 6px;
@@ -209,7 +209,7 @@ input[type="submit"]:hover {
 }
 
 .custom-file-upload:focus-within { /* Style when the hidden input inside has focus */
-     box-shadow: 0 0 0 3px var(--accent); /* Use accent for focus ring */
+     box-shadow: 0 0 0 3px var(--primary); /* Use accent for focus ring */
      outline: none;
 }
 
@@ -265,12 +265,12 @@ input[type="submit"]:hover {
 }
 
 .ingredients button:hover, .steps button:hover {
-    background-color: var(--secondary); /* Use secondary on hover */
+    background-color: var(--primary); /* Use secondary on hover */
 }
 
 /* Style for 'X' remove buttons */
 .ingredientsNode button, .stepsNode button {
-    background-color: var(--secondary); /* Use secondary color */
+    background-color: var(--primary); /* Use secondary color */
     border-radius: 50%;
     border: none;
     color: var(--text); /* Use text color */
@@ -369,7 +369,7 @@ input[type="submit"]:hover {
     margin: 2px; /* Reduced margin */
     list-style: none;
     border-radius: 4px; /* Slightly less rounded */
-    background: var(--accent); /* Use accent */
+    background: var(--primary); /* Use accent */
     box-shadow:0px 0px 1px 1px #c7c7c7;
     padding: 6px 10px; /* Adjusted padding */
     display: flex; /* Use flex for alignment */
@@ -383,7 +383,7 @@ input[type="submit"]:hover {
     font-size: 11px; /* Adjusted size */
     cursor: pointer;
     border-radius: 50%;
-    background: var(--secondary); /* Use secondary background */
+    background: var(--primary); /* Use secondary background */
     display: flex; /* Ensure centering */
     align-items: center; /* Center icon */
     justify-content: center;
@@ -427,7 +427,7 @@ input[type="submit"]:hover {
     margin: 4px; /* Consistent margin */
     list-style: none;
     border-radius: 4px;
-    background: var(--accent); /* Use accent */
+    background: var(--primary); /* Use accent */
     box-shadow:0px 0px 1px 1px #c7c7c7;
     padding: 6px 10px;
     width: fit-content;
@@ -439,7 +439,7 @@ input[type="submit"]:hover {
     
   }
   .presetTag:hover {
-      background-color: var(--secondary); /* Use secondary on hover */
+      background-color: var(--primary); /* Use secondary on hover */
       color: var(--text);
   }
 
@@ -471,6 +471,6 @@ input[type="submit"]:hover {
     }
 
     body{
-        background-color: var(--background); /* Use variable */
+        background-color: var(--primary); /* Use variable */
     }
   }

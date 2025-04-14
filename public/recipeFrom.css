@@ -63,7 +63,7 @@
 }
 
 body{
-    background-color: var(--background); /* Use theme background */
+    background-color: var(--primary); /* Use theme background */
 }
 
 /* Styles for the explanation boxes */

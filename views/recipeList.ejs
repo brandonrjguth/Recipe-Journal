@@ -119,11 +119,11 @@
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>">
                             <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipeList[i].isOnCurrentUserList === true){%>cart2-filled-smooth.svg<%} else {%>cart2-smooth.svg<%}%>" alt="Add to shopping list"></button> <%# Updated condition and image names %>
                         </form>
+                        <%}%>
                         <form class="col deleteRecipe" action='/deleteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipeList[i].title%>">
                             <button type="button" class="deleteBtn"><img src="/imgs/trash-2.svg" alt="Delete"></button>
                         </form>
-                        <%}%>
                     </div>
                 </div>
             <%}%>
