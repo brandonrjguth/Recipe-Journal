@@ -1,64 +1,51 @@
-
-/*Recipe Form*/
-body{
-    display:flex;
-    flex-direction:column;
-    height: 100%;
-}
-
-input, textarea{
-    width:100%
-}
-
+/*----- General Input Stylings ----*/
 input[type="text"],
 input[type="email"],
 input[type="password"],
 textarea {
-  font-family: 'Poppins', sans-serif; /* Consistent font */
-  padding: 10px 12px; /* Adjusted padding */
+  font-family: 'Poppins', sans-serif; 
+  padding: 10px 12px; 
   margin: 5px 0;
-  border: 1px solid var(--border-light); /* Use variable */
-  border-radius: 6px; /* Slightly more rounded */
-  box-shadow: none; /* Remove inset shadow */
-  background-color: var(--white); /* Ensure white background */
-  color: var(--text); /* Ensure text color */
+  border: 1px solid var(--border-light); 
+  border-radius: 6px; 
+  box-shadow: none; 
+  background-color: var(--white); 
+  color: var(--text); 
   outline: none;
-  width: 100%; /* Ensure full width */
-  box-sizing: border-box; /* Include padding and border in width */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-  border-color: var(--primary); /* Use primary color for focus border */
-  box-shadow: 0 0 0 3px var(--accent-red); /* Use accent for focus ring */
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 3px var(--accent-red); 
 }
-
-/* Remove default submit styling if not used */
-/* input[type="submit"] { ... } */
 
 .warning{
-    color: #a83232; /* Darker, less saturated red */
+    color: #a83232; 
     text-align:center;
-    font-size: 0.95rem; /* Slightly smaller */
-    padding: 1rem 0.5rem; /* Adjusted padding */
-    background-color: #ffebee; /* Very light pink background */
-    border: 1px solid #ffcdd2; /* Light pink border */
+    font-size: 0.95rem; 
+    padding: 1rem 0.5rem; 
+    background-color: #ffebee; 
+    border: 1px solid #ffcdd2; 
     border-radius: 6px;
-    margin: 1rem auto; /* Center and add margin */
-    max-width: 600px; /* Limit width */
+    margin: 1rem auto; 
+    max-width: 600px; 
 }
 
-/* The duplicated .warning rule and orphaned lines above have been removed */
-
+/*--change italics size for warning--*/
 i{
   font-weight:700;
 }
 
-input[type="submit"]:hover {
-  background-color: #45a049;
-}
+
+/*---------------------------------------*/
+/*---Form Wrapper and Header Stylings---*/
+/*---------------------------------------*/
+
 
 .newRecipeWrapper{
     display: flex;
@@ -66,53 +53,44 @@ input[type="submit"]:hover {
     padding: 2rem 0.5rem;
 }
 
+#submitRecipe{
+    padding: 2rem; 
+    width: 100%;
+    background-color: var(--white); 
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px var(--shadow-color); 
+    max-width: 700px; 
+    margin: 0 auto; 
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* Add consistent spacing between form groups */
+}
+
+
 .newRecipeWrapper h1{
-    padding-top: 0; /* Remove top padding */
-    padding-bottom: 1.5rem; /* Increase bottom padding */
-    text-align: center; /* Center title */
+    padding-top: 0; 
+    padding-bottom: 1.5rem; 
+    text-align: center; 
     font-weight: 900;
     font-size: 3rem;
     color: var(--accent-red);
     font-family: "Fraunces";
 }
 .newRecipeWrapper h2, .newRecipeWrapper h3{
-    font-size: 1.1rem; /* Slightly larger section titles */
+    font-size: 1.1rem; 
     font-weight: 500;
-    color: var(--text-light); /* Use lighter text variable */
+    color: var(--text-light); 
 }
 
 .upload h2{
     padding-bottom:1rem;
 }
 
-.newRecipeWrapper h3{
-    padding-right:1rem;
-    width:1rem;
-}
 
-#submitRecipe{
-    padding: 2rem; /* Consistent padding */
-    width: 100%;
-    background-color: var(--white); /* Use variable */
-    border-radius: 8px; /* Consistent border-radius */
-    box-shadow: 0 2px 5px var(--shadow-color); /* Use variable */
-    max-width: 700px; /* Max width for the form */
-    margin: 0 auto; /* Center the form */
-}
-
-/* Remove specific padding from h2s if margin-bottom is added */
-.title h2, .favourite h2, .ingredients h2, .steps h2{
-    padding-right: 0;
-}
-
-.favourite h2{
-    padding-bottom:0.5rem;
-}
-
-/* General Form Group Styling */
-.form-group {
-    margin-bottom: 1.5rem; /* Add consistent spacing between form groups */
-}
+/*----------------------------*/
+/*----- Favourites -----------*/
+/*----------------------------*/
 
 /* Custom Checkbox Styling */
 .custom-checkbox-wrapper {
@@ -133,7 +111,7 @@ input[type="submit"]:hover {
     display: inline-block;
     width: 44px; /* Width of the toggle */
     height: 24px; /* Height of the toggle */
-    background-color: var(--border-light); /* Use variable */
+    background-color: var(--border-light); 
     border-radius: 12px; /* Make it pill-shaped */
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -146,13 +124,13 @@ input[type="submit"]:hover {
     left: 2px;
     width: 20px; /* Size of the inner circle */
     height: 20px;
-    background-color: var(--white); /* Use variable */
+    background-color: var(--white); 
     border-radius: 50%;
     transition: transform 0.2s ease;
 }
 
 .custom-checkbox-input:checked + .custom-checkbox-label {
-    background-color: var(--accent-red); /* Use primary when checked */
+    background-color: var(--accent-red); 
 }
 
 .custom-checkbox-input:checked + .custom-checkbox-label::after {
@@ -160,27 +138,125 @@ input[type="submit"]:hover {
 }
 
 .custom-checkbox-input:focus + .custom-checkbox-label {
-    box-shadow: 0 0 0 3px var(--primary); /* Use accent for focus ring */
+    box-shadow: 0 0 0 3px var(--primary); 
 }
 
-/* Remove default checkbox class styling if no longer needed */
-/* .checkbox{ width:fit-content; } */
+
+/*----------------------------*/
+/*---------Categories--------*/
+/*----------------------------*/
+
+/* Tag Section Refinements */
+.tagWrapper{
+    width: 100%;
+  }
+
+  .tagWrapper :where(.tagTitle, li, li i, .tagDetails){
+    display: flex;
+    align-items: center;
+  }
+  .tagTitle img{
+    max-width: 21px;
+  }
+
+  .tagWrapper .tagContent{
+    margin: 10px 0;
+  }
+  .tagContent p{
+    font-size: 0.9rem; /* Slightly smaller instruction text */
+    color: var(--text-light); 
+    margin-bottom: 8px;
+  }
+  .tagContent ul{ /* Container for tags and input */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; /* Align items vertically */
+    gap: 5px; /* Add gap between tags and input */
+    padding: 8px; /* Add padding around tags */
+    margin: 12px 0;
+    border-radius: 6px; 
+    border: 1px solid var(--border-light); 
+    background-color: var(--white); 
+  }
+
+  .tagContent ul li{ /* Style for individual tags */
+    color: #333 !important; 
+    margin: 2px; /* Reduced margin */
+    list-style: none;
+    border-radius: 4px; /* Slightly less rounded */
+    background: var(--primary); 
+    box-shadow:0px 0px 1px 1px #c7c7c7;
+    padding: 6px 10px; 
+    display: flex; 
+    align-items: center; 
+  }
+  .tagContent ul li i{ /* Style for 'x' icon */
+    height: 18px; 
+    width: 18px;
+    color: var(--text); 
+    margin-left: 8px;
+    font-size: 11px; 
+    cursor: pointer;
+    border-radius: 50%;
+    background: var(--primary); 
+    display: flex; /* Ensure centering */
+    align-items: center; /* Center icon */
+    justify-content: center;
+    transition: background-color 0.2s ease;
+  }
+   .tagContent ul li i:hover {
+       background-color: var(--primary); /* Use primary on hover */
+   }
+
+  .tagContent ul input{ /* Input field within the tag area */
+    flex: 1; /* Allow input to grow */
+    min-width: 150px; 
+    padding: 8px; 
+    border: none; /* Remove border */
+    outline: none;
+    font-size: 0.95rem; 
+    font-family: 'Poppins', sans-serif;
+  }
 
 
-.title, .ingredients, .steps, .favourite, .upload, .description, .submitWrapper{
-    padding-bottom: 0; /* Remove padding if using form-group margin */
-    padding-top: 0;
- }
+  /* Corrected Preset Tag Styles */
+  .presetTag{
+    color: black !important; 
+    margin: 4px; 
+    list-style: none;
+    border-radius: 4px;
+    background: var(--primary); 
+    box-shadow:0px 0px 1px 1px #c7c7c7;
+    padding: 6px 10px;
+    width: fit-content;
+    border: none; 
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    transition: color 0.2s ease;
+    font-size: 0.9rem;
+    
+  }
+  .presetTag:hover {
+      background-color: var(--primary); 
+      color: var(--text);
+  }
 
- .upload{
-    padding-bottom: 2rem;
- }
+  .presetWrapper{ /* Container for preset tags */
+    display:flex;
+    flex-wrap:wrap;
+  }
 
- .steps{
-    padding-top:2rem;
- }
+  .uit-multiply::before {
+    content: '\0058';
+    font-style:normal;
+    font-weight: bolder;
+}
 
-/* Custom File Input Styling */
+  /*----------------------------*/
+  /*-------Upload Picture-------*/
+  /*----------------------------*/
+
+  /* Custom File Input Styling */
 .uploadInput {
     width: 0.1px; /* Hide the default file input visually */
     height: 0.1px;
@@ -194,8 +270,8 @@ input[type="submit"]:hover {
     display: inline-block;
     padding: 0.6rem 1.2rem;
     cursor: pointer;
-    background-color: var(--primary); /* Use secondary color */
-    color: var(--text); /* Use text color */
+    background-color: var(--primary); 
+    color: var(--text); 
     border: none;
     border-radius: 6px;
     font-family: 'Poppins', sans-serif;
@@ -209,25 +285,27 @@ input[type="submit"]:hover {
 }
 
 .custom-file-upload:focus-within { /* Style when the hidden input inside has focus */
-     box-shadow: 0 0 0 3px var(--primary); /* Use accent for focus ring */
+     box-shadow: 0 0 0 3px var(--primary); 
      outline: none;
 }
 
 .file-name-display {
     font-size: 0.9rem;
-    color: var(--text-light); /* Use variable */
+    color: var(--text-light); 
     font-style: italic;
     padding: 0.75rem;
     font-weight: 800;
 }
 
+/*----------------------------*/
+/*-------Description-------*/
+/*----------------------------*/
 
-.ingredients, .steps{
-    align-items: center;
-    gap: 0.5rem;
+.description textarea{
+    height:3.5rem;
 }
 
-.description > h2, .image > h2{
+.description > h2{
     padding-bottom:0.5rem;
 }
 
@@ -235,26 +313,32 @@ input[type="submit"]:hover {
     width:100%;
 }
 
-.description textarea{
-    height:3.5rem;
+/*------------------------------------------*/
+/*-------Steps and Ingredients Section------*/
+/*----------------------------------------*/
+
+ .steps{
+    padding-top:2rem;
+ }
+
+.ingredients, .steps{
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.image, .ingredientsNode, .stepsNode{
+.ingredientsNode, .stepsNode{
     padding-top:1rem;
 }
 
-.image{
-    padding-bottom:1rem;
-}
 
 /* Style for '+' add buttons */
 .ingredients button, .steps button {
-    background-color: var(--primary); /* Use primary color */
+    background-color: var(--primary); 
     border-radius: 50%;
     border: none;
-    color: var(--text); /* Use text color */
+    color: var(--text); 
     font-weight: bold;
-    width: 24px; /* Slightly larger */
+    width: 24px; 
     height: 24px;
     display: flex;
     align-items: center;
@@ -265,17 +349,17 @@ input[type="submit"]:hover {
 }
 
 .ingredients button:hover, .steps button:hover {
-    background-color: var(--primary); /* Use secondary on hover */
+    background-color: var(--primary); 
 }
 
 /* Style for 'X' remove buttons */
 .ingredientsNode button, .stepsNode button {
-    background-color: var(--primary); /* Use secondary color */
+    background-color: var(--primary); 
     border-radius: 50%;
     border: none;
-    color: var(--text); /* Use text color */
+    color: var(--text); 
     font-weight: bold;
-    min-width: 22px; /* Adjusted size */
+    min-width: 22px; 
     min-height: 22px;
     margin-left: 0.5rem;
     align-self: center;
@@ -298,30 +382,36 @@ input[type="submit"]:hover {
 
 /* Ensure textareas in steps are sized appropriately */
 .stepsNode textarea{
-    min-height: 3rem; /* Use min-height */
+    min-height: 3rem; 
     resize: vertical; /* Allow vertical resize */
 }
 
+
+/*------------------------------------------*/
+/*------------------Submit-----------------*/
+/*----------------------------------------*/
+
+
 .submitBtn{
-    margin: 2rem 0 0 0; /* Adjust margin */
-    padding: 0.8rem 1.5rem; /* Match recipeFrom button padding */
-    background-color: var(--primary); /* Use primary color */
-    border-radius: 8px;     /* Match border-radius */
+    margin: 2rem 0 0 0; 
+    padding: 0.8rem 1.5rem; 
+    background-color: var(--primary); 
+    border-radius: 8px;     
     border: none;
-    color: var(--text);            /* Use text color */
+    color: var(--text);            
     font-family: 'Poppins', sans-serif;
-    font-weight: 500;       /* Match font-weight */
+    font-weight: 500;      
     font-size: 1rem;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Match shadow */
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
     cursor: pointer;
-    transition: background-color 0.2s ease; /* Match transition */
+    transition: background-color 0.2s ease; 
     width: auto; /* Allow button to size naturally */
 }
 
 .submitBtn:hover{
-    background-color: var(--accent-red); /* Use secondary on hover */
+    background-color: var(--accent-red); 
     color:white;
-    box-shadow: 1px 1px 1px var(--shadow-color); /* Use variable */
+    box-shadow: 1px 1px 1px var(--shadow-color); 
 }
 
 .submitWrapper{
@@ -330,147 +420,23 @@ input[type="submit"]:hover {
 }
 
 
-/* Tag Section Refinements */
-.tagWrapper{
-    width: 100%;
-    /* padding adjusted by form-group margin */
-  }
 
-  .tagWrapper :where(.tagTitle, li, li i, .tagDetails){
-    display: flex;
-    align-items: center;
-  }
-  .tagTitle img{
-    max-width: 21px;
-  }
 
-  .tagWrapper .tagContent{
-    margin: 10px 0;
-  }
-  .tagContent p{
-    font-size: 0.9rem; /* Slightly smaller instruction text */
-    color: var(--text-light); /* Use variable */
-    margin-bottom: 8px;
-  }
-  .tagContent ul{ /* Container for tags and input */
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center; /* Align items vertically */
-    gap: 5px; /* Add gap between tags and input */
-    padding: 8px; /* Add padding around tags */
-    margin: 12px 0;
-    border-radius: 6px; /* Match input border-radius */
-    border: 1px solid var(--border-light); /* Use variable */
-    background-color: var(--white); /* Use variable */
-  }
-
-  .tagContent ul li{ /* Style for individual tags */
-    color: #333 !important; /* Use variable */
-    margin: 2px; /* Reduced margin */
-    list-style: none;
-    border-radius: 4px; /* Slightly less rounded */
-    background: var(--primary); /* Use accent */
-    box-shadow:0px 0px 1px 1px #c7c7c7;
-    padding: 6px 10px; /* Adjusted padding */
-    display: flex; /* Use flex for alignment */
-    align-items: center; /* Align icon vertically */
-  }
-  .tagContent ul li i{ /* Style for 'x' icon */
-    height: 18px; /* Adjusted size */
-    width: 18px;
-    color: var(--text); /* Use variable */
-    margin-left: 8px;
-    font-size: 11px; /* Adjusted size */
-    cursor: pointer;
-    border-radius: 50%;
-    background: var(--primary); /* Use secondary background */
-    display: flex; /* Ensure centering */
-    align-items: center; /* Center icon */
-    justify-content: center;
-    transition: background-color 0.2s ease;
-  }
-   .tagContent ul li i:hover {
-       background-color: var(--primary); /* Use primary on hover */
-   }
-  .tagContent ul input{ /* Input field within the tag area */
-    flex: 1; /* Allow input to grow */
-    min-width: 150px; /* Minimum width */
-    padding: 8px; /* Match padding */
-    border: none; /* Remove border */
-    outline: none;
-    font-size: 0.95rem; /* Match other inputs */
-    font-family: 'Poppins', sans-serif;
-    /* Removed duplicate border rule */
-  }
-  /* Remove tagDetails if not used */
-  /* .tagWrapper .tagDetails{ */
-  /*   justify-content: space-between; */
-  /* } */
-  /* .tagDetails button{ */
-  /*   border: none; */
-  /*   outline: none; */
-  /*   color: #fff; */
-  /*   font-size: 14px; */
-  /*   cursor: pointer; */
-  /*   padding: 9px 15px; */
-  /*   border-radius: 5px; */
-  /*   background: #5372F0; */
-  /*   transition: background 0.3s ease; */
-  /* } */
-  /* .tagDetails button:hover{ */
-  /*   background: #2c52ed; */
-  /* } */
-
-  /* Corrected Preset Tag Styles */
-  .presetTag{
-    color: black !important; /* Use variable */
-    margin: 4px; /* Consistent margin */
-    list-style: none;
-    border-radius: 4px;
-    background: var(--primary); /* Use accent */
-    box-shadow:0px 0px 1px 1px #c7c7c7;
-    padding: 6px 10px;
-    width: fit-content;
-    border: none; /* Remove border */
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    transition: color 0.2s ease;
-    font-size: 0.9rem;
-    
-  }
-  .presetTag:hover {
-      background-color: var(--primary); /* Use secondary on hover */
-      color: var(--text);
-  }
-
-  .presetWrapper{ /* Container for preset tags */
-    display:flex;
-    flex-wrap:wrap;
-  }
-
-  .uit-multiply::before {
-    content: '\0058';
-    font-style:normal;
-    font-weight: bolder;
-}
 @media only screen and (min-width: 600px) {
 
-    /* Update form container style in media query */
+    
     #submitRecipe {
-        width: auto; /* Remove fixed width */
-        max-width: 700px; /* Keep max-width */
-        background-color: var(--white); /* Use variable */
-        padding: 2.5rem; /* Slightly more padding on larger screens */
-        border-radius: 8px; /* Consistent radius */
-        box-shadow: 0 4px 10px var(--shadow-color); /* Use variable */
-        margin: 2rem auto; /* Ensure centering with margin */
+        width: auto; 
+        max-width: 700px; 
+        background-color: var(--white); 
+        padding: 2.5rem; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 10px var(--shadow-color); 
+        margin: 2rem auto; 
     }
 
     .newRecipeWrapper{
-        padding: 2rem 1rem; /* Add horizontal padding */
+        padding: 2rem 1rem; 
     }
 
-    body{
-        background-color: var(--primary); /* Use variable */
-    }
   }

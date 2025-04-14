@@ -1,4 +1,5 @@
- /* Basic form styling - can be moved to a dedicated CSS file */
+ /*-- Styling for register/login container and buttons ---*/
+
  .auth-container {
     max-width: 500px;
     margin: 40px auto; /* Add some margin */
@@ -31,7 +32,7 @@
     font-family: 'Poppins', sans-serif; /* Ensure font consistency */
 }
  .btn-submit { /* Use a more specific class */
-    background-color: var(--accent-red); /* Match header color */
+    background-color: rgb(221, 60, 42); /* Match header color */
     color: white;
     padding: 12px 20px;
     border: none;
@@ -43,7 +44,7 @@
     font-weight: 500;
 }
 .btn-submit:hover {
-    background-color: #c82800/* Darker shade */
+    background-color: rgb(190, 40, 25); /* Darker shade */
 }
  .error-message {
     color: #d9534f;
