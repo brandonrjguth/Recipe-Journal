@@ -1,87 +1,46 @@
-/* recipe.css - Minimal Cleanup */
 
-/* Keep original html/body styles */
-html, body{
-    height:100%;
-}
+/* --- Image and Wrapper Sizing --- */
+/* --- these are the outmost containers for the page divided into three parts ---*/
 
-body{
-    display:flex;
-    flex-direction: column;
-}
+.heroImage{
+    height:15rem;
+    width:100%;
+    grid-area: heroImg; /* Keep grid area name */
+    background-size:cover;
+    background-position:center;
+  }
 
-p{
-    font-size: 0.9rem;
-}
-
-h2{
-    font-size:1rem;
-}
-
-/* --- Base Layout & Typography --- */
 .recipeHeroWrapper{
     padding: 1.5rem 1rem 0rem 1rem;
 }
+
 .recipeInstructionsWrapper{
     padding: 1rem 1rem;
 }
 
+/*---------------------------*/
+/*--- Inside Hero Wrapper ---*/
+/*---------------------------*/
+
+/*--- inner wrapper ---*/
+.recipeHero{
+    width: 100%;
+    padding: 0;
+}
+
+/*Ordered from top to bottom*/
 
 .title{
-    color: var(--accent-red); /* Use variable */
+    color: var(--accent-red); 
     padding-top:0rem;
-    font-family: "Fraunces", serif; /* Added fallback */
+    font-family: "Fraunces", serif; 
     font-size: 3rem;
     font-weight: 900;
-    line-height: 3.3rem; /* Keep original */
     padding-bottom: 1.5rem;
 }
 
-.description, .presets{
-    padding-top:1rem;
-}
 
-p.presetTag { /* Keep original selector */
-    font-size:0.8rem;
-}
-
-.ingredientsTitle{
-    padding-top: 1rem; /* Keep spacing */
-    /* color: white; /* Set in MQ */
-    border-radius: 20px 20px 0px 0px;
-    width: 100%;
-}
-
-/* Set base color using variable */
-.ingredientsTitle h3 {
-    color: var(--accent-red);
-}
-/* Set base color using variable */
-.steps h3{
-    color: var(--accent-red);
-}
-
-/* Keep original list styling */
-.content ul{
-    margin-left:1.5rem;
-    margin-top:0;
-    padding: 1rem 1rem 1.5rem 1rem;
-}
-
-ol li{
-    padding-bottom:0.75rem;
-    text-align:left;
-}
-
-.content ol{
-    padding-inline-start: 0;
-    margin-left: 1.5rem;
-    margin-top: 0;
-    padding: 1rem 1rem 1.5rem 1rem;
-    margin-bottom: 0;
-}
-
-/* Keep original button styling */
+/*---- Buttons row ----*/
 .buttons{
     display:flex;
     align-items: center;
@@ -106,40 +65,77 @@ button{
     padding:0;
 }
 
-.recipeHero{
-    width: 100%;
-    padding: 0;
+
+/*---- Tags and Description ----*/
+
+.tagWrapper{
+    display:flex;
+    flex-wrap:wrap;
+  }
+
+p.tag {
+    font-size:0.8rem;
 }
 
-.presetTag{
-    color: #431407; /* Keep specific colors */
-    background-color:#FECACA;
+
+.tag{
+    color: var(--tag-text);
+    background-color:var(--tag-accent);
     margin: 4px 3px;
     list-style: none;
     border-radius: 5px;
     padding: 5px 8px 5px 10px;
     width:fit-content;
     border: 1px solid #e3e1e1;
-  }
+}
 
-  .heroImage{
-    height:15rem;
-    width:100%;
-    grid-area: heroImg; /* Keep grid area name */
-    background-size:cover;
-    background-position:center;
-  }
+.description, .tags{
+    padding-top:1rem;
+}
 
-  .presetWrapper{
-    display:flex;
-    flex-wrap:wrap;
-  }
+.description{
+    font-size:0.9rem;
+}
 
-  .recipeImg{
-    object-fit: cover;
-    max-width: 94%;
-    display: block; /* Added */
-  }
+
+
+/*-----------------------------------*/
+/*--- Inside Instructions Wrapper---*/
+/*----------------------------------*/
+
+
+/*----- Ingredients Column ------*/
+.ingredientsTitle{
+    padding-top: 1rem; 
+    border-radius: 20px 20px 0px 0px;
+    width: 100%;
+}
+
+.ingredientsTitle h3, .steps h3 {
+    color: var(--accent-red);
+}
+
+
+.ingredients ul{
+    margin-left:1.5rem;
+    margin-top:0;
+    padding: 1rem 1rem 1.5rem 1rem;
+}
+
+/*----- Steps Column ------*/
+.steps ol{
+    padding-inline-start: 0;
+    margin-left: 1.5rem;
+    margin-top: 0;
+    padding: 1rem 1rem 1.5rem 1rem;
+    margin-bottom: 0;
+}
+
+.steps li{
+    padding-bottom:0.75rem;
+    text-align:left;
+}
+
 
 /* --- Media Queries (Keep structure, apply variable, remove redundancy) --- */
 @media (min-width: 768px) {
@@ -147,13 +143,10 @@ button{
       display:grid;
       grid-template-columns:1fr 1fr 1fr; /* Keep original columns */
       grid-template-rows: max-content;
-      grid-template-areas: /* Keep original areas */
+      grid-template-areas: 
       "heroImg heroImg heroImg"
       "hero hero hero"
       "inst inst inst";
-      padding:0;
-      width:100%;
-      height: 100%; /* Keep original height */
     }
 
     .recipeHeroWrapper{
@@ -164,45 +157,22 @@ button{
         width:100%;
     }
 
-    .recipeHeroInner { /* Keep original structure if this exists */
-        background-color: var(--primary); /* Use variable */
+    .recipeHero .recipeImg{
+        padding-right:2rem;
+        object-fit: cover;
+    }
+
+    .recipeHeroInner { 
+        background-color: var(--primary); 
         border-radius: 20px;
         padding:1rem 0rem;
         width: 100%;
     }
 
     .title{
-        color: var(--accent-red); /* Use variable */
+        color: var(--accent-red);
         font-size:4rem;
         font-weight:900;
-    }
-
-    /* Original had background on Title, maybe meant for Ing Title? */
-    .ingredientsTitle{
-        /* background-color: #F53100; Let's assume this was intended for Ingredients below */
-    }
-
-    /* REMOVED redundant color rule: .steps h3, .ingredients h3 */
-
-    .steps h3{
-        padding-left: 1rem;
-        border-bottom: 2px solid var(--accent-red); /* Use variable */
-        padding-bottom: 1rem;
-        color: var(--accent-red); /* Reaffirm color if needed */
-    }
-
-    .recipeHero{ /* Keep grid definition */
-        display:grid;
-        grid-template-columns:auto;
-        grid-template-areas:
-        "img title title"
-        "img btn btn"
-        "img pre pre"
-        "img des des"
-        "img des des"
-        "img des des" ;
-        justify-content:start;
-        width:70%; /* Keep original width */
     }
 
     .recipeInstructionsWrapper{
@@ -212,60 +182,51 @@ button{
         justify-content: center;
         width:100%;
     }
+    
     .recipeInstructions{
         display:flex;
         justify-content: center;
         padding: 1rem 0;
         gap:2rem;
-        width:70%; /* Keep original width */
+        width:70%;
     }
 
-    .recipeHero .recipeImg{
-        grid-area:img;
-        padding-right:2rem;
-        object-fit: cover;
-        max-width: 30vw; /* Keep original max-width */
+    .steps h3{
+        padding-left: 1rem;
+        border-bottom: 2px solid var(--accent-red); 
+        padding-bottom: 1rem;
+        color: var(--accent-red); 
     }
-
-    .title{ grid-area:title; } /* Keep assignments */
-    .description{ grid-area:des; }
-    .presets{ grid-area:pre; }
-    .buttons{ grid-area:btn; align-self:start; }
 
     .steps{
-        grid-area:step; /* Keep original area name */
         background-color: white;
-        width:60%; /* Keep original width */
+        width:60%; 
         padding: 1rem 0rem;
         border-radius: 20px;
         height: fit-content;
-        border:2px solid var(--accent-red); /* Use variable */
+        border:2px solid var(--accent-red); 
     }
 
     .ingredients{
-        grid-area: ing; /* Keep original area name */
         background-color: white;
-        width: 40%; /* Keep original width */
         height: fit-content;
-        border-radius: 22px; /* Keep original radius */
-        padding: 0rem 0rem 0rem 0rem; /* Keep original padding */
-        border: 2px solid var(--accent-red); /* Use variable */
+        border-radius: 22px; 
+        border: 2px solid var(--accent-red); 
     }
 
-    /* Apply background color here */
+
     .ingredients .ingredientsTitle {
-         background-color: var(--accent-red); /* Use variable */
-         padding: 1rem; /* Add padding for the title background */
-         margin-bottom: 1rem; /* Space below title */
-         border-radius: 20px 20px 0 0; /* Match parent rounding */
-         width: auto; /* Override base 100% */
+         background-color: var(--accent-red); 
+         padding: 1rem; 
+         margin-bottom: 1rem; 
+         border-radius: 20px 20px 0 0; 
+         width: auto; 
     }
 
-    /* Override color for text on background */
     .ingredients h3{
-        padding: 0; /* Remove old padding */
-        color: white; /* Override base color */
-        margin: 0; /* Remove default margin */
+        padding: 0; 
+        color: var(--white); 
+        margin: 0; 
     }
 }
 

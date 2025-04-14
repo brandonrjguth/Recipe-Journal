@@ -44,14 +44,11 @@
                         </form>
 
                     </div>
-                    <%if (recipe.images){%>
-                    <!--<img class="recipeImg" src="/recipeImg/imgThumbURL/<%=recipe.title%>" height="300px">-->
-                    <%}%>
-                    <div class="presets">
-                        <div class="presetWrapper">
+                    <div class="tags">
+                        <div class="tagWrapper">
                             <%if (recipe.categories){
                                 recipe.categories.forEach((category) => {%>
-                                    <p class="presetTag"><%=category%></p>
+                                    <p class="tag"><%=category%></p>
                                 <%})
                             }%>
                         </div>
