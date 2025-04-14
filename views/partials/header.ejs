@@ -8,10 +8,10 @@
             </a>
                 <ul class="menuShelf" id="desktop-menu"> <!-- Added ID -->
                     <div class="mainMenu">
-                        <li><a href="/favourites" class="<%= currentPage === '/favourites' ? 'current' : '' %>">Favourites</a></li>
-                        <li><a href="/recipeList" class="<%= currentPage === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
-                        <li><a href="/recipeFrom" class="<%= currentPage === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
-                        <li><a href="/shoppingList" class="<%= currentPage === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
+                        <li><a href="/favourites" class="<%= currentPath === '/favourites' ? 'current' : '' %>">Favourites</a></li>
+                        <li><a href="/recipeList" class="<%= currentPath === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
+                        <li><a href="/recipeFrom" class="<%= currentPath === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
+                        <li><a href="/shoppingList" class="<%= currentPath === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
                     </div>
                 </ul>
                 <!-- Hamburger Button (Mobile Only) - Moved search toggle away -->
@@ -70,10 +70,10 @@
 
     <ul class="menuShelf mobileMenu" id="mobile-menu"> <!-- Added ID -->
         <div class="mainMenu">
-            <li><a href="/favourites">Favourites</a></li>
-            <li><a href="/recipeList">Recipes</a></li>
-            <li><a href="/recipeFrom">Create</a></li>
-            <li><a href="/shoppingList">Groceries</a></li>
+            <li><a href="/favourites" class="<%= currentPath === '/favourites' ? 'current' : '' %>">Favourites</a></li>
+            <li><a href="/recipeList" class="<%= currentPath === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
+            <li><a href="/recipeFrom" class="<%= currentPath === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
+            <li><a href="/shoppingList" class="<%= currentPath === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
         </div>
 
         <div class="user-bar">

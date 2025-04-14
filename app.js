@@ -419,23 +419,23 @@ async function run() {
     });
 
     app.get('/newRecipePage', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPage: req.path }) // Pass currentPage
+      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPath: req.path }) // Pass currentPath
     })
 
     app.get('/convertRecipe', ensureAuthenticated, (req, res) => { // Protected
-      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false, currentPage: req.path }); // Pass currentPage
+      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false, currentPath: req.path }); // Pass currentPath
     })
 
     app.get('/newRecipeLink', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false, currentPage: req.path }) // Pass currentPage
+      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false, currentPath: req.path }) // Pass currentPath
     })
 
     app.get('/newRecipePicture', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false, currentPage: req.path }) // Pass currentPage
+      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false, currentPath: req.path }) // Pass currentPath
     })
 
     app.get('/recipeFrom', ensureAuthenticated, (req, res) => { // Protected
-      res.render('recipeFrom', { recipeExists: false, currentPage: req.path }) // Pass currentPage
+      res.render('recipeFrom', { recipeExists: false, currentPath: req.path }) // Pass currentPath
     })
 
     // Send paginated array of recipes belonging to the logged-in user to recipeList page, indicating favourite status
@@ -495,7 +495,7 @@ async function run() {
         try {
             // Currently just renders the static EJS page
             // Future enhancement: Could fetch the list dynamically if needed
-            res.render('supportedSites.ejs', { currentPage: req.path }); // Pass currentPage
+            res.render('supportedSites.ejs', { currentPath: req.path }); // Pass currentPath
         } catch (err) {
             console.error("Error rendering supported sites page:", err);
             res.status(500).send('Error displaying supported sites');
@@ -525,7 +525,7 @@ async function run() {
         fullRecipe.isOnCurrentUserList = !!isOnList; // Add shopping list flag
         console.log(fullRecipe.isOnCurrentUserList);
 
-        res.render("recipe", { recipe: fullRecipe, currentPage: req.path }); // Pass updated recipe object
+        res.render("recipe", { recipe: fullRecipe, currentPath: req.path }); // Pass currentPath
       } catch (err) {
         console.error("Error fetching recipe:", err);
         res.status(500).send('Error fetching recipe');
@@ -550,7 +550,7 @@ async function run() {
         fullRecipe.isCurrentUserFavourite = !!isFavourite; // Add flag to recipe object
 
         let imageNumber = fullRecipe.images ? fullRecipe.images.length : 0; // Handle case where images might be null/undefined
-        res.render("recipeImg", { recipe: fullRecipe, imageNumber: imageNumber, currentPage: req.path }); // Pass currentPage
+        res.render("recipeImg", { recipe: fullRecipe, imageNumber: imageNumber, currentPath: req.path }); // Pass currentPath
       } catch (err) {
         console.error("Error fetching image recipe:", err);
         res.status(500).send('Error fetching image recipe');
@@ -574,7 +574,7 @@ async function run() {
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: recipe._id });
         recipe.isCurrentUserFavourite = !!isFavourite;
 
-        res.render("editRecipe", { recipe: recipe, recipeExists: false, currentPage: req.path }); // Pass currentPage
+        res.render("editRecipe", { recipe: recipe, recipeExists: false, currentPath: req.path }); // Pass currentPath
       } catch (err) {
         console.error("Error fetching recipe for edit:", err);
         res.status(500).send('Error fetching recipe for edit');
@@ -635,7 +635,7 @@ async function run() {
 
 
         // Pass the structured data to the template
-        res.render("shoppingList", { shoppingListData: shoppingListData, currentPage: req.path }); // Pass currentPage
+        res.render("shoppingList", { shoppingListData: shoppingListData, currentPath: req.path }); // Pass currentPath
       } catch (err) {
         console.error("Error fetching shopping list:", err);
         res.status(500).send('Error fetching shopping list');
