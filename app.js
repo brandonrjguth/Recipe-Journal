@@ -634,16 +634,16 @@ async function run() {
 
         // Basic validation
         if (!username || !password || !passwordConfirm) {
-          return res.render('register', { error: 'All fields are required.' });
+          return res.render('register', { error: 'All fields are required.', currentPath:req.path });
         }
         if (password !== passwordConfirm) {
-          return res.render('register', { error: 'Passwords do not match.' });
+          return res.render('register', { error: 'Passwords do not match.', currentPath:req.path });
         }
 
         // Check if user already exists
         const existingUser = await users.findOne({ username: username });
         if (existingUser) {
-          return res.render('register', { error: 'Username already taken.' });
+          return res.render('register', { error: 'Username already taken.', currentPath:req.path });
         }
 
         // Hash password
@@ -675,7 +675,7 @@ async function run() {
 
       } catch (err) {
         console.error("Registration error:", err);
-        res.render('register', { error: 'An error occurred during registration.' });
+        res.render('register', { error: 'An error occurred during registration.', currentPath:req.path });
       }
     });
 
@@ -718,7 +718,7 @@ async function run() {
         //Redirect back to page with error message if this recipe name already exists for this user
         let result = await recipes.findOne({ title: title, userId:userId });
         if (result !== null) {
-          res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false, currentPage: false })
+          res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false, currentPage: false, currentPath:req.path })
           return
         }
 
@@ -821,7 +821,7 @@ async function run() {
         let result = await recipes.findOne({ title: recipeData.name, userId: userId });
         if (result !== null) {
           console.log("recipeExists");
-          res.render("convertRecipe", { recipeExists: true, recipeSiteError: false }) // Pass recipeSiteError:false
+          res.render("convertRecipe", { recipeExists: true, recipeSiteError: false, currentPath:req.path }) // Pass recipeSiteError:false
           return
         } else {
 
@@ -875,7 +875,7 @@ async function run() {
         }
       } catch (err) {
         console.log("Error converting recipe:", err); 
-        res.render('convertRecipe', { recipeSiteError: true, recipeExists: false, currentPage: false})
+        res.render('convertRecipe', { recipeSiteError: true, recipeExists: false, currentPage: false, currentPath:req.path})
       }
     })
 
