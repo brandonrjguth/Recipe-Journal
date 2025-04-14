@@ -418,29 +418,6 @@ async function run() {
       }
     });
 
-    // Thumbs route - fetches thumbnails for recipes favourited by the current user
-    app.get("/thumbs", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
-      try {
-        const userId = req.user._id;
-        // Find favourite recipe IDs for the user
-        const favouriteEntries = await userFavourites.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
-        const recipeIds = favouriteEntries.map(fav => fav.recipeId);
-        const recipeObjectIds = recipeIds.map(id => typeof id === 'string' ? new ObjectId(id) : id);
-
-        // Fetch the corresponding recipes
-        let recipeList = await recipes.find({ _id: { $in: recipeObjectIds } }).sort({ "title": 1 }).toArray();
-
-        // Add favourite status (always true for this route)
-        recipeList = recipeList.map(recipe => ({ ...recipe, isCurrentUserFavourite: true }));
-
-        res.render('thumbs', { recipeList: recipeList, favourites: true, thumbnails: false, currentPage: req.path }); // Pass currentPage
-      } catch (err) {
-        console.error("Error fetching thumbs for favourites:", err);
-        res.status(500).send('Error fetching favourite thumbnails');
-      }
-    });
-
-
     app.get('/newRecipePage', ensureAuthenticated, (req, res) => { // Protected
       res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPage: req.path }) // Pass currentPage
     })
