@@ -20,7 +20,7 @@
 .recipeFromCol{
     display:flex;
     flex-direction: column;
-    padding:2rem;
+    padding:2rem 0rem;
     border-radius: 8px; /* Consistent rounded corners */
     width:100%;
     text-align: center;
@@ -40,7 +40,7 @@ its what we want the user to use and see first.----*/
     flex-wrap: wrap;
     width:100%;
     justify-content: center;
-    padding:1rem;
+    padding:0;
 }
 
 
@@ -79,8 +79,7 @@ its what we want the user to use and see first.----*/
     border: 1px solid var(--border-light);
     border-radius: 8px;
     padding: 1.5rem;
-    max-width: 90%;
-    width:35rem;
+    width:100%;
     text-align: left;
     display:flex;
     flex-direction: column;
@@ -125,9 +124,18 @@ its what we want the user to use and see first.----*/
     margin-top: 1rem;
 }
 
-@media only screen and (min-width: 990px) {
-    /* .recipeFromCol border-radius already set to 8px above */
 
+@media only screen and (min-width: 700px) {
+    .explanation-box {
+        width:35rem;
+    }
+    .explanationLesserRow{
+        padding:1rem;
+    }
+
+}
+
+@media only screen and (min-width: 990px) {
     .explanationLesserRow .explanation-box{
         width:20rem;
     }
