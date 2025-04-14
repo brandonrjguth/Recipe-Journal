@@ -60,7 +60,7 @@
         <!--Recipe List-->
         <ul>
             <% for(var i=0; i < recipeList.length; i++){%>
-                <div class="contentRow">
+                <div class="contentRoworCol">
                     <li>
                         <% if (recipeList[i].isLink){%>
                         <a href="<%=recipeList[i].recipeUrl%>"><%=recipeList[i].title%></a>

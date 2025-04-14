@@ -1,3 +1,5 @@
+/*---------Outer Wrappers--------*/
+
 .content{
     padding:2rem 1rem 2rem 1rem;
     display:flex;
@@ -11,10 +13,20 @@
     justify-content: center;
 }
 
-.buttons.row > form{
-    color:#FFF7ED;
-
+/*-----Title and List Styles-----*/
+.content h1{
+    font-family: 'Fraunces';
+    font-weight: 900;
+    color: #F53100;
+    font-size: 3rem;
+    padding-bottom:2rem;
 }
+
+.content ul{
+    width:90%
+}
+
+/*--- Toggle Thumbnail/List View button ----*/
 .toggle{
     gap:0.5rem;
     padding-bottom:1rem;
@@ -32,39 +44,14 @@
 
 #toggleStylesheet:hover{
     background-color: var(--primary); /* Use secondary on hover */
+
+
 }
+/*--------------------------------------------------*/
+/*---------Recipe List Title and Button Rows -------*/
+/*--------------------------------------------------*/
 
-.content h1{
-    font-family: 'Fraunces';
-    font-weight: 900;
-    color: #F53100;
-    font-size: 3rem;
-    padding-bottom:2rem;
-}
-
-.content ul{
-    width:90%
-}
-
-.content ul li{
-   list-style:none; 
-   font-size:1.1rem;
-   padding:0.25rem 0;
-}
-
-
-
-.content a, .content a:visited{
-    color: var(--text); /* Use text variable */
-    text-decoration:none;
-    transition: color 0.2s ease;
-}
-
-.content a:hover {
-    color: var(--accent-red); /* Use primary color on hover */
-}
-
-.contentRow{
+.contentRoworCol{
     display:flex;
     align-items: center;
     justify-content: space-between;
@@ -72,47 +59,30 @@
     gap:0.5rem;
 }
 
-.listH1{
-    align-self: start;
-}
+/*---------Recipe List Title Area------*/
+.content ul li{
+    list-style:none; 
+    font-size:1.1rem;
+    padding:0.25rem 0;
+ }
+ 
+ .content a, .content a:visited{
+     color: var(--text); /* Use text variable */
+     text-decoration:none;
+     transition: color 0.2s ease;
+ }
+ 
+ .content a:hover {
+     color: var(--accent-red); /* Use primary color on hover */
+ }
 
-.listButtonRow{
-    display:flex;
-    align-self: start;
-    gap:1rem;
-}
 
-.listButtonRow button{
-    height:fit-content;
-    border-radius: 5px;
-    border: none;
-    box-shadow: 0px 0px 1px 1px #000000;
-    box-shadow: 1px 1xp 1px black;
-    font-family: 'Poppins';
-    background-color: var(--primary);
-    color: #000000;
-    padding: 0.5rem 0.5rem;
-}
+ /*---------Recipe Buttons Area------*/
+ 
+.buttons.row > form{
+    color:#FFF7ED;
 
-.listButtonRow button:hover{
-    background-color:var(--accent-red);
-    color:white;
-    box-shadow:none;
 }
-.strikeout {
-    text-decoration: line-through;
-}
-
-.deleteShop{
-    align-self:start;
-    padding-bottom:2rem;
-}
-/* Removing the generic red span style, specific styling should be applied where needed */
-/* span{
-    align-self:center;
-    color: red;
-    padding-right:0.5rem;
-} */
 
 .deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
@@ -145,7 +115,11 @@
     vertical-align: middle; /* Align images better if using img tags */
 }
 
-/* --- Pagination Styles --- */
+
+/*--------------------------------------------------*/
+/* ---------------- Pagination Row Styles --------- */
+/*--------------------------------------------------*/
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -180,23 +154,12 @@
     font-weight: bold;
 }
 
-  @media only screen and (min-width: 600px) {
-    @media only screen and (max-width: 1200px) {
-        .content{
-            width:50%;
-        }
-    .content h1{
-        font-size:5rem;
-    }
-  }
-
-
-  }
-  @media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 600px) {
     .content{
         width:50%;
     }
     .content h1{
         font-size:5rem;
     }
-  }
+}
+

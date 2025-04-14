@@ -1,0 +1,80 @@
+/*---------Outer Wrappers--------*/
+.content{
+    padding:2rem 1rem 2rem 1rem;
+    display:flex;
+    flex-direction:column;
+    align-self:center;
+}
+
+.contentWrapper{
+    display:flex;
+    justify-content: center;
+}
+
+
+/*-----Title and List Styles-----*/
+.content h1{
+    font-family: 'Fraunces';
+    font-weight: 900;
+    color: #F53100;
+    font-size: 3rem;
+    padding-bottom:2rem;
+    align-self: start;
+}
+
+.content ul{
+    width:90%
+}
+
+.content ul li{
+    list-style:none; 
+    font-size:1rem;
+    padding:0.25rem 0;
+ }
+
+ .strikeout {
+    text-decoration: line-through;
+}
+ 
+
+/*-----List Buttons Row-----*/
+
+.listButtonRow{
+    display:flex;
+    align-self: start;
+    gap:1rem;
+}
+
+.listButtonRow button{
+    height:fit-content;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 1px 1px #000000;
+    box-shadow: 1px 1xp 1px black;
+    font-family: 'Poppins';
+    background-color: var(--primary);
+    color: #000000;
+    padding: 0.5rem 0.5rem;
+}
+
+.listButtonRow button:hover{
+    background-color:var(--accent-red);
+    color:white;
+    box-shadow:none;
+}
+
+.deleteShop{
+    align-self:start;
+    padding-bottom:2rem;
+}
+
+
+
+@media only screen and (min-width: 600px) {
+    .content{
+        width:50%;
+    }
+    .content h1{
+        font-size:5rem;
+    }
+}

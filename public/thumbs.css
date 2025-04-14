@@ -1,7 +1,4 @@
-body{
-    display:flex;
-    flex-direction: column;
-}
+/*-----Outer Wrapper-------*/
 
 .content{
     padding:1rem 1rem 2rem 1rem;
@@ -9,6 +6,21 @@ body{
     flex-direction:column;
     align-items: center;
     align-self:center;
+    width:100%;
+}
+
+.contentWrapper{
+    display: flex;
+    justify-content: center;
+}
+
+/*-----Title and Toggle List/Thumbnail-------*/
+.content h1{
+    font-family:'Fraunces';
+    font-weight:900;
+    padding: 1rem 1rem 2rem 1rem;
+    color:#F53100;
+    font-size: 4rem;
 }
 
 .toggle{
@@ -25,18 +37,12 @@ body{
     background-color: rgb(211, 219, 225);
 }
 
-.contentWrapper{
-    display: flex;
-    justify-content: center;
-}
 
-.content h1{
-    font-family:'Fraunces';
-    font-weight:900;
-    padding: 1rem 1rem 2rem 1rem;
-    color:#F53100;
-    font-size: 4rem;
-}
+/*-----------------------*/
+/*-----Recipe List-------*/
+/*-----------------------*/
+
+
 
 .content ul{
     width:100%;
@@ -46,13 +52,41 @@ body{
     gap:2rem;
 }
 
-.buttons.row{
-    justify-content: center;
+
+/*------Recipe Wrapper-----*/
+.contentRoworCol {
+    display: grid;
+    align-items: center; /* Maybe change to stretch if needed */
+    justify-content: space-between;
+    width: 100%;
+    /* Ensure the grid row for the image can accommodate 14rem + padding/gaps */
+    /* Your existing grid-template-rows: 2fr 10fr 1fr; might need adjustment */
+    /* Consider explicit row sizes or adjust fractions */
+    grid-template-rows: auto minmax(14rem, auto) auto; /* Title, Image Area, Buttons */
+     /* OR grid-template-rows: auto 1fr auto; and let the image height push it */
+    height: auto; /* Let the row height be determined by content */
+    /* max-height: 20rem; */ /* Be careful this doesn't conflict */
+    grid-template-columns: 1fr;
+    padding-bottom: 1rem;
+    /* Add overflow: hidden; to the image's direct container (the <a> tag) */
+    /* or potentially the .contentRow itself if appropriate */
 }
 
+/*-----Recipe Title-----*/
+.content ul li{
+    list-style:none; 
+    font-size:1.1rem;
+    padding:0.25rem 0;
+    text-align:center;
+ }
 
+ .content a, .content a:visited{
+    color:rgb(0, 0, 0);
+    text-decoration:none;
 
+}
 
+/*------Recipe Thumbnail-----------*/
 img.recipeImg {
     /* Your existing dimensions, object-fit, etc. */
     display: block;
@@ -78,44 +112,11 @@ img.recipeImg.error { /* Optional class for error state */
     /* background-color: #fdd; */
 }
 
+/*------------Buttons Row-----------*/
 
-.content ul li{
-   list-style:none; 
-   font-size:1.1rem;
-   padding:0.25rem 0;
-   text-align:center;
+.buttons.row{
+    justify-content: center;
 }
-
-
-.content a, .content a:visited{
-    color:rgb(0, 0, 0);
-    text-decoration:none;
-
-}
-
-.content{
-    width:100%;
-}
-
-
-.contentRow {
-    display: grid;
-    align-items: center; /* Maybe change to stretch if needed */
-    justify-content: space-between;
-    width: 100%;
-    /* Ensure the grid row for the image can accommodate 14rem + padding/gaps */
-    /* Your existing grid-template-rows: 2fr 10fr 1fr; might need adjustment */
-    /* Consider explicit row sizes or adjust fractions */
-    grid-template-rows: auto minmax(14rem, auto) auto; /* Title, Image Area, Buttons */
-     /* OR grid-template-rows: auto 1fr auto; and let the image height push it */
-    height: auto; /* Let the row height be determined by content */
-    /* max-height: 20rem; */ /* Be careful this doesn't conflict */
-    grid-template-columns: 1fr;
-    padding-bottom: 1rem;
-    /* Add overflow: hidden; to the image's direct container (the <a> tag) */
-    /* or potentially the .contentRow itself if appropriate */
-}
-
 
 
 .deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
@@ -129,7 +130,10 @@ img.recipeImg.error { /* Optional class for error state */
     height: 1.5rem;
 }
 
-/* --- Pagination Styles --- */
+
+/*-----------------------------------------*/
+/* --------- Pagination Row ------------- */
+/*-----------------------------------------*/
 .pagination {
     display: flex;
     justify-content: center;
