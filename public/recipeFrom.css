@@ -1,3 +1,50 @@
+/*---- Outer Page Wrapper ----*/
+
+.recipeFromWrapper{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:center;
+    justify-content: center;
+    padding:1rem 0.5rem 1rem 0.5rem;
+}
+
+.recipeFromWrapper h1{
+    font-family: "Fraunces";
+    font-weight: 900;
+    font-size: 5rem;
+    color:var(--accent-red);
+}
+
+/*---- Inner Page Wrapper ----*/
+.recipeFromCol{
+    display:flex;
+    flex-direction: column;
+    padding:2rem;
+    border-radius: 8px; /* Consistent rounded corners */
+    width:100%;
+    text-align: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content:center;
+    gap:1rem;
+}
+
+/*---- Wrapper for secondary explanation boxes ----*/
+/*---- This is to keep Convert Recipe separate because 
+its what we want the user to use and see first.----*/
+
+.explanationLesserRow{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    width:100%;
+    justify-content: center;
+    padding:1rem;
+}
+
+
+/*----- Recipe From Buttons -------*/
 .recipeFrom{
     padding: 0.8rem 1.5rem; /* Adjusted padding */
     background-color: #333; /* Dark charcoal background */
@@ -21,50 +68,10 @@
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); /* Adjust shadow on hover */
     color: var(--white); /* Ensure text color remains white */
 }
-.recipeFromWrapper{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:center;
-    justify-content: center;
-    padding:1rem 0.5rem 1rem 0.5rem;
-}
 
-.recipeFromCol{
-    display:flex;
-    flex-direction: column;
-    padding:2rem;
-    border-radius: 8px; /* Consistent rounded corners */
-    width:100%;
-    text-align: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content:center;
-    gap:1rem;
-}
 
-.explanationLesserRow{
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    width:100%;
-    justify-content: center;
-    padding:1rem;
-}
 
-.recipeFromCol h1{
-    padding-bottom:2rem;
-}
 
-.recipeFromWrapper h1{
-    font-family: "Fraunces";
-    font-weight: 900;
-    font-size: 5rem;
-}
-
-body{
-    background-color: var(--primary); /* Use theme background */
-}
 
 /* Styles for the explanation boxes */
 .explanation-box {
@@ -114,26 +121,8 @@ body{
     text-decoration: none;
 }
 
-/* Specific styling for buttons inside the box */
 .explanation-box button.recipeFrom {
     margin-top: 1rem;
-}
-
-
-.row {
-    display: flex;
-    justify-content: center;
-    gap:2rem;
-    flex-wrap:wrap;
-}
-
-h1 {
-    font-weight: 300;
-    font-size: 2rem;
-    font-weight:600;
-    font-size:3rem;
-    color:#F53100 !important;
-
 }
 
 @media only screen and (min-width: 990px) {
