@@ -1,3 +1,8 @@
+/*---------------------------------------------------*/
+/*----------Base Stylings, Default Colours-----------*/
+/*---------------------------------------------------*/
+
+/*Box sizing set to border-box so that all padding is included and doesnt push outside the view width*/
 *,
 *::before,
 *::after {
@@ -27,22 +32,25 @@ html {
 body, p, h3, h2, h1, ul, li {
     padding:0;
     margin:0;
-    font-family: 'Poppins', sans-serif;
-    color: var(--text);
 }
 
+/*Explicitly decalare font-type for text input,
+Some browsers will not inherit it from html styles*/
 
 input[type="text"],
 textarea {
     font-family: 'Poppins', sans-serif;
 }
 
-
+/*easy styling classes*/
 .hidden{ display:none !important; }
 .col{ display:flex; flex-direction: column; }
 .row{ display:flex; }
-.firstHalfEnd{ display:flex; }
 
+
+/*---------------------------------------------------*/
+/*-------Header Styling--------*/
+/*---------------------------------------------------*/
 
 .header{
     position: relative;
@@ -77,6 +85,9 @@ textarea {
     display:none;
 }
 
+.firstHalfEnd{ 
+    display:flex; 
+}
 
 .searchBar{
     display:none;
@@ -149,6 +160,14 @@ span{
     font-size:0.5rem;
 }
 
+
+/*Menushelf class is on both mobile and desktop menu's. By default the class is set to display-none.
+The way it is shown on mobile is by targeting .menushelf.active and setting display:flex.
+
+This is because the active class gets added to it when the hamburger menu is clicked. As the active class
+is applied to the user drop-down menu also, we want to target specifically the mobile menu shelf which has
+both classes.
+*/
 .menuShelf {
     display: none;
     position: absolute;
@@ -253,43 +272,20 @@ span{
 }
 
 
-.menuShelf.mobileMenu.active{
+.mobileMenu.active{
     display:flex;
 }
 
-  
-.user-dropdown {
-    position: relative;
-    display: inline-block;
-}
 
-.user-dropdown-toggle {
-    background: none; border: none; padding: 0; margin: 0;
-    font: inherit; color: inherit; cursor: pointer; display: flex; align-items: center;
-}
-
-.dropdown-arrow {
-    font-size: 1.3em; line-height: 1; color:black;
-}
-.user-dropdown-menu {
-    display: none; position: absolute; top: 100%; right: 0;
-    background-color: var(--white); border: 1px solid var(--border-light);
-    border-radius: 4px; box-shadow: 0 2px 5px var(--shadow-color);
-    list-style: none; padding: 0; margin: 5px 0 0 0;
-    min-width: 100px; z-index: 1001;
-}
-.user-dropdown-menu.active { display: block; }
-.user-dropdown-menu li { padding: 0; margin: 0; width: 100%; }
-.user-dropdown-menu li a {
-    display: block; padding: 0.5rem 1rem; color: var(--text);
-    text-decoration: none; white-space: nowrap;
-}
-
-.user-dropdown-menu li a:hover { background-color: var(--primary); }
-
+/*---------------------------------------------------*/
+/*--------Desktop/Large Tablet styling (>700px)---------*/
+/*---------------------------------------------------*/
 
   @media only screen and (min-width: 700px) {
 
+
+    /*----As per the previous description, now menuShelf is made active for desktop sizes, and .menuShelf.mobileMenu is completely hidden
+    whether active or not by this specificity---*/
     .menuShelf{
         padding:0.5rem;
         align-items: center;
@@ -307,10 +303,6 @@ span{
     }
 
     .menuShelf.mobileMenu {
-        display: none;
-    }
-
-    .menuShelf.mobileMenu.active {
         display: none;
     }
 
@@ -355,11 +347,49 @@ span{
         gap: 1rem;
     }
 
+
+    /*------------Desktop user logout menu styling-----------------*/
+    .user-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .user-dropdown-toggle {
+        background: none; border: none; padding: 0; margin: 0;
+        font: inherit; color: inherit; cursor: pointer; display: flex; align-items: center;
+    }
+    
+    .dropdown-arrow {
+        font-size: 1.3em; line-height: 1; color:black;
+    }
+    .user-dropdown-menu {
+        display: none; 
+        position: absolute; right: 0;
+        background-color: var(--white); 
+        border: 1px solid var(--border-light);
+        border-radius: 4px; 
+        box-shadow: 0 2px 5px var(--shadow-color);
+        list-style: none;
+        margin: 5px 0 0 0;
+        min-width: 100px; 
+    }
+    
+    .user-dropdown-menu.active { display: block; }
+    .user-dropdown-menu li a {
+        display: block; padding: 0.5rem 1rem; color: var(--text);
+        text-decoration: none; white-space: nowrap;
+    }
+    
+    .user-dropdown-menu li a:hover { background-color: var(--primary); }
   }
 
 
+/*---------------------------------------------------*/
+/*----------------Full size desktop screen Styling--------------------------*/
+/*---------------------------------------------------*/
   @media only screen and (min-width: 991px) {
 
+    /*Display full search bar in header, hide search button that brings up the search bar below the header*/
     .searchBar {
         display: flex;
     }

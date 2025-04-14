@@ -59,69 +59,6 @@ async function run() {
     const userFavourites = db.collection('userFavourites'); // Collection for user favourites
     const userShoppingList = db.collection('userShoppingList'); // Collection for user shopping list items
 
-    // --- Function to Generate Thumbnails for All Recipes ---
-    async function generateThumbnails() {
-      console.log("Starting thumbnail generation process...");
-      let updatedCount = 0;
-      let errorCount = 0;
-      const cursor = recipes.find({}); // Get a cursor for all recipes
-
-      try {
-        while (await cursor.hasNext()) {
-          const recipe = await cursor.next();
-          let sourceImageBuffer = null;
-
-          try {
-            // Determine the source image
-            if (recipe.isImg && Array.isArray(recipe.images) && recipe.images.length > 0) {
-              // Image recipe: use the first image's buffer
-              sourceImageBuffer = recipe.images[0].buffer; // Assuming images[0] stores the buffer directly
-            } else if (!recipe.isImg && recipe.images) {
-              // Normal recipe: use the single image buffer
-              sourceImageBuffer = recipe.images.buffer; // Assuming images stores the buffer directly
-            }
-
-            // Check if we have a valid buffer to process
-            if (sourceImageBuffer && Buffer.isBuffer(sourceImageBuffer)) {
-              // Generate the thumbnail
-              const thumbnailBuffer = await sharp(sourceImageBuffer)
-                .resize(400) // Resize width to 400px
-                .jpeg({ quality: 60 }) // Set JPEG quality
-                .toBuffer();
-
-              // Update the recipe document
-              const updateResult = await recipes.updateOne(
-                { _id: recipe._id },
-                { $set: { thumbnail: thumbnailBuffer } }
-              );
-
-              if (updateResult.modifiedCount === 1) {
-                updatedCount++;
-                // console.log(`Successfully generated thumbnail for: ${recipe.title}`);
-              } else if (updateResult.matchedCount === 1 && updateResult.modifiedCount === 0) {
-                // Matched but didn't modify (thumbnail might be identical already)
-                // console.log(`Thumbnail already up-to-date or no change needed for: ${recipe.title}`);
-              } else {
-                 console.log(`Could not find or update recipe: ${recipe.title} (ID: ${recipe._id})`);
-              }
-            } else {
-              // console.log(`Skipping recipe with no suitable source image: ${recipe.title}`);
-            }
-          } catch (err) {
-            errorCount++;
-            console.error(`Error processing thumbnail for recipe "${recipe.title}" (ID: ${recipe._id}):`, err.message);
-            // Continue to the next recipe even if one fails
-          }
-        }
-      } finally {
-        await cursor.close(); // Ensure the cursor is closed
-        console.log(`Thumbnail generation finished. Updated: ${updatedCount}, Errors: ${errorCount}`);
-      }
-    }
-    // To run this function manually (e.g., from a specific route or script):
-    //generateThumbnails().catch(console.error);
-
-
     // --- Session Configuration ---
     // Secret should be in .env file for production
     const secret = process.env.SESSION_SECRET || 'a default secret for development';
@@ -204,42 +141,13 @@ async function run() {
     //---------------------------------------------------------------//
 
 
-    //FUNCTION FOR SEEDING NEW RECIPES MANUALLY//
-
-    /*let seed = async function() {
-        try {
-    let title = ``
-    let desc = ``
-    let ing = ``
-    let step = ``
-    
-    ing = ing.split('\n')
-    step = step.split(`\n`)
-    
-    await recipes.insertOne({
-              title: title,
-              favourite:false, // Note: This field is likely obsolete now
-              isImg:false,
-              isLink:false,
-              recipeUrl: "noUrl",
-              images: null,
-              description: desc,
-              steps: step,
-              ingredients:ing,
-              categories:null,
-              // userId: // Add appropriate user ID if seeding
-            })
-    
-        } catch {
-    
-        }
-      }
-      seed();*/
-
     app.get('/', (req, res) => {
       res.redirect('recipeList');
     })
 
+
+    //Demo route logs in a demoUser, deletes all recipes tied to the demoUser and then reseeds example recipes
+    //This is purely for showing off the app, allows the user to edit, favourite, delete and add but resets whenever the route is called
     app.get('/demo', async (req, res) => {
       const demoUsername = 'demoUser';
       const demoPassword = 'password123';
@@ -312,7 +220,7 @@ async function run() {
                 ingredients: ["4 Chicken Thighs", "4 Chicken Drumsticks", "2 cups Buttermilk", "1 tbsp Hot Sauce", "2 cups All-Purpose Flour", "1 tbsp Paprika", "1 tbsp Garlic Powder", "1 tbsp Onion Powder", "1 tsp Salt", "1 tsp Black Pepper", "1 tsp Cayenne Pepper", "1 tsp Dried Thyme", "1 tsp Dried Oregano", "Oil for frying (vegetable or peanut oil)"],
                 steps: ["In a bowl, mix buttermilk and hot sauce.", "Add chicken pieces to the buttermilk mixture and marinate for at least 2 hours, preferably overnight.", "In a separate bowl, combine flour, paprika, garlic powder, onion powder, salt, black pepper, cayenne pepper, thyme, and oregano.", "Heat oil in a deep fryer or large skillet to 350°F (175°C).", "Remove chicken from the buttermilk and dredge in the flour mixture, coating evenly.", "Fry chicken in hot oil for 12-15 minutes, turning occasionally, until golden brown and cooked through (internal temperature should reach 165°F or 75°C).", "Remove chicken and drain on paper towels."],
                 categories: ["Fried", "Southern", "Chicken"],
-                  images: friedChickenImgBuffer, // Assign processed buffer
+                  images: friedChickenImgBuffer, 
                   thumbnail:friedChickenThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
@@ -325,7 +233,7 @@ async function run() {
                   ingredients: ["2 1/4 cups All-purpose Flour", "1 tsp Baking Soda", "1 tsp Salt", "1 cup Butter, softened", "3/4 cup Granulated Sugar", "3/4 cup Brown Sugar", "2 large Eggs", "1 tsp Vanilla Extract", "2 cups Chocolate Chips"],
                   steps: ["Preheat oven to 375°F (190°C).", "Combine dry ingredients.", "Cream butter and sugars.", "Beat in eggs and vanilla.", "Gradually add dry ingredients.", "Stir in chocolate chips.", "Drop rounded tablespoons onto ungreased baking sheets.", "Bake 9-11 minutes."],
                   categories: ["Dessert", "Cookies", "Baking"],
-                  images: cookiesImgBuffer, // Assign processed buffer
+                  images: cookiesImgBuffer, 
                   thumbnail:cookiesThumbBuffer,
                   userId: demoUserId,
                   isLink:false,
@@ -365,10 +273,14 @@ async function run() {
       }
   });
 
-    // Favourites route - fetches recipes favourited by the current user with pagination
+    // Favourites route - fetches recipes favourited by the current user
     app.get("/favourites", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
+
+        //get UserId from passport session
         const userId = req.user._id;
+
+        //Pagination logic
         const page = parseInt(req.query.page) || 1; // Get page from query, default to 1
         const limit = parseInt(req.query.limit) || 12; // Get limit from query, default to 12
         const skip = (page - 1) * limit;
@@ -397,9 +309,14 @@ async function run() {
         const shoppingListEntries = await userShoppingList.find({ userId: userId }, { projection: { recipeId: 1 } }).toArray();
         const shoppingListRecipeIds = new Set(shoppingListEntries.map(item => item.recipeId.toString()));
 
-        // Add the isCurrentUserFavourite and isOnCurrentUserList flags
+        // Set isCurrentUSerFavourite flag to true for all recipes gathered by searching for favourites
+        // This gets used to set the favourited symbol correctly
         recipeList = recipeList.map(recipe => ({
           ...recipe,
+
+        //Use the shopping list recipe Ids and compare them to each recipe in the gathered favourite list
+        //If its on the shopping list, set the flag for isOnCurrentUserList to true
+        //This gets used again to set the shopping symbol correctly
           isCurrentUserFavourite: true, // Always true for favourites page
           isOnCurrentUserList: shoppingListRecipeIds.has(recipe._id.toString())
         }));
@@ -438,7 +355,7 @@ async function run() {
       res.render('recipeFrom', { recipeExists: false, currentPath: req.path }) // Pass currentPath
     })
 
-    // Send paginated array of recipes belonging to the logged-in user to recipeList page, indicating favourite status
+    // Send paginated array of recipes belonging to the logged-in user to recipeList page, indicating favourite and shopping list status
     app.get('/recipeList', ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
         const userId = req.user._id;
@@ -493,8 +410,6 @@ async function run() {
     // Route for the supported sites page
     app.get('/supportedSites', ensureAuthenticated, (req, res) => { // Protected (ensure user is logged in to see it)
         try {
-            // Currently just renders the static EJS page
-            // Future enhancement: Could fetch the list dynamically if needed
             res.render('supportedSites.ejs', { currentPath: req.path }); // Pass currentPath
         } catch (err) {
             console.error("Error rendering supported sites page:", err);
@@ -502,7 +417,7 @@ async function run() {
         }
     });
 
-  //Find the recipe by title FOR THE CURRENT USER and render its page, adding favourite status
+  //Find the recipe by title for the current user and render its page, adding favourite and shopping list status
   app.get("/recipe/:title", ensureAuthenticated, async(req, res) => { // Protected & User-Specific Fetch
     try{
       const userId = req.user._id;
@@ -514,7 +429,6 @@ async function run() {
         console.log(`Recipe "${req.params.title}" not found for user ${userId}`);
         return res.redirect('/recipeList'); 
       }
-      // Ownership is guaranteed by the query, no need for the extra check here.
 
         // Check if the current user has favourited this recipe
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: fullRecipe._id });
@@ -532,7 +446,7 @@ async function run() {
       }
     })
 
-  //Find an image recipe by title FOR THE CURRENT USER and display its page, adding favourite status
+  //Find an image recipe by title FOR THE CURRENT USER and display its page, adding favourite  and shopping list status
   app.get("/recipeImg/:title", ensureAuthenticated, async(req, res) => { // Protected & User-Specific Fetch
     try{
       const userId = req.user._id;
@@ -543,7 +457,6 @@ async function run() {
          console.log(`Image Recipe "${req.params.title}" not found for user ${userId}`);
         return res.redirect('/recipeList');
       }
-      // Ownership is guaranteed by the query.
 
         // Check if the current user has favourited this recipe
         const isFavourite = await userFavourites.findOne({ userId: userId, recipeId: fullRecipe._id });
@@ -603,10 +516,10 @@ async function run() {
             ingredients.push(ing);
           })
         })
-        // Regular expression to match numbers, units, and fractions
+        // Regular expression to match numbers, units, and fractions and common recipe terms. This is used to make a simplified list.
         let regex = /(\b\d+(\.\d+)?\/?\d*\s*)?(lbs?|oz|cans?|Tbsp|packed|diced|minced|tsp|\bcup\b|\btotal\b|cups|\bg\b|grams|handful|crushed|to garnish|low-fat|\d+g|\d+l|\d+ml|kg|knob|of|kilograms|\bml\b|\bl\b|liters|pinch|dash|cloves?|sprigs?|bunches?|slices?|sticks?|quarts?|pints?|gallons?|teaspoons?|grated|ground|jar|bunch|fresh|to taste|chopped|freshly|sliced|diced|tablespoons?|fluid\sounces?)\b|\.|^-|\s-|-\s|$|½|¼|¾|\b\d+\s+-\s+\d+\b|\b\d+-\d+\b|\b\d+\b|,|\/+|\(|\)|\*|\babout\b|\binch\b|\b-inch\b|\bpeeled\b|\band\b|\bvery\b|\bfinely\b|\bi\b|\buse\b|\bfrozen\b|\bready\b|\bprepared\b|\bor\b|\ba\b/gi;
 
-        // Remove numbers, units, fractions, then sort based on cleaned
+  
 
         // Group ingredients by their cleaned name
         let groupedIngredients = {};
@@ -651,14 +564,13 @@ async function run() {
     app.get('/login', (req, res) => {
       // Pass any flash messages if they exist (e.g., from failed login attempts)
       // Note: req.flash requires connect-flash middleware, which we haven't installed.
-      // For simplicity, we'll just render the view without flash messages for now.
-      // If you want flash messages, we'd need to `npm install connect-flash` and configure it.
-      res.render('login', { error: null , currentPage:false}); // Pass null initially
+      // For simplicity, we just render the view without flash messages for now.
+      res.render('login', { error: null , currentPage:false, currentPath: req.path}); // Pass null initially
     });
 
     // Display registration page
     app.get('/register', (req, res) => {
-      res.render('register', { error: null, currentPage:false}); // Pass null initially
+      res.render('register', { error: null, currentPage:false, currentPath: req.path}); // Pass null initially
     });
 
     // Handle logout
@@ -671,12 +583,14 @@ async function run() {
 
 
     //--------------------- IMAGE SERVING ROUTES -----------------------------//
+
+    // To-do: Add ownership checks here too? Maybe less critical if URL isn't easily guessable.
+    
     //Pictures for a picture recipe
     app.get("/recipeImg/imgURL/:title/:number", async (req, res) => {
       try {
         let imageNumber = req.params.number;
         let fullRecipe = await recipes.findOne({ title: req.params.title })
-        // Add ownership check here too? Maybe less critical if URL isn't easily guessable.
         let img = fullRecipe.images[imageNumber];
         res.send(img.buffer);
       } catch (err) {
@@ -688,7 +602,6 @@ async function run() {
     app.get("/recipeImg/imgThumbURL/:title", async (req, res) => {
       try {
         let fullRecipe = await recipes.findOne({ title: req.params.title })
-        // Add ownership check here too? Maybe less critical if URL isn't easily guessable.
         const img = fullRecipe.thumbnail;
         res.send(img.buffer);
       } catch (err) {
@@ -696,10 +609,10 @@ async function run() {
       }
     })
 
+    //Full images for regular recipe hero
     app.get("/recipeImg/imgHeroURL/:title", async (req, res) => {
       try {
         let fullRecipe = await recipes.findOne({ title: req.params.title })
-        // Add ownership check here too? Maybe less critical if URL isn't easily guessable.
         const img = fullRecipe.images;
         res.send(img.buffer);
       } catch (err) {
@@ -770,11 +683,8 @@ async function run() {
     app.post('/login', passport.authenticate('local', {
       successRedirect: '/recipeList', // Redirect on successful login
       failureRedirect: '/login',     // Redirect back to login on failure
-      // failureFlash: true // Requires connect-flash if you want flash messages
+      // failureFlash: true // Requires connect-flash, not installed currently
     }), (req, res) => {
-      // This callback is only called on successful authentication
-      // You could add additional logic here if needed after login
-      // But typically the redirects handle it.
     });
 
 
@@ -785,6 +695,7 @@ async function run() {
     //Submitted newly created recipe
     app.post('/newRecipe', ensureAuthenticated, upload.array('recipeImage', 6), async (req, res) => { // Protected
       try {
+
         // Add user ID to the recipe object
         const userId = req.user._id;
         //setup initial variables to be used in recipe object
@@ -804,8 +715,7 @@ async function run() {
           categories = req.body.categories.split(",");
         }
 
-        //Redirect back to page with error message if this recipe name already exists
-        // Consider scoping this check to the user? Or keep titles globally unique? Currently global.
+        //Redirect back to page with error message if this recipe name already exists for this user
         let result = await recipes.findOne({ title: title, userId:userId });
         if (result !== null) {
           res.render("newRecipe", { recipeExists: true, isLink: false, isImg: false, currentPage: false })
@@ -858,7 +768,6 @@ async function run() {
         //Add the recipe into the recipe collection on mongoDB
         const newRecipeDoc = {
           title: req.body.title,
-          // favourite:false, // Obsolete
           isImg: isImg,
           isLink: isLink,
           recipeUrl: recipeUrl,
@@ -868,7 +777,7 @@ async function run() {
           steps: steps,
           ingredients: ingredients,
           categories: categories,
-          userId: userId // Store the user ID
+          userId: userId 
         };
         await recipes.insertOne(newRecipeDoc);
 
@@ -896,8 +805,8 @@ async function run() {
     //Convert a link to a Recipe
     app.post('/convertRecipe', ensureAuthenticated, async (req, res) => { // Protected
       try {
-        // Add user ID to the recipe object
         const userId = req.user._id;
+
         //use recipeScraper to generate recipe from URL
         const url = req.body.link;
         let recipeData = await recipeScraper(url).then(recipe => { return recipe }); // Renamed variable
@@ -908,7 +817,7 @@ async function run() {
         }
 
 
-        //Check if recipe title already exists in DB (globally or per user?) - Currently global
+        //Check if recipe title already exists for this user in DB 
         let result = await recipes.findOne({ title: recipeData.name, userId: userId });
         if (result !== null) {
           console.log("recipeExists");
@@ -946,14 +855,14 @@ async function run() {
             title: recipeData.name,
             isImg: false, // Converted recipes are not image recipes by default
             isLink: false, // Converted recipes are not link recipes by default
-            recipeUrl: "noUrl", // Store original URL? Maybe add a sourceUrl field?
+            recipeUrl: "noUrl", 
             description: recipeData.description,
-            images: imageBuffer, // Use processed image buffer (or null)
+            images: imageBuffer, 
             thumbnail: thumbImageBuffer,
             ingredients: recipeData.ingredients,
             steps: recipeData.instructions,
             categories: categories,
-            userId: userId // Store the user ID
+            userId: userId 
           };
           await recipes.insertOne(newRecipeDoc);
 
@@ -965,7 +874,7 @@ async function run() {
           res.redirect('recipe/' + recipeData.name);
         }
       } catch (err) {
-        console.log("Error converting recipe:", err); // Log the actual error
+        console.log("Error converting recipe:", err); 
         res.render('convertRecipe', { recipeSiteError: true, recipeExists: false, currentPage: false})
       }
     })
@@ -977,7 +886,7 @@ async function run() {
         const recipeTitle = req.body.title;
 
         // Find the recipe document to get its ID
-        const recipe = await recipes.findOne({ title: recipeTitle });
+        const recipe = await recipes.findOne({ title: recipeTitle, userId:userId });
         if (!recipe) {
           return res.status(404).send('Recipe not found'); // Or handle error differently
         }
@@ -1012,24 +921,14 @@ async function run() {
         const userId = req.user._id;
         const originalTitle = req.params.title;
 
-        // Find the recipe document to get its ID
-        const recipe = await recipes.findOne({ title: originalTitle });
+        // Find the recipe document with title and current userId to get its ID
+        const recipe = await recipes.findOne({ title: originalTitle, userId:userId});
         if (!recipe) {
           return res.status(404).send('Recipe not found'); // Or handle error differently
+          return res.redirect('/recipeList'); // Or show an error
         }
 
         const recipeId = recipe._id;
-
-        // First, verify ownership of the original recipe
-        const originalRecipe = await recipes.findOne({ title: originalTitle });
-        if (!originalRecipe) {
-          console.log(`Edit failed: Original recipe "${originalTitle}" not found.`);
-          return res.redirect('/recipeList'); // Or show an error
-        }
-        if (!originalRecipe.userId || originalRecipe.userId.toString() !== userId.toString()) {
-          console.log(`User ${userId} attempted to POST edit for recipe owned by ${originalRecipe.userId}`);
-          return res.redirect('/recipeList'); // Or show an error
-        }
 
         // Proceed with gathering updated data
         let steps = [];
@@ -1080,7 +979,7 @@ async function run() {
         // Check if any new files were uploaded in this request
         if (req.files && req.files.length > 0) {
           console.log(`Processing ${req.files.length} uploaded file(s).`);
-          if (originalRecipe.isImg) {
+          if (recipe.isImg) {
               // If it's an image recipe and new files are uploaded, replace the entire array
               updateData.images = await Promise.all(req.files.map(async (file) => {
                   return await sharp(file.buffer)
@@ -1117,13 +1016,12 @@ async function run() {
       }
 
         // Update the recipe using its _id
-        await recipes.updateOne({ _id: originalRecipe._id }, { $set: updateData });
+        await recipes.updateOne({ _id: recipe._id }, { $set: updateData });
 
-        console.log(originalRecipe.isImg);
         // Redirect based on the *new* title
         if (req.body.link) { // isImg might be obsolete here if edit form doesn't change type
           res.redirect("/recipeList");
-        } else if (originalRecipe.isImg){
+        } else if (recipe.isImg){
           res.redirect("/recipeImg/" +req.body.title);
         } else {
           res.redirect("/recipe/" + req.body.title); // Use the new title
@@ -1305,14 +1203,11 @@ async function run() {
         const recipeTitle = req.body.title;
 
         // Find the recipe document to get its ID
-        const recipe = await recipes.findOne({ title: recipeTitle });
+        const recipe = await recipes.findOne({ title: recipeTitle, userId:userId});
+        
         if (!recipe) {
           return res.status(404).send('Recipe not found');
         }
-        // Optional: Check if user owns recipe before adding to list?
-        // if (!recipe.userId || recipe.userId.toString() !== userId.toString()) {
-        //    return res.status(403).send('Cannot add another user recipe to list');
-        // }
         const recipeId = recipe._id;
 
 
@@ -1328,8 +1223,6 @@ async function run() {
           await userShoppingList.insertOne({ userId: userId, recipeId: recipeId });
           res.json({ onList: true }); // Send response back to client JS if needed
         }
-        // If not using client-side JS to update, just send 200 OK
-        // res.sendStatus(200);
 
       } catch (err) {
         console.error("Error updating shopping list status:", err);
