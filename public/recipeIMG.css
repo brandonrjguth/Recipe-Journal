@@ -1,17 +1,23 @@
-html, body{
-    height:100%;
-}
 
-body{
-    display:flex;
-    flex-direction: column;
-}
-
+/*-----Outer Wrapper-------*/
 .content{
     padding:0 1rem;
     align-self:center;
 }
 
+.recipeHero{
+    width: 100%;
+    padding: 0;
+    flex-direction: column;
+}
+
+.recipeInstructionsWrapper{
+    flex-direction: column;
+    gap:1rem;
+    padding-top:1rem;
+}
+
+/*----------Title------------*/
 .title, .recipeImg, .description, .steps, .ingredients{
     padding-top:2rem;
 }
@@ -24,24 +30,7 @@ body{
     font-weight: bold;
 }
 
-.content ul{
-    margin-left:1.5rem;
-    margin-top:0;
-    padding-top:0.5rem;
-}
-
-ol li{
-    padding-bottom:0.75rem;
-    text-align:left;
-}
-
-.content ol{
-    padding-inline-start:0;
-    margin-left:1rem;
-    margin-top:0;
-    padding-top:0.5rem;
-}
-
+/*---------Buttons Row-------*/
 .buttons{
     display:flex;
     align-items: center;
@@ -69,26 +58,20 @@ button{
     padding:0;
 }
 
-.recipeHero{
-    width: 100%;
-    padding: 0;
-    flex-direction: column;
-}
 
+/*---------Main Image-------*/
 img{
     max-width: 100%;
 }
 
-.recipeInstructionsWrapper{
-    flex-direction: column;
-    gap:1rem;
-    padding-top:1rem;
-}
-
+/*---------Thumbnails-------*/
 .thumbnail{
     max-width:20%;
 }
 
+
+
+/*----Desktop and large Tablet Sizing----*/
 @media (min-width: 768px) {
     .content{
       display:flex
@@ -101,8 +84,6 @@ img{
         justify-content: center;
         width:100%;
     }
-
-    
 
     .recipeHero{
         display:flex
@@ -124,35 +105,20 @@ img{
   }
 
   @media (min-width: 1000px) {
-    .recipeHero{
-        padding:2rem 0;
-        max-width:80%;
-    }
-    .recipeInstructions{
+    .recipeHero, .recipeInstructions{
         padding:2rem 0;
         max-width:80%;
     }
   }
 
-
   @media (min-width: 1300px) {
-    .recipeHero{
-        padding:2rem 0;
-        max-width:70%;
-    }
-    .recipeInstructions{
-        padding:2rem 0;
+    .recipeHero, .recipeInstructions{
         max-width:70%;
     }
   }
 
   @media (min-width: 1500px) {
-    .recipeHero{
-        padding:2rem 0;
-        max-width:60%;
-    }
-    .recipeInstructions{
-        padding:2rem 0;
+    .recipeHero, .recipeInstructions{
         max-width:60%;
     }
   }

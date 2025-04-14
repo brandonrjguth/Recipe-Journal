@@ -13,10 +13,12 @@
     --primary: #FFF7ED;
     --text: #333333;
     --text-light: #5E5E5E;
-    --white: #FFFFFF;
+    --white: #ffffff;
     --border-light: #d1d1d1;
     --shadow-color: rgba(0,0,0,0.1);
     --accent-red: #F53100;
+    --tag-accent: #FECACA;
+    --tag-text: #431407;
   }
 
 

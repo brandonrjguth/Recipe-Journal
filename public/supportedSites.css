@@ -1,0 +1,43 @@
+.supported-sites-wrapper {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.supported-sites-wrapper h1 {
+    text-align: center;
+    padding-bottom:1rem;
+    font-weight: 900;
+    color: var(--accent-red);
+    font-size: 3rem;
+    font-family: "Fraunces";
+}
+.supported-sites-list {
+    list-style: none;
+    padding-top: 1rem;
+    column-count: 2; /* Display in two columns on wider screens */
+    column-gap: 2rem;
+    text-align: center;
+}
+.supported-sites-list li {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+a{
+    color:var(--accent-red);
+    text-decoration: none;
+}
+
+a:hover{
+    color:#555
+}
+@media (max-width: 600px) {
+    .supported-sites-list {
+        column-count: 1; /* Single column on smaller screens */
+    }
+}
