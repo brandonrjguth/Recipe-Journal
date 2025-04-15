@@ -328,8 +328,12 @@ i{
 
 .ingredientsNode, .stepsNode{
     padding-top:1rem;
+    align-items: center;
 }
 
+.ingredientsNode h3, .stepsNode h3{
+    padding-right:1rem;
+}
 
 /* Style for '+' add buttons */
 .ingredients button, .steps button {

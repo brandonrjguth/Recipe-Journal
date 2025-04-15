@@ -4,16 +4,16 @@
             <div class="firstHalfHeader">
                 <!--<a href="/" class="logoName"><img src="/imgs/logofull-mix2.png" class="logoName"></a>-->
                 <a href="/" class="logoName"><h1>Recipe Journal</h1>
-                <img src="/imgs/logonew.png" class="logoName">
+                <img alt="A logo with the text Recipe Journal next to a picture of a recipe hat with a chefs hat on the cover"src="/imgs/logonew.png" class="logoName">
             </a>
-                <ul class="menuShelf" id="desktop-menu"> <!-- Added ID -->
-                    <div class="mainMenu">
+                <div class="menuShelf" id="desktop-menu"> <!-- Added ID -->
+                    <ul class="mainMenu">
                         <li><a href="/favourites" class="<%= currentPath === '/favourites' ? 'current' : '' %>">Favourites</a></li>
                         <li><a href="/recipeList" class="<%= currentPath === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
                         <li><a href="/recipeFrom" class="<%= currentPath === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
                         <li><a href="/shoppingList" class="<%= currentPath === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
-                    </div>
-                </ul>
+                    </ul>
+                </div>
                 <!-- Hamburger Button (Mobile Only) - Moved search toggle away -->
                 <div class="firstHalfEnd">
                 </div>
@@ -25,17 +25,17 @@
                     <div class="searchBar"> <!-- Desktop Search -->
                         <form class="searchInput" action='/search' method='post'>
 
-                            <button type="submit" class="search-image-button"><img src="/imgs/search.svg" class="searchIcon" alt="Search"></button>
+                            <button aria-label="search button" type="submit" class="search-image-button"><img alt="Magnifying glass search icon" src="/imgs/search.svg" class="searchIcon" alt="Search"></button>
                             <input type='text' name='search' required pattern="[^\{<>]{2,50}"  autocomplete="off" placeholder="Search For Recipe"></input>
                         </form>
                     </div>
                     <!-- Mobile Search Toggle Button - Moved here -->
                     <div class="searchButtonMobile">
-                        <button type="button" class="searchButton"><img src="/imgs/search.svg"></button>
+                        <button aria-label="toggle search bar" type="button" class="searchButton"><img  alt="Magnifying glass search icon" src="/imgs/search.svg"></button>
                     </div>
                 </div>
-                <ul class="menuShelf user-menu-container"> <!-- Added class for easier targeting -->
-                    <div class="user-bar">
+                <div class="menuShelf user-menu-container"> <!-- Added class for easier targeting -->
+                    <ul class="user-bar">
                         <% if (currentUser) { %>
                             <li class="user-dropdown">
                                 <button type="button" class="user-dropdown-toggle">
@@ -50,8 +50,8 @@
                                 <li><a href="/login">Login</a></li>
                                 <li><a href="/register">Register</a></li>
                         <% } %>
-                    </div>
-                </ul>
+                        </ul>
+                </div>
             </div>
             <button type="button" id="hamburger-btn" class="hamburger-button">
                 &#9776; <!-- Unicode hamburger icon -->
@@ -62,22 +62,22 @@
     <div class="searchBarMobile hidden">
         <div class="searchBarMobileWrapper">
             <form class="row searchInput" action='/search' method='post'>
-                <button type="submit" class="searchButtonMobileInner"><img src="/imgs/search.svg"></button>
+                <button type="submit" aria-label="search button" class="searchButtonMobileInner"><img alt="Magnifying glass search icon" src="/imgs/search.svg"></button>
                 <input type='text' name='search' pattern="[^\{<>]{2,50}"  autocomplete="off" placeholder="Search For Recipe">
                 </input>
             </form>
         </div>
     </div>
 
-    <ul class="menuShelf mobileMenu" id="mobile-menu"> <!-- Added ID -->
-        <div class="mainMenu">
+    <div class="menuShelf mobileMenu" id="mobile-menu"> <!-- Added ID -->
+        <ul class="mainMenu">
             <li><a href="/favourites" class="<%= currentPath === '/favourites' ? 'current' : '' %>">Favourites</a></li>
             <li><a href="/recipeList" class="<%= currentPath === '/recipeList' ? 'current' : '' %>">Recipes</a></li>
             <li><a href="/recipeFrom" class="<%= currentPath === '/recipeFrom' ? 'current' : '' %>">Create</a></li>
             <li><a href="/shoppingList" class="<%= currentPath === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
-        </div>
+        </ul>
 
-        <div class="user-bar">
+        <ul class="user-bar">
         <% if (currentUser) { %>  
                 <li class="user-greeting"><%= currentUser.username %></li> 
                 <li class="user-greeting">|</li> 
@@ -86,8 +86,8 @@
                 <li><a href="/login">Login</a></li>
                 <li><a href="/register">Register</a></li>  
         <% } %>
-        </div>
-    </ul>
+        </ul>
+    </div>
 </div>
 
 <script>

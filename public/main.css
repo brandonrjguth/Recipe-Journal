@@ -49,6 +49,9 @@ textarea {
 .col{ display:flex; flex-direction: column; }
 .row{ display:flex; }
 
+ul{
+    list-style: none;
+}
 
 /*---------------------------------------------------*/
 /*-------Header Styling--------*/

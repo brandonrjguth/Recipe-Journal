@@ -29,18 +29,18 @@
                     <div class="buttons row">
                         <form class="col" id='favouriteRecipe' action='/favouriteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                            <button id="favouriteButton"><img src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
+                            <button aria-label="set as favourite" id="favouriteButton"><img alt="small heart icon" src="/imgs/<%if (recipe.isCurrentUserFavourite === true){%>heart-f-filled-red.png<%} else {%>heart-f-filled.png<%}%>"></button> <%# Updated condition %>
                         </form>
-                            <button><a href="/recipe/<%=recipe.title%>/editRecipe"><img src="/imgs/edit.svg"></a></button>
+                            <a href="/recipe/<%=recipe.title%>/editRecipe"><img alt="notepad being written on with a pencil" src="/imgs/edit.svg"></a>
                         <% if (!recipe.isImg && !recipe.isLink) { %> <%# Check if recipe is not an image or link %>
                             <form class="col shoppingList" action='/shoppingList' method='post'>
                                 <input type="hidden" name="title" value="<%=recipe.title%>">
-                                <button type="button" class="shoppingListBtn"><img src="/imgs/<%if (recipe.isOnCurrentUserList === true){%>cart2-filled-smooth.svg<%} else {%>cart2-smooth.svg<%}%>" alt="Add to shopping list"></button> <%# Updated condition and image names %>
+                                <button aria-label="add to shopping list" type="button" class="shoppingListBtn"><img alt="shopping basket" src="/imgs/<%if (recipe.isOnCurrentUserList === true){%>cart2-filled-smooth.svg<%} else {%>cart2-smooth.svg<%}%>" alt="Add to shopping list"></button> <%# Updated condition and image names %>
                             </form>
                         <% } %>
                         <form class="col" id='deleteRecipe' action='/deleteRecipe' method='post'>
                             <input type="hidden" name="title" value="<%=recipe.title%>"></input>
-                            <button type="button" id="deleteBtn"><img src="/imgs/trash-2.svg"></button>
+                            <button aria-label="delete recipe" type="button" id="deleteBtn"><img alt="trash can" src="/imgs/trash-2.svg"></button>
                         </form>
 
                     </div>
