@@ -336,23 +336,24 @@ async function run() {
     });
 
     app.get('/newRecipePage', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPath: req.path }) // Pass currentPath
+      res.render('newRecipe', { recipeExists: false, isImg: false, isLink: false, currentPath: "/recipeFrom" }) // Pass currentPath
     })
 
     app.get('/convertRecipe', ensureAuthenticated, (req, res) => { // Protected
-      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false, currentPath: req.path }); // Pass currentPath
+      console.log(req.path);
+      res.render('convertRecipe', { recipeExists: false, recipeSiteError: false, currentPath: "/recipeFrom" }); // Pass currentPath
     })
 
     app.get('/newRecipeLink', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false, currentPath: req.path }) // Pass currentPath
+      res.render('newRecipe', { recipeExists: false, isLink: true, isImg: false, currentPath: "/recipeFrom" }) // Pass currentPath
     })
 
     app.get('/newRecipePicture', ensureAuthenticated, (req, res) => { // Protected
-      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false, currentPath: req.path }) // Pass currentPath
+      res.render('newRecipe', { recipeExists: false, isImg: true, isLink: false, currentPath: "/recipeFrom" }) // Pass currentPath
     })
 
     app.get('/recipeFrom', ensureAuthenticated, (req, res) => { // Protected
-      res.render('recipeFrom', { recipeExists: false, currentPath: req.path }) // Pass currentPath
+      res.render('recipeFrom', { recipeExists: false, currentPath: "/recipeFrom" }) // Pass currentPath
     })
 
     // Send paginated array of recipes belonging to the logged-in user to recipeList page, indicating favourite and shopping list status
@@ -1134,6 +1135,9 @@ async function run() {
     // Search Recipe by Title, Ingredient, or Category with Pagination (Initial POST)
     app.post('/search', ensureAuthenticated, async (req, res) => {
       try {
+
+        console.log("at search")
+        console.log(req.body.search);
         const userId = req.user._id;
         // Search term comes from the POST body for the initial search
         const searchTerm = req.body.search || '';
