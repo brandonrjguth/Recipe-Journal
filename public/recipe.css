@@ -23,14 +23,26 @@
 /*---------------------------*/
 
 /*--- inner wrapper ---*/
+
 .recipeHero{
-    width: 100%;
-    padding: 0;
+    display:grid;
+    grid-template-columns:auto;
+    grid-template-areas:
+    "img title title"
+    "img btn btn"
+    "img tag tag"
+    "img des des"
+    "img des des"
+    "img des des" ;
+    justify-content:start;
+    width:70%;
 }
+
 
 /*Ordered from top to bottom*/
 
 .title{
+    grid-area:title;
     color: var(--accent-red); 
     padding-top:0rem;
     font-family: "Fraunces", serif; 
@@ -44,6 +56,7 @@
 .buttons{
     display:flex;
     align-items: center;
+    grid-area:btn;
 }
 
 .buttons a{
@@ -93,8 +106,12 @@ p.tag {
     padding-top:1rem;
 }
 
+.tags{
+    grid-area:tag;
+}
 .description{
     font-size:0.9rem;
+    grid-area:des;
 }
 
 
@@ -115,6 +132,13 @@ p.tag {
     color: var(--accent-red);
 }
 
+.steps{
+    grid-area:step;
+}
+
+.ingredients{
+    grid-area:ing;
+}
 
 .ingredients ul{
     margin-left:1.5rem;
@@ -158,6 +182,7 @@ p.tag {
     }
 
     .recipeHero .recipeImg{
+        grid-area:img;
         padding-right:2rem;
         object-fit: cover;
     }
@@ -184,7 +209,7 @@ p.tag {
     }
     
     .recipeInstructions{
-        display:flex;
+        display:flex;.
         padding: 1rem 0;
         gap:2rem;
         width:70%;
