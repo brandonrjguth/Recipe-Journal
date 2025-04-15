@@ -107,11 +107,11 @@ textarea {
 }
 
 .searchBarMobileWrapper{
-    padding:1rem;
+    padding:1.5rem;
 }
 
 .searchBarMobileWrapper .searchInput{
-    border-radius:4px;
+    border-radius:12px;
     box-shadow: 0 0 0 2px var(--border-light);
     display:flex;
 }
@@ -122,8 +122,9 @@ textarea {
 
 .searchBarMobileWrapper .searchInput input{
     width:100%;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 12px 12px 0;
     border:none;
+    font-size: 1.2rem;
 }
 
 .searchBarMobileWrapper .searchInput input:focus{
@@ -133,15 +134,15 @@ textarea {
 .searchBarMobileWrapper .searchInput button{
     border:none;
     background-color: var(--white);
-    border-radius: 4px 0 0 4px;
+    border-radius: 12px 0 0 12px;
     padding: 0;
     display: flex;
     align-items: center;
 }
 
 .searchBarMobileWrapper .searchInput button img{
-    height: 1.6rem;
-    padding: 0.3rem;
+    height: 2.5rem;
+    padding: 0.5rem;
     display: block;
 }
 
@@ -349,6 +350,17 @@ both classes.
         gap: 1rem;
     }
 
+    .searchBarMobileWrapper {
+        padding: 0rem 1rem 1rem 1rem;
+    }
+    .searchBarMobileWrapper .searchInput button img {
+        height: 2.3rem;
+    }
+    
+    .searchBarMobileWrapper .searchInput input {
+        font-size: 1rem;
+    }
+
 
     /*------------Desktop user logout menu styling-----------------*/
     .user-dropdown {
@@ -412,6 +424,10 @@ both classes.
         box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 20%);
     }
 
+    .searchBarMobile{
+        display:none;
+    }
+
     .searchInput:focus-within {
         box-shadow: 0 0 0 2px var(--accent-red);
     }
@@ -430,5 +446,17 @@ both classes.
         margin: 0;
         color: var(--text);
         font-size: 0.95rem;
+    }
+
+    .search-image-button {
+        background: none;
+        border: none;
+        padding: 0;
+        margin-top: 0.25rem;
+        cursor: pointer;
+    }
+    
+    .search-image-button:focus {
+        outline: none;
     }
   }

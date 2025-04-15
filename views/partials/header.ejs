@@ -24,7 +24,8 @@
                 <div class="search-container">
                     <div class="searchBar"> <!-- Desktop Search -->
                         <form class="searchInput" action='/search' method='post'>
-                            <img src="/imgs/search.svg" class="searchIcon" alt="Search">
+
+                            <button type="submit" class="search-image-button"><img src="/imgs/search.svg" class="searchIcon" alt="Search"></button>
                             <input type='text' name='search' required pattern="[^\{<>]{2,50}"  autocomplete="off" placeholder="Search For Recipe"></input>
                         </form>
                     </div>
@@ -95,6 +96,7 @@
 
     searchButtonMobile.addEventListener("click", () => {
         searchBarMobile.classList.toggle("hidden"); // Use toggle instead of remove
+        mobileMenu.classList.remove('active'); // Toggle the 'active' class
     });
 
     // Hamburger Menu Toggle
@@ -103,6 +105,7 @@
 
     hamburgerBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('active'); // Toggle the 'active' class
+        searchBarMobile.classList.add("hidden"); // Use toggle instead of remove
     });
 
     // User Dropdown Toggle
