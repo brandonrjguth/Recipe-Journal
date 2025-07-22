@@ -41,7 +41,7 @@
       "src": "imgs/logos/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     },
       {
       "src": "imgs/logos/icon-152.png",
