@@ -1,4 +1,5 @@
-const CACHE_NAME = 'recipe-journal-v1';
+const CACHE_PREFIX = 'recipe-journal-';
+const CACHE_VERSION = `${CACHE_PREFIX}${Date.now()}`;
 const urlsToCache = [
   '/',
   '/main.css',
@@ -20,7 +21,7 @@ const urlsToCache = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(CACHE_VERSION)
       .then((cache) => cache.addAll(urlsToCache))
   );
 });
@@ -38,7 +39,7 @@ self.addEventListener('fetch', (event) => {
               return response;
             }
             const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
+            caches.open(CACHE_VERSION)
               .then((cache) => {
                 cache.put(event.request, responseToCache);
               });
@@ -53,7 +54,8 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
+          if (cacheName.startsWith(CACHE_PREFIX) && 
+              cacheName !== CACHE_VERSION) {
             return caches.delete(cacheName);
           }
         })
