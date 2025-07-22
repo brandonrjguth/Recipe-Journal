@@ -70,9 +70,9 @@ async function run() {
         clientPromise: Promise.resolve(client), // Use the connected client
         dbName: 'recipeBook',
         collectionName: 'sessions',
-        ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+        ttl: 400 * 24 * 60 * 60 // = 400 days. Default
       }),
-      cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1 week cookie
+      cookie: { maxAge: 1000 * 60 * 60 * 24 * 400 } // 400 daycookie
     }));
 
     // --- Passport Configuration ---
