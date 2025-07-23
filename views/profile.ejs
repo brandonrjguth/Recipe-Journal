@@ -109,7 +109,6 @@
             
             document.getElementById('deleteAccountBtn').addEventListener('click', function(e) {
                 e.preventDefault();
-                confirmationType.textContent = isGoogleUser === 'true' ? 'email' : 'username';
                 modal.style.display = 'flex';
                 confirmationInput.value = '';
                 confirmationInput.focus();
