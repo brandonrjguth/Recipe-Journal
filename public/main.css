@@ -49,6 +49,59 @@ textarea {
 .col{ display:flex; flex-direction: column; }
 .row{ display:flex; }
 
+/* Form validation styles */
+.error-message {
+    color: var(--accent-red);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Special styling for ingredient and step nodes */
+.ingredientsNode,
+.stepsNode {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+/* Row container for input elements */
+.ingredientsNode .input-row,
+.stepsNode .input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: 100%;
+}
+
+/* Error message styling */
+.ingredientsNode .error-message,
+.stepsNode .error-message {
+    width: 100%;
+    margin-left: 2.5rem;
+    padding-top: 0.25rem;
+    color: var(--accent-red);
+    font-size: 0.85rem;
+}
+
+/* Ensure inputs don't have bottom margin since error is in a new row */
+.ingredientsNode input,
+.stepsNode textarea {
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+input.invalid {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 0 0 1px var(--accent-red) !important;
+}
+
+
 ul{
     list-style: none;
 }

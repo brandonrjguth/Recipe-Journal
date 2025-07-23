@@ -1,69 +1,130 @@
- /*-- Styling for register/login container and buttons ---*/
+/* Form container styling */
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-family: 'Poppins', sans-serif;
+}
 
- .auth-container {
-    max-width: 500px;
-    margin: 40px auto; /* Add some margin */
-    padding: 20px;
-    background-color: #fff; /* Optional: background for the form area */
-    border-radius: 8px; /* Optional: rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
-    text-align: center;
-}
 .auth-container h1 {
-     margin-bottom: 20px;
-     color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text);
 }
- .form-group {
-    margin-bottom: 15px;
-    text-align: left;
+
+/* Form styling */
+.form-group {
+    margin-bottom: 1.5rem;
 }
+
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    color: #555;
+    margin-bottom: 0.5rem;
+    color: var(--text);
     font-weight: 500;
 }
+
 .form-group input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 0.75rem;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
-    box-sizing: border-box; /* Include padding in width */
-    font-family: 'Poppins', sans-serif; /* Ensure font consistency */
+    font-size: 1rem;
 }
- .btn-submit { /* Use a more specific class */
-    background-color: rgb(221, 60, 42); /* Match header color */
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 2px rgba(245, 49, 0, 0.1);
+}
+
+/* Button styling */
+.btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--accent-red);
     color: white;
-    padding: 12px 20px;
     border: none;
     border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
-    font-size: 16px;
-    width: 100%;
-    margin-top: 10px;
-    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
+
+.newUser{
+        margin-top: 0.5rem;
+}
+.loginH1{
+    padding-bottom:1rem;
+}
+
 .btn-submit:hover {
-    background-color: rgb(190, 40, 25); /* Darker shade */
+    background-color: #d62a00;
 }
- .error-message {
-    color: #d9534f;
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-    padding: 10px;
+
+/* Error message styling */
+.error-message {
+    color: var(--accent-red);
+    background-color: rgba(245, 49, 0, 0.1);
+    padding: 0.75rem;
     border-radius: 4px;
-    margin-bottom: 15px;
-    text-align: left;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
 }
-.switch-link { /* Use a more specific class */
-    margin-top: 20px;
-    font-size: 14px;
+
+/* Link styling */
+.switch-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
 }
+
 .switch-link a {
-    color: rgb(221, 60, 42); /* Match header color */
+    color: var(--accent-red);
     text-decoration: none;
     font-weight: 500;
 }
+
 .switch-link a:hover {
     text-decoration: underline;
+}
+
+
+.google-auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom:1rem;
+}
+
+
+
+.google-auth-btn img {
+    width:13rem;
+}
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.auth-divider span {
+    padding: 0 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
 }

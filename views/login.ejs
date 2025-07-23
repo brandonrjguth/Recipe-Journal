@@ -27,7 +27,7 @@
     <%- include('partials/header'); %>
 
     <div class="auth-container"> <!-- Changed class -->
-        <h1>Login</h1>
+        <h1 class="loginH1">Login</h1>
 
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="error-message"><%= error %></div>
@@ -42,10 +42,19 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn-submit">Login</button> <!-- Changed class -->
+            <button type="submit" class="btn-submit">Login</button>
         </form>
 
-        <div class="switch-link"> <!-- Changed class -->
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+
+        <div class="google-auth-container">
+            <a href="/auth/google" class="google-auth-btn">
+                <img src="imgs/signin-assets/Web (mobile + desktop)/svg/light/web_light_rd_ctn.svg" alt="Google Logo">
+            </a>
+        </div>
+        <div class="switch-link">
             Don't have an account? <a href="/register">Register here</a>
         </div>
     </div>

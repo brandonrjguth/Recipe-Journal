@@ -18,6 +18,7 @@
     
     <link rel="stylesheet" type="text/css" href="/main.css">
     <link rel="stylesheet" type="text/css" href="/newRecipe.css">
+    <script src="/validation.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,32 +72,33 @@
               </div>
 
         <% if (!isLink && !isImg) {%>
-            <div class="upload col form-group"> <!-- Added form-group class -->
+            <div class="upload col form-group">
                 <h2>Upload Picture (Optional)</h2>
                 <label class="custom-file-upload">
                     <input type="file" class="uploadInput" max-length="1" name="recipeImage" accept="image/*">
                     Choose File
                 </label>
-                <span class="file-name-display">No file chosen</span> <!-- Added span to display filename -->
+                <span class="file-name-display">No file chosen</span>
             </div>
         <%}%>
 
         <%if (isImg){%>
-            <div class="upload col form-group"> <!-- Added form-group class -->
+            <div class="upload col form-group">
                 <h2>Upload Picture</h2>
                  <label class="custom-file-upload">
-                    <input class="uploadInput" type="file" multiple max-length="6" name="recipeImage" accept="image/*">
+                    <input class="uploadInput" type="file" multiple max-length="6" name="recipeImage" accept="image/*" required>
                     Choose Files
                  </label>
-                 <span class="file-name-display">No files chosen</span> <!-- Added span to display filename -->
+                 <span class="file-name-display">No files chosen</span>
+                 <div class="error-message" style="display: none;">Please select at least one image</div>
                 <input type="hidden" name="isImg" value="isImg">
             </div>
         <%}%>
 
         <% if (isLink){%>
-            <div class="Link">
+            <div class="Link form-group">
                 <h2>Recipe Link</h2>
-                <input type='text' name='link' required></input>
+                <input type='text' name='link' required placeholder="https://example.com/recipe"></input>
             </div>     
         <%}%>
 
@@ -114,10 +116,13 @@
 
             <!--New ingredient nodes are appended to this list when the add ingredient button is clicked.-->
             <div class="ingredientsList">
-                <div class="row ingredientsNode" id="ingredientDiv1">
-                    <h3>1</h3>
-                    <input name="ingredient1" type="text" required="" pattern="[^{}<>]{2,70}">
-                    <button id="ingredientBtn1">X</button>
+                <div class="ingredientsNode form-group" id="ingredientDiv1">
+                    <div class="input-row">
+                        <h3>1</h3>
+                        <input name="ingredient1" type="text" required pattern="[^{}<>]{2,70}">
+                        <button id="ingredientBtn1">X</button>
+                    </div>
+                    <div class="error-message" style="display: none;">Please enter an ingredient</div>
                 </div>
             </div>
             
@@ -128,10 +133,13 @@
 
             <!--New step nodes are appended to this list when the add step button is clicked.-->
             <div class="stepsList">
-                <div class="stepsNode row" id="stepDiv1">
-                    <h3>1</h3>
-                    <textarea name="step1" type="text" required="" pattern="[^{}<>]{2,70}"></textarea>
-                    <button id="stepBtn1" type="button">X</button>
+                <div class="stepsNode form-group" id="stepDiv1">
+                    <div class="input-row">
+                        <h3>1</h3>
+                        <textarea name="step1" type="text" required pattern="[^{}<>]{2,70}"></textarea>
+                        <button id="stepBtn1" type="button">X</button>
+                    </div>
+                    <div class="error-message" style="display: none;">Please enter a step</div>
                 </div>
             </div>
         <%}%>  
@@ -296,13 +304,28 @@
                 let h3 = document.createElement("h3");
                 let textInput = document.createElement("textarea");
                 let deleteButton = document.createElement("button");
+                let errorDiv = document.createElement("div");
+                
                 textInput.type = "text";
                 textInput.required = true;
                 deleteButton.textContent = "X";
                 deleteButton.type = "button";
-                div.append(h3);
-                div.append(textInput);
-                div.append(deleteButton);
+                errorDiv.className = "error-message";
+                errorDiv.style.display = "none";
+
+                // Create input row div to hold the inputs in a row
+                let inputRow = document.createElement("div");
+                inputRow.classList.add("input-row");
+                
+                // Add elements to input row
+                inputRow.append(h3);
+                inputRow.append(textInput);
+                inputRow.append(deleteButton);
+                
+                // Add input row and error message to main div
+                div.classList.add("form-group");
+                div.append(inputRow);
+                div.append(errorDiv);
 
                 if (recipeReq === "steps"){
                     //increment step
@@ -314,6 +337,7 @@
                     textInput.name = `step${stepNumber}`;
                     textInput.pattern = "[^{}<>]{2,300}";
                     deleteButton.id = `stepBtn${stepNumber}`;
+                    errorDiv.textContent = "Please enter a step";
 
                     //append nodes to correct area
                     stepsArea.append(div);
@@ -332,6 +356,7 @@
                     textInput.name = `ingredient${ingredientNumber}`;
                     textInput.pattern = "[^{}<>]{2,70}";
                     deleteButton.id = `ingredientBtn${ingredientNumber}`;
+                    errorDiv.textContent = "Please enter an ingredient";
                     ingredientsArea.append(div);
                     setNumber("ingredients")
                 } else {
@@ -344,18 +369,20 @@
             let reset = (recipeReq) => {
                 if (recipeReq === "steps"){
                     for (i=0; i < steps.length; i++){
+                        const row = steps[i].querySelector('.input-row');
                         steps[i].id = `stepDiv${i+1}`;
-                        steps[i].children[1].name = `step${i+1}`
-                        steps[i].children[0].textContent = `${i+1}`
-                        steps[i].children[2].id = `stepBtn${i+1}`
+                        row.children[1].name = `step${i+1}`;
+                        row.children[0].textContent = `${i+1}`;
+                        row.children[2].id = `stepBtn${i+1}`;
                     }
                 }
                 else if (recipeReq === "ingredients"){
                     for (i=0; i < ingredients.length; i++){
+                        const row = ingredients[i].querySelector('.input-row');
                         ingredients[i].id = `ingredientDiv${i+1}`;
-                        ingredients[i].children[1].name = `ingredient${i+1}`
-                        ingredients[i].children[0].textContent = `${i+1}`
-                        ingredients[i].children[2].id = `ingredientBtn${i+1}`
+                        row.children[1].name = `ingredient${i+1}`;
+                        row.children[0].textContent = `${i+1}`;
+                        row.children[2].id = `ingredientBtn${i+1}`;
                     }
                 } else {
                     console.log("Error, valid paramaters are 'steps' or 'ingredients'")
@@ -381,31 +408,58 @@
             })
         }
         
-        //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
-        submitBtn.addEventListener("click", function(){
-            let inputs = document.querySelectorAll("#submitRecipe input, textarea");
-            let categories = document.querySelector(".categories");
-            console.log(inputs);
-            
-            let inputsFilled = true;
-            let inputsValid = true;
+        // Initialize form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            initFormValidation('submitRecipe');
+        });
 
-            for (i = 0; i < inputs.length; i++){
-                if (inputs[i].validity.valueMissing === true){
-                    inputsFilled = false;
-                    console.log("input missing");
+        // Handle form submission with custom validation
+        submitBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            let categories = document.querySelector(".categories");
+            let isValid = true;
+
+            // Validate all required fields
+            document.querySelectorAll("#submitRecipe input[required], #submitRecipe textarea[required]").forEach(input => {
+                if (!validateRequired(input)) {
+                    isValid = false;
                 }
-                if (inputs[i].validity.patternMismatch === true){
-                    inputsValid = false;
-                    console.log("pattern mismatch");
+            });
+
+            // Validate URL if it's a link recipe
+            if (isLink === "true") {
+                const linkInput = document.querySelector('input[name="link"]');
+                if (!validateUrl(linkInput)) {
+                    isValid = false;
                 }
             }
 
-            if (inputsValid && inputsFilled){
-                categories.value = tags;
+            // Validate image upload for image recipes
+            if (isImg === "true") {
+                const imageInput = document.querySelector('.uploadInput');
+                if (!validateImageUpload(imageInput)) {
+                    isValid = false;
+                }
+            }
+
+            // Validate ingredients and steps for manual recipes
+            if (isLink === "false" && isImg === "false") {
+                if (!validateIngredients()) {
+                    isValid = false;
+                }
+                if (!validateSteps()) {
+                    isValid = false;
+                }
+            }
+
+            // If form is valid, set categories and submit
+            if (isValid && submitRecipeForm.checkValidity()) {
+                if (categories) {
+                    categories.value = tags;
+                }
                 submitRecipeForm.submit();
             }
-        })
+        });
 
         // --- Script for Custom File Input Display ---
         document.querySelectorAll('.uploadInput').forEach(input => {

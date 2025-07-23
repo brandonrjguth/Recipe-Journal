@@ -18,6 +18,7 @@
     
     <link rel="stylesheet" type="text/css" href="/main.css">
     <link rel="stylesheet" type="text/css" href="/newRecipe.css">
+    <script src="/validation.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,14 +40,14 @@
             <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
             <% if (recipeSiteError === true){%><div class="warning">This recipe website is currently unsupported.</div><%}%>
             <h1>Convert Recipe</h1>
-            <div class="favourite col form-group"> <!-- Added form-group class -->
+            <div class="favourite col">
                 <h2>Favourite</h2>
                  <div class="custom-checkbox-wrapper">
                     <input type="checkbox" class="checkbox custom-checkbox-input" id="favouriteCheckbox" name="favourite">
-                    <label for="favouriteCheckbox" class="custom-checkbox-label"></label> <!-- Added Label -->
+                    <label for="favouriteCheckbox" class="custom-checkbox-label"></label>
                 </div>
             </div>
-            <div class="tagWrapper form-group"> <!-- Added form-group class -->
+            <div class="tagWrapper">
                 <input type="hidden" name="categories" class="categories"></input>
                 <div class="tagTitle">
                   <h2>Categories</h2>
@@ -64,9 +65,9 @@
                   </div>
                 </div>
               </div>
-            <div class="Link">
+            <div class="Link form-group">
                 <h2>Recipe Link</h2>
-                <input type='text' name='link' required></input>
+                <input type='text' name='link' required placeholder="https://example.com/recipe"></input>
             </div>     
             <div class="submitWrapper">
                 <button type='button' class='submitBtn'>SUBMIT</button>
@@ -75,6 +76,10 @@
     </div>
 
     <script>
+        // Initialize form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            initFormValidation('submitRecipe');
+        });
 
         //--------------------------TAG SECTION LOGIC ----------------------//
         const tagUl = document.querySelector(".tagContent ul"),
@@ -142,28 +147,16 @@
         let submitRecipeForm = document.querySelector("#submitRecipe");
 
         //Checks to make sure every input is filled and that there is atleast one ingredient and one step before submitting. Error messages not handled.
-        submitBtn.addEventListener("click", function(){
-            let inputs = document.querySelectorAll("#submitRecipe input");
+        submitBtn.addEventListener("click", function(e){
+            e.preventDefault(); // Prevent default button behavior
             let categories = document.querySelector(".categories");
-            let inputsFilled = true;
-            let inputsValid = true;
-
-            for (i = 0; i < inputs.length; i++){
-                if (inputs[i].validity.valueMissing === true){
-                    inputsFilled = false;
-                    console.log("input missing");
-                }
-                if (inputs[i].validity.patternMismatch === true){
-                    inputsValid = false;
-                    console.log("pattern mismatch");
-                }
-            }
-
-            if (inputsFilled === true && inputsValid === true){
+            
+            // Let validation.js handle the form validation
+            // If form is valid, it will be submitted there
+            if (categories) {
                 categories.value = tags;
-                submitRecipeForm.submit();
-            };
-        })
+            }
+        });
     </script>
     <script src="/pwa.js"></script>
 </body>

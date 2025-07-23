@@ -11,13 +11,14 @@ const multer = require('multer');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcrypt');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
 //Setup express, port
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 
 //Multer set to use memory for image uploads
 //This is so they can be altered before sending to mongodb
@@ -78,6 +79,35 @@ async function run() {
     // --- Passport Configuration ---
     app.use(passport.initialize());
     app.use(passport.session());
+
+    // Google OAuth Strategy
+    passport.use(new GoogleStrategy({
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "http://localhost:80/auth/google/callback"
+    },
+    async function(accessToken, refreshToken, profile, done) {
+        try {
+            // Check if user exists
+            let user = await users.findOne({ googleId: profile.id });
+            
+            if (!user) {
+                // Create new user with firstLogin flag
+                user = {
+                    googleId: profile.id,
+                    displayName: profile.displayName, // Store original display name
+                    username: profile.displayName, // Initial username, can be changed
+                    email: profile.emails[0].value,
+                    firstLogin: true // Flag to indicate username needs to be set
+                };
+                const result = await users.insertOne(user);
+                user = await users.findOne({ _id: result.insertedId });
+            }
+            return done(null, user);
+        } catch (err) {
+            return done(err, null);
+        }
+    }));
 
     // Passport Local Strategy
     passport.use(new LocalStrategy(
@@ -572,6 +602,77 @@ async function run() {
     // Display registration page
     app.get('/register', (req, res) => {
       res.render('register', { error: null, currentPage:false, currentPath: req.path}); // Pass null initially
+    });
+
+    // Google Auth Routes
+    app.get('/auth/google',
+      passport.authenticate('google', { scope: ['profile', 'email'] })
+    );
+
+    app.get('/auth/google/callback', 
+      passport.authenticate('google', { failureRedirect: '/login' }),
+      (req, res) => {
+        // Check if user needs to set username
+        if (req.user.firstLogin) {
+          res.redirect('/set-username');
+        } else {
+          res.redirect('/recipeList');
+        }
+      }
+    );
+
+    // Username setup routes
+    app.get('/set-username', ensureAuthenticated, (req, res) => {
+      res.render('setUsername', { error: null, currentPath: req.path });
+    });
+
+    app.post('/set-username', ensureAuthenticated, async (req, res) => {
+      try {
+        const { username } = req.body;
+        const userId = req.user._id;
+
+        // Validate username
+        if (!username || username.length < 3 || username.length > 20) {
+          return res.render('setUsername', { 
+            error: 'Username must be between 3 and 20 characters',
+            currentPath: req.path,
+            currentUser: req.user
+          });
+        }
+
+        // Check if username is already taken
+        const existingUser = await users.findOne({ 
+          username: { $regex: `^${username}$`, $options: 'i' },
+          _id: { $ne: userId } // Exclude current user
+        });
+
+        if (existingUser) {
+          return res.render('setUsername', {
+            error: 'Username is already taken',
+            currentPath: req.path,
+            currentUser: req.user
+          });
+        }
+
+        // Update user
+        await users.updateOne(
+          { _id: userId },
+          { 
+            $set: { 
+              username: username,
+              firstLogin: false
+            }
+          }
+        );
+
+        res.redirect('/recipeList');
+      } catch (err) {
+        console.error('Error setting username:', err);
+        res.render('setUsername', { 
+          error: 'An error occurred while setting username',
+          currentPath: req.path 
+        });
+      }
     });
 
     // Handle logout
