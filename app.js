@@ -859,7 +859,7 @@ async function run() {
             console.error("Login after verification failed:", err);
             return res.redirect('/login');
           }
-          res.redirect('/recipeList');
+          return res.redirect('/recipeList');
         });
 
       } catch (err) {
