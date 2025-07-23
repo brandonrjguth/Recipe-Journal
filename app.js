@@ -778,28 +778,63 @@ async function run() {
       try {
         console.log('Verification route hit with token:', req.params.token);
         
-        // First check if user is already verified
-        const alreadyVerifiedUser = await users.findOne({
+        // First check if any user is verified with this email (regardless of token)
+        const verifiedUser = await users.findOne({
           verificationToken: req.params.token,
           isVerified: true
         });
 
-        if (alreadyVerifiedUser) {
+        if (verifiedUser) {
           return res.render('verify-email', {
             success: 'Your email is already verified. You can now log in.',
-            email: alreadyVerifiedUser.email,
+            email: verifiedUser.email,
             currentPath: req.path
           });
         }
 
-        // Check for valid unverified user
-        const user = await users.findOne({
+        // Check if token is valid but user not yet verified
+        const unverifiedUser = await users.findOne({
           verificationToken: req.params.token,
           verificationTokenExpires: { $gt: Date.now() },
           isVerified: false
         });
 
-        if (!user) {
+        if (unverifiedUser) {
+          // Mark as verified
+          await users.updateOne(
+            { _id: unverifiedUser._id },
+            {
+              $set: { isVerified: true },
+              $unset: { 
+                verificationToken: "",
+                verificationTokenExpires: ""
+              }
+            }
+          );
+          
+          // Log the user in automatically
+          req.login(unverifiedUser, (err) => {
+            if (err) {
+              console.error("Login after verification failed:", err);
+              return res.redirect('/login');
+            }
+            return res.redirect('/recipeList');
+          });
+        } else {
+          // Token is invalid - check if user exists and is already verified
+          const userWithSameEmail = await users.findOne({
+            verificationToken: req.params.token
+          });
+          
+          if (userWithSameEmail && userWithSameEmail.isVerified) {
+            return res.render('verify-email', {
+              success: 'Your email is already verified. You can now log in.',
+              email: userWithSameEmail.email,
+              currentPath: req.path
+            });
+          }
+
+          // No valid user found
           return res.render('verify-email', {
             error: 'Verification token is invalid or has expired.',
             email: null,
