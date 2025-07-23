@@ -28,6 +28,11 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Skip caching for verification URLs to prevent PWA issues
+  if (event.request.url.includes('/verify-email/')) {
+    return fetch(event.request);
+  }
+  
   event.respondWith(
     fetch(event.request)
       .then(response => {

@@ -29,10 +29,16 @@
 
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="error-message"><%= error %></div>
+            <div class="auth-link" style="margin-top: 2rem; text-align: center;">
+              <a href="/resend-verification?email=<%= email %>" style="color: var(--accent); text-decoration: none;">Resend Verification Email</a>
+            </div>
         <% } %>
 
         <% if (typeof success !== 'undefined' && success) { %>
             <div class="success-message"><%= success %></div>
+            <div class="auth-link" style="margin-top: 2rem; text-align: center;">
+              <a href="/login" style="color: var(--accent); text-decoration: none;">Go to Login</a>
+            </div>
         <% } %>
 
         <div class="verification-info" style="margin: 2rem 0; padding: 1.5rem; background-color: var(--background-light); border-radius: 8px;">

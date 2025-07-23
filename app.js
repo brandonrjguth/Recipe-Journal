@@ -777,6 +777,22 @@ async function run() {
     app.get('/verify-email/:token', async (req, res) => {
       try {
         console.log('Verification route hit with token:', req.params.token);
+        
+        // First check if user is already verified
+        const alreadyVerifiedUser = await users.findOne({
+          verificationToken: req.params.token,
+          isVerified: true
+        });
+
+        if (alreadyVerifiedUser) {
+          return res.render('verify-email', {
+            success: 'Your email is already verified. You can now log in.',
+            email: alreadyVerifiedUser.email,
+            currentPath: req.path
+          });
+        }
+
+        // Check for valid unverified user
         const user = await users.findOne({
           verificationToken: req.params.token,
           verificationTokenExpires: { $gt: Date.now() },
