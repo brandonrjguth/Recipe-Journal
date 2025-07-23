@@ -84,8 +84,8 @@
         <div id="deleteModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
             <div class="modal-content" style="background-color: var(--white); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px var(--shadow-color); max-width: 90%; width: 400px; font-family: 'Poppins', sans-serif;">
                 <h2 style="margin-bottom: 1.5rem; color: var(--text); font-size: 1.5rem; text-align: center;">Confirm Account Deletion</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light); text-align: center;">Please enter your <span id="confirmationType">email</span> to confirm deletion:</p>
-                <input type="text" id="confirmationInput" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 4px; margin-bottom: 1.5rem; font-family: 'Poppins', sans-serif;">
+                <p style="margin-bottom: 1rem; color: var(--text-light); text-align: center;">To delete your account, please confirm your email address:</p>
+                <input type="email" id="confirmationInput" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 4px; margin-bottom: 1.5rem; font-family: 'Poppins', sans-serif;" placeholder="Enter your email address">
                 <div style="display: flex; justify-content: center; gap: 1rem;">
                     <button id="cancelDelete" style="padding: 0.75rem 1.5rem; border: 1px solid var(--border-light); background: var(--white); border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif;">Cancel</button>
                     <button id="confirmDelete" style="padding: 0.75rem 1.5rem; background: var(--accent-red); color: white; border: none; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif;">Delete Account</button>
