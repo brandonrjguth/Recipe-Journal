@@ -172,11 +172,22 @@ async function run() {
           if (!user) {
             return done(null, false, { message: 'Incorrect username/email or password.' });
           }
+
+          // Check if this is a Google OAuth user without a password
+          if (user.googleId && !user.password) {
+            return done(null, false, { message: 'This account uses Google Sign-In. Please sign in with Google.' });
+          }
+
+          // Check if email is verified - only if user has an email field
+          if (user.email && !user.isVerified) {
+            return done(null, false, { message: 'Please verify your email address before logging in.' });
+          }
+
           // Compare password
           const match = await bcrypt.compare(password, user.password);
           if (!match) {
              // Keep the generic message for security
-            return done(null, false, { message: 'Incorrect username or password.' });
+            return done(null, false, { message: 'Incorrect username/email or password.' });
           }
           // Return the user object (with original casing) on success
           return done(null, user);
@@ -652,6 +663,164 @@ async function run() {
     //---------------------------------------------------------------//
     //----------------- AUTHENTICATION GET ROUTES -------------------//
     //---------------------------------------------------------------//
+
+    // Add email page
+    app.get('/add-email', ensureAuthenticated, (req, res) => {
+      res.render('add-email', { error: null, success: null, currentPath: req.path });
+    });
+
+    // Handle add email submission
+    app.post('/add-email', ensureAuthenticated, async (req, res) => {
+      try {
+        const { email } = req.body;
+        const userId = req.user._id;
+
+        // Check if email is already in use
+        const existingUser = await users.findOne({ email: email });
+        if (existingUser) {
+          return res.render('add-email', {
+            error: 'This email is already registered with another account.',
+            currentPath: req.path
+          });
+        }
+
+        // Generate verification token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpires = Date.now() + 24 * 3600000; // 24 hours
+
+        // Store pending email and token
+        await users.updateOne(
+          { _id: userId },
+          {
+            $set: {
+              pendingEmail: email,
+              verificationToken: verificationToken,
+              verificationTokenExpires: verificationExpires
+            }
+          }
+        );
+
+        // Send verification email
+        const verifyUrl = `${req.protocol}://${req.get('host')}/verify-add-email/${verificationToken}`;
+        await transporter.sendMail({
+          to: email,
+          from: process.env.EMAIL_USER,
+          subject: 'Verify Your Email - Recipe Journal',
+          html: `
+            <p>Please verify your email address to add it to your Recipe Journal account.</p>
+            <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
+            <p>This link will expire in 24 hours.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+          `
+        });
+
+        res.render('verify-email', {
+          email: email,
+          success: 'Please check your email to verify your address.',
+          currentPath: req.path
+        });
+
+      } catch (err) {
+        console.error('Error adding email:', err);
+        res.render('add-email', {
+          error: 'An error occurred while processing your request.',
+          currentPath: req.path
+        });
+      }
+    });
+
+    // Verify added email
+    app.get('/verify-add-email/:token', ensureAuthenticated, async (req, res) => {
+      try {
+        const user = await users.findOne({
+          verificationToken: req.params.token,
+          verificationTokenExpires: { $gt: Date.now() }
+        });
+
+        if (!user || !user.pendingEmail) {
+          return res.render('verify-email', {
+            error: 'Verification token is invalid or has expired.',
+            email: null,
+            currentPath: req.path
+          });
+        }
+
+        // Update user with verified email
+        await users.updateOne(
+          { _id: user._id },
+          {
+            $set: { 
+              email: user.pendingEmail,
+              isVerified: true
+            },
+            $unset: { 
+              pendingEmail: "",
+              verificationToken: "",
+              verificationTokenExpires: ""
+            }
+          }
+        );
+
+        res.redirect('/profile');
+
+      } catch (err) {
+        console.error('Error verifying email:', err);
+        res.render('verify-email', {
+          error: 'An error occurred during verification.',
+          email: null,
+          currentPath: req.path
+        });
+      }
+    });
+
+    // Email verification route
+    app.get('/verify-email/:token', async (req, res) => {
+      try {
+        console.log('Verification route hit with token:', req.params.token);
+        const user = await users.findOne({
+          verificationToken: req.params.token,
+          verificationTokenExpires: { $gt: Date.now() },
+          isVerified: false
+        });
+
+        if (!user) {
+          return res.render('verify-email', {
+            error: 'Verification token is invalid or has expired.',
+            email: null,
+            currentPath: req.path
+          });
+        }
+
+        // Update user to verified status
+        await users.updateOne(
+          { _id: user._id },
+          {
+            $set: { isVerified: true },
+            $unset: { 
+              verificationToken: "",
+              verificationTokenExpires: ""
+            }
+          }
+        );
+
+        // Log the user in automatically
+        req.login(user, (err) => {
+          if (err) {
+            console.error("Login after verification failed:", err);
+            return res.redirect('/login');
+          }
+          res.redirect('/recipeList');
+        });
+
+      } catch (err) {
+        console.error('Error verifying email:', err);
+        res.render('verify-email', {
+          error: 'An error occurred during verification.',
+          email: null,
+          currentPath: req.path
+        });
+      }
+    });
 
     // Display login page
     app.get('/login', (req, res) => {
@@ -1296,31 +1465,43 @@ async function run() {
           }
         }
 
-        // Hash password
-        const saltRounds = 10; // Recommended salt rounds
+        // Hash password and create verification token
+        const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const verificationToken = crypto.randomBytes(32).toString('hex');
 
-        // Create new user
-        const newUser = {
+        // Create pending user
+        const pendingUser = {
           username: username,
           email: email,
           password: hashedPassword,
+          verificationToken: verificationToken,
+          verificationTokenExpires: Date.now() + 24 * 3600000, // 24 hours
+          isVerified: false,
           createdAt: new Date()
         };
-        const insertResult = await users.insertOne(newUser);
-        const createdUser = await users.findOne({ _id: insertResult.insertedId });
 
-        if (!createdUser) {
-          console.error("Failed to find newly registered user for login.");
-          return res.redirect('/login');
-        }
+        const insertResult = await users.insertOne(pendingUser);
+        
+        // Create verification URL and send email
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+        const verifyUrl = `${protocol}://${req.get('host')}/verify-email/${verificationToken}`;
+        await transporter.sendMail({
+          to: email,
+          from: process.env.EMAIL_USER,
+          subject: 'Verify Your Email - Recipe Journal',
+          html: `
+            <p>Thank you for registering! Please verify your email address to complete your registration.</p>
+            <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
+            <p>This link will expire in 24 hours.</p>
+            <p>If you didn't register, please ignore this email.</p>
+          `
+        });
 
-        req.login(createdUser, (err) => {
-          if (err) {
-            console.error("Login after registration failed:", err);
-            return res.redirect('/login');
-          }
-          return res.redirect('/recipeList');
+        return res.render('verify-email', {
+          email: email,
+          success: 'Please check your email to verify your account.',
+          currentPath: req.path
         });
 
       } catch (err) {
@@ -1336,8 +1517,9 @@ async function run() {
           return next(err); 
         }
         if (!user) {
+          // Use the error message from the strategy
           return res.render('login', { 
-            error: 'Incorrect username/email or password',
+            error: info.message || 'Authentication failed',
             currentPage: false,
             currentPath: req.path
           });
