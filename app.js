@@ -778,21 +778,21 @@ async function run() {
       try {
         console.log('Verification route hit with token:', req.params.token);
         
-        // First check if any user is verified with this email (regardless of token)
-        const verifiedUser = await users.findOne({
-          verificationToken: req.params.token,
+        // First check if any user has this token in their verification history
+        const previouslyVerifiedUser = await users.findOne({
+          'verificationHistory.token': req.params.token,
           isVerified: true
         });
 
-        if (verifiedUser) {
+        if (previouslyVerifiedUser) {
           return res.render('verify-email', {
             success: 'Your email is already verified. You can now log in.',
-            email: verifiedUser.email,
+            email: previouslyVerifiedUser.email,
             currentPath: req.path
           });
         }
 
-        // Check if token is valid but user not yet verified
+        // Check for valid unverified user with this token
         const unverifiedUser = await users.findOne({
           verificationToken: req.params.token,
           verificationTokenExpires: { $gt: Date.now() },
@@ -800,11 +800,22 @@ async function run() {
         });
 
         if (unverifiedUser) {
-          // Mark as verified
+          // Mark as verified and archive the token
           await users.updateOne(
             { _id: unverifiedUser._id },
             {
-              $set: { isVerified: true },
+              $set: { 
+                isVerified: true,
+                verificationStatus: 'verified',
+                verifiedAt: new Date()
+              },
+              $push: {
+                verificationHistory: {
+                  token: req.params.token,
+                  usedAt: new Date(),
+                  via: 'email'
+                }
+              },
               $unset: { 
                 verificationToken: "",
                 verificationTokenExpires: ""
@@ -1648,16 +1659,19 @@ async function run() {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationTokenExpires = Date.now() + 24 * 3600000; // 24 hours
 
-        // Create pending user
+        // Create pending user with verification tracking
         const pendingUser = {
           username: username,
           email: email,
           password: hashedPassword,
           verificationToken: verificationToken,
-          verificationTokenExpires: Date.now() + 24 * 3600000, // 24 hours
+          verificationTokenExpires: verificationTokenExpires,
+          verificationStatus: 'pending', // Track verification state
           isVerified: false,
-          createdAt: new Date()
+          createdAt: new Date(),
+          verificationHistory: [] // Track verification attempts
         };
 
         const insertResult = await users.insertOne(pendingUser);

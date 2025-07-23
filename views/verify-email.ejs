@@ -29,8 +29,18 @@
 
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="error-message"><%= error %></div>
-            <div class="auth-link" style="margin-top: 2rem; text-align: center;">
-              <a href="/resend-verification?email=<%= email %>" style="color: var(--accent); text-decoration: none;">Resend Verification Email</a>
+            <div class="verification-help" style="margin-top: 1rem; padding: 1rem; background: var(--background-light); border-radius: 8px;">
+              <p style="margin-bottom: 0.5rem;">If you're seeing this after clicking a verification link:</p>
+              <ul style="margin-left: 1rem; margin-bottom: 0.5rem;">
+                <li>Your account may already be verified</li>
+                <li>The link may have expired (valid for 24 hours)</li>
+                <li>You may have clicked it twice</li>
+              </ul>
+              <p>Try logging in or request a new verification email below.</p>
+            </div>
+            <div class="auth-links" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+              <a href="/resend-verification?email=<%= email %>" class="btn-submit" style="padding: 0.5rem 1rem;">Resend Verification Email</a>
+              <a href="/login" class="btn-submit" style="padding: 0.5rem 1rem;">Go to Login</a>
             </div>
         <% } %>
 
