@@ -269,7 +269,6 @@ both classes.
 .mainMenu, .user-bar{
     display: flex;
     gap: 1rem;
-    align-items: center;
 }
 
 .mainMenu{
