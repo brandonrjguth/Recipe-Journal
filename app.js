@@ -970,19 +970,6 @@ async function run() {
           });
         }
 
-        // Check if username is already taken
-        const existingUser = await users.findOne({ 
-          username: { $regex: `^${username}$`, $options: 'i' },
-          _id: { $ne: userId } // Exclude current user
-        });
-
-        if (existingUser) {
-          return res.render('profile', {
-            error: 'Username is already taken',
-            currentPath: req.path,
-            currentUser: req.user.username
-          });
-        }
 
         // Update user
         await users.updateOne(
@@ -1521,54 +1508,6 @@ async function run() {
           });
         }
 
-        // Check for existing accounts (both username and email)
-        const existingUsername = await users.findOne({ 
-          username: { $regex: `^${username}$`, $options: 'i' }
-        });
-
-        // Check for unverified account with same username
-        if (existingUsername) {
-          if (!existingUsername.isVerified) {
-            // Generate new verification token
-            const verificationToken = crypto.randomBytes(32).toString('hex');
-            const verificationExpires = Date.now() + 24 * 3600000; // 24 hours
-
-            // Update existing unverified account
-            await users.updateOne(
-              { _id: existingUsername._id },
-              {
-                $set: {
-                  verificationToken: verificationToken,
-                  verificationTokenExpires: verificationExpires
-                }
-              }
-            );
-
-            // Send new verification email
-            const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email/${verificationToken}`;
-            await transporter.sendMail({
-              to: existingUsername.email,
-              from: process.env.EMAIL_USER,
-              subject: 'Verify Your Email - Recipe Journal',
-              html: `
-                <p>Please verify your email address to complete your registration.</p>
-                <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
-                <p>This link will expire in 24 hours.</p>
-                <p>If you didn't register, please ignore this email.</p>
-              `
-            });
-
-            return res.render('verify-email', {
-              email: existingUsername.email,
-              success: 'A new verification email has been sent.',
-              currentPath: req.path
-            });
-          }
-          return res.render('register', { 
-            error: 'Username already taken.', 
-            currentPath: req.path 
-          });
-        }
 
         // Then check for email conflicts and handle account linking
         const existingAccount = await users.findOne({ email: email });
