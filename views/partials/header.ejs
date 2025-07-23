@@ -78,16 +78,24 @@
             <li><a href="/shoppingList" class="<%= currentPath === '/shoppingList' ? 'current' : '' %>">Groceries</a></li>
         </ul>
 
-        <ul class="user-bar">
+        
         <% if (currentUser) { %>  
-                <li class="user-greeting"><a class="usernameLink"href="/profile"><%= currentUser.username %></a></li> 
-                <li class="user-greeting">|</li> 
-                <li><a href="/logout">Logout</a></li>
+            <div class="userBarWrapper">
+                <ul class="user-bar">
+                    <li class="user-greeting left"><a class="usernameLink"href="/profile"><%= currentUser.username %></a></li> 
+                    <li class="user-greeting divider">|</li> 
+                    <li class="logout"><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
         <% } else { %>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>  
+            <div class="userBarWrapper">
+                <ul class="user-bar col">
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>  
+                </ul>
+            </div>
         <% } %>
-        </ul>
+        
     </div>
 </div>
 

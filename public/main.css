@@ -36,6 +36,10 @@ body, p, h3, h2, h1, ul, li {
     margin:0;
 }
 
+.col{
+    flex-direction: column !important;
+}
+
 /*Explicitly decalare font-type for text input,
 Some browsers will not inherit it from html styles*/
 
