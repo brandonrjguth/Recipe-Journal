@@ -994,13 +994,19 @@ async function run() {
         // Delete all user's shopping list items
         await userShoppingList.deleteMany({ userId: userId });
 
-        // Delete the user
+        // First mark all recipes as deleted
+        await recipes.updateMany(
+          { userId: userId },
+          { $set: { deleted: true, deletedAt: new Date() } }
+        );
+
+        // Then delete the user
         await users.deleteOne({ _id: userId });
 
-        // Log the user out
-        req.logout((err) => {
+        // Clear the session
+        req.session.destroy((err) => {
           if (err) {
-            console.error('Error logging out after account deletion:', err);
+            console.error('Error destroying session:', err);
           }
           res.sendStatus(200);
         });
@@ -1316,12 +1322,28 @@ async function run() {
         // Find user with valid reset token
         const user = await users.findOne({
           resetPasswordToken: req.params.token,
-          resetPasswordExpires: { $gt: Date.now() }
+          resetPasswordExpires: { $gt: Date.now() },
+          email: { $exists: true } // Ensure email field exists
         });
 
         if (!user) {
           return res.render('forgot-password', {
             error: 'Password reset token is invalid or has expired.',
+            success: null,
+            currentPath: req.path
+          });
+        }
+
+        // Check if this email is already verified with a different account
+        const existingVerifiedUser = await users.findOne({
+          email: user.email,
+          isVerified: true,
+          _id: { $ne: user._id } // Different account
+        });
+
+        if (existingVerifiedUser) {
+          return res.render('forgot-password', {
+            error: 'This email is already registered with a verified account.',
             success: null,
             currentPath: req.path
           });

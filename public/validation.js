@@ -29,12 +29,13 @@ function showError(input, message) {
     input.classList.add('invalid');
 }
 
-// Validate that string is not an email address
-function validateNotEmail(input) {
-    // Simple email pattern check
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailPattern.test(input.value.trim())) {
-        showError(input, errorMessages.emailAsUsername);
+// Validate username format
+function validateUsername(input) {
+    const value = input.value.trim();
+    // Allow 3-20 chars, letters, numbers, underscores, hyphens
+    const usernamePattern = /^[a-zA-Z0-9_-]{3,20}$/;
+    if (!usernamePattern.test(value)) {
+        showError(input, 'Username must be 3-20 characters and can only contain letters, numbers, underscores and hyphens.');
         return false;
     }
     clearError(input);

@@ -46,9 +46,15 @@
 
         <% if (typeof success !== 'undefined' && success) { %>
             <div class="success-message"><%= success %></div>
-            <div class="auth-link" style="margin-top: 2rem; text-align: center;">
-              <a href="/login" style="color: var(--accent); text-decoration: none;">Go to Login</a>
-            </div>
+            <% if (typeof verified !== 'undefined' && verified) { %>
+              <div class="auth-link" style="margin-top: 2rem; text-align: center;">
+                <a href="/recipeList" style="color: var(--accent); text-decoration: none;">Continue to Your Recipes</a>
+              </div>
+            <% } else { %>
+              <div class="auth-link" style="margin-top: 2rem; text-align: center;">
+                <a href="/login" style="color: var(--accent); text-decoration: none;">Go to Login</a>
+              </div>
+            <% } %>
         <% } %>
 
         <div class="verification-info" style="margin: 2rem 0; padding: 1.5rem; background-color: var(--background-light); border-radius: 8px;">
