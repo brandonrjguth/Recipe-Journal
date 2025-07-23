@@ -160,10 +160,19 @@ async function run() {
     }
 
     // Middleware to pass user info to all views
-    app.use((req, res, next) => {
-      res.locals.currentUser = req.user; // Make user object available in all EJS templates
-      next();
-    });
+  app.use((req, res, next) => {
+    if (req.user) {
+      res.locals.currentUser = {
+        _id: req.user._id,
+        username: req.user.username,
+        email: req.user.email,
+      };
+    } else {
+      res.locals.currentUser = null;
+    }
+    next();
+  });
+
 
 
     //---------------------------------------------------------------//
@@ -636,9 +645,7 @@ async function run() {
 
       res.render('profile', { 
         error: null, 
-        currentPath: req.path,
-        currentUser: req.user.username,
-        currentUserEmail: req.user.email,
+        currentPath: req.path, // Pass currentPath
         googleUser: googleUser // Pass Google user status
       });
     });
@@ -653,7 +660,7 @@ async function run() {
           return res.render('profile', { 
             error: 'Username must be between 3 and 20 characters',
             currentPath: req.path,
-            currentUser: req.user
+            currentUser: req.user.username
           });
         }
 
@@ -667,7 +674,7 @@ async function run() {
           return res.render('profile', {
             error: 'Username is already taken',
             currentPath: req.path,
-            currentUser: req.user
+            currentUser: req.user.username
           });
         }
 

@@ -44,7 +44,7 @@
                     required 
                     pattern="[a-zA-Z0-9_-]{3,20}"
                     title="Username must be between 3-20 characters and can only contain letters, numbers, underscores and hyphens"
-                    value="<%= currentUser.displayName || '' %>"
+                    value="<%= currentUser.username || '' %>"
                     style="font-family: 'Poppins', sans-serif;"
                 >
             </div>
@@ -76,8 +76,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             initFormValidation('setUsernameForm');
 
-            const userEmail = "<%= currentUserEmail %>";
-            const userDisplayName = "<%= currentUser %>";
+            const userEmail = "<%= currentUser.email %>";
+            const userDisplayName = "<%= currentUser.username %>";
             const isGoogleUser = "<%= googleUser %>";
 
             const modal = document.getElementById('deleteModal');
