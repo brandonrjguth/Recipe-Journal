@@ -1460,11 +1460,48 @@ async function run() {
         }
 
         // Check for existing accounts (both username and email)
-        const usernameExists = await users.findOne({ 
+        const existingUsername = await users.findOne({ 
           username: { $regex: `^${username}$`, $options: 'i' }
         });
 
-        if (usernameExists) {
+        // Check for unverified account with same username
+        if (existingUsername) {
+          if (!existingUsername.isVerified) {
+            // Generate new verification token
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+            const verificationExpires = Date.now() + 24 * 3600000; // 24 hours
+
+            // Update existing unverified account
+            await users.updateOne(
+              { _id: existingUsername._id },
+              {
+                $set: {
+                  verificationToken: verificationToken,
+                  verificationTokenExpires: verificationExpires
+                }
+              }
+            );
+
+            // Send new verification email
+            const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email/${verificationToken}`;
+            await transporter.sendMail({
+              to: existingUsername.email,
+              from: process.env.EMAIL_USER,
+              subject: 'Verify Your Email - Recipe Journal',
+              html: `
+                <p>Please verify your email address to complete your registration.</p>
+                <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
+                <p>This link will expire in 24 hours.</p>
+                <p>If you didn't register, please ignore this email.</p>
+              `
+            });
+
+            return res.render('verify-email', {
+              email: existingUsername.email,
+              success: 'A new verification email has been sent.',
+              currentPath: req.path
+            });
+          }
           return res.render('register', { 
             error: 'Username already taken.', 
             currentPath: req.path 
@@ -1475,16 +1512,40 @@ async function run() {
         const existingAccount = await users.findOne({ email: email });
 
         if (existingAccount) {
-          // If there's an existing pending verification with this email, preserve the token
-          const pendingUser = await users.findOne({ 
-            email: email,
-            isVerified: false,
-            verificationToken: { $exists: true }
-          });
+          // If there's an existing pending verification with this email
+          if (!existingAccount.isVerified) {
+            // Generate new verification token
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+            const verificationExpires = Date.now() + 24 * 3600000; // 24 hours
 
-          if (pendingUser) {
-            return res.render('register', {
-              error: 'A verification email has already been sent to this address.',
+            // Update existing unverified account
+            await users.updateOne(
+              { _id: existingAccount._id },
+              {
+                $set: {
+                  verificationToken: verificationToken,
+                  verificationTokenExpires: verificationExpires
+                }
+              }
+            );
+
+            // Send new verification email
+            const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email/${verificationToken}`;
+            await transporter.sendMail({
+              to: email,
+              from: process.env.EMAIL_USER,
+              subject: 'Verify Your Email - Recipe Journal',
+              html: `
+                <p>Please verify your email address to complete your registration.</p>
+                <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
+                <p>This link will expire in 24 hours.</p>
+                <p>If you didn't register, please ignore this email.</p>
+              `
+            });
+
+            return res.render('verify-email', {
+              email: email,
+              success: 'A new verification email has been sent.',
               currentPath: req.path
             });
           }
@@ -1584,7 +1645,53 @@ async function run() {
           return next(err); 
         }
         if (!user) {
-          // Use the error message from the strategy
+          // Check if there's an unverified account
+          const unverifiedUser = await users.findOne({ 
+            $or: [
+              { email: req.body.username },
+              { username: req.body.username }
+            ],
+            isVerified: false
+          });
+
+          if (unverifiedUser) {
+            // Generate new verification token
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+            const verificationExpires = Date.now() + 24 * 3600000; // 24 hours
+
+            // Update user with new token
+            await users.updateOne(
+              { _id: unverifiedUser._id },
+              {
+                $set: {
+                  verificationToken: verificationToken,
+                  verificationTokenExpires: verificationExpires
+                }
+              }
+            );
+
+            // Send new verification email
+            const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email/${verificationToken}`;
+            await transporter.sendMail({
+              to: unverifiedUser.email,
+              from: process.env.EMAIL_USER,
+              subject: 'Verify Your Email - Recipe Journal',
+              html: `
+                <p>Please verify your email address to complete your registration.</p>
+                <p>Click this <a href="${verifyUrl}">link</a> to verify your email.</p>
+                <p>This link will expire in 24 hours.</p>
+                <p>If you didn't register, please ignore this email.</p>
+              `
+            });
+
+            return res.render('verify-email', {
+              email: unverifiedUser.email,
+              success: 'A new verification email has been sent.',
+              currentPath: req.path
+            });
+          }
+
+          // If no unverified account, show regular login error
           return res.render('login', { 
             error: info.message || 'Authentication failed',
             currentPage: false,
