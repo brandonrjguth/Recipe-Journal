@@ -120,15 +120,21 @@
             });
 
             document.getElementById('confirmDelete').addEventListener('click', async function() {
-                const confirmValue = confirmationInput.value.trim();
-                const expectedValue = isGoogleUser === 'true' ? userEmail : userDisplayName;
+                const confirmValue = confirmationInput.value.trim().toLowerCase();
+                const userEmailLower = userEmail.toLowerCase();
+                
+                if (!confirmValue) {
+                    alert('Please enter your email address');
+                    confirmationInput.focus();
+                    return;
+                }
 
-                if (confirmValue === expectedValue) {
+                if (confirmValue === userEmailLower) {
                     await fetch('/delete-account', { method: 'POST' });
                     window.location.href = '/logout';
                 } else {
-                    const errorType = isGoogleUser === 'true' ? 'Email' : 'Username';
-                    alert(`${errorType} does not match. Account deletion cancelled.`);
+                    alert('Email does not match. Account deletion cancelled.');
+                    confirmationInput.focus();
                 }
             });
 
