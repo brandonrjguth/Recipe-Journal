@@ -645,8 +645,12 @@ async function run() {
 
       res.render('profile', { 
         error: null, 
-        currentPath: req.path, // Pass currentPath
-        googleUser: googleUser // Pass Google user status
+        currentPath: req.path,
+        currentUser: {
+          username: req.user.username,
+          email: req.user.email
+        },
+        googleUser: googleUser
       });
     });
 
@@ -655,12 +659,30 @@ async function run() {
         const { username } = req.body;
         const userId = req.user._id;
 
-        // Validate username
+        // Validate username length
         if (!username || username.length < 3 || username.length > 20) {
           return res.render('profile', { 
             error: 'Username must be between 3 and 20 characters',
             currentPath: req.path,
-            currentUser: req.user.username
+            currentUser: {
+              username: req.user.username,
+              email: req.user.email
+            },
+            googleUser: req.user.googleId ? true : false
+          });
+        }
+
+        // Validate username is not an email address
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailPattern.test(username)) {
+          return res.render('profile', {
+            error: 'Username cannot be an email address',
+            currentPath: req.path,
+            currentUser: {
+              username: req.user.username,
+              email: req.user.email
+            },
+            googleUser: req.user.googleId ? true : false
           });
         }
 

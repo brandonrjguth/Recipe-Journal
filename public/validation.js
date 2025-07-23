@@ -6,7 +6,8 @@ const errorMessages = {
     generic: "Please check this field",
     imageRequired: "Please select at least one image",
     ingredient: "Ingredient field cannot be empty",
-    step: "Step field cannot be empty"
+    step: "Step field cannot be empty",
+    emailAsUsername: "Username cannot be an email address"
 };
 
 // Add error styling
@@ -26,6 +27,18 @@ function showError(input, message) {
     errorDiv.textContent = message;
     formGroup.appendChild(errorDiv);
     input.classList.add('invalid');
+}
+
+// Validate that string is not an email address
+function validateNotEmail(input) {
+    // Simple email pattern check
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailPattern.test(input.value.trim())) {
+        showError(input, errorMessages.emailAsUsername);
+        return false;
+    }
+    clearError(input);
+    return true;
 }
 
 // Remove error styling
@@ -167,6 +180,14 @@ function initFormValidation(formId) {
     if (submitBtn) {
         submitBtn.addEventListener('click', (e) => {
             let isValid = true;
+
+            // Special validation for username field in profile form
+            if (form.getAttribute('id') === 'setUsernameForm') {
+                const usernameInput = form.querySelector('#username');
+                if (!validateNotEmail(usernameInput)) {
+                    isValid = false;
+                }
+            }
 
             // Validate all required fields
             inputs.forEach(input => {
