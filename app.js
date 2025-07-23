@@ -110,27 +110,31 @@ async function run() {
     },
     async function(accessToken, refreshToken, profile, done) {
         try {
-            // First, check if there's a linked account with this email
-            let user = await users.findOne({ 
-              email: profile.emails[0].value,
-              isLinkedAccount: true 
-            });
-            
-            if (user) {
-                // If this is a linked account, update the Google ID if it's not set
-                if (!user.googleId) {
-                    await users.updateOne(
-                        { _id: user._id },
-                        { $set: { googleId: profile.id } }
-                    );
-                }
-                return done(null, user);
-            }
-
-            // If no linked account, check for existing Google account
-            user = await users.findOne({ googleId: profile.id });
+            // First, check if a user exists with this Google ID
+            let user = await users.findOne({ googleId: profile.id });
             
             if (!user) {
+                // Check if a local account exists with the same email
+                const localUser = await users.findOne({ 
+                    email: profile.emails[0].value,
+                    googleId: { $exists: false }
+                });
+
+                if (localUser) {
+                    // Link the accounts
+                    await users.updateOne(
+                        { _id: localUser._id },
+                        { 
+                            $set: { 
+                                googleId: profile.id,
+                                isLinkedAccount: true 
+                            }
+                        }
+                    );
+                    user = await users.findOne({ _id: localUser._id });
+                    return done(null, user);
+                }
+
                 // Create new user with firstLogin flag
                 // Truncate displayName if it's longer than 20 characters
                 const truncatedUsername = profile.displayName.length > 20 
@@ -1232,22 +1236,64 @@ async function run() {
           });
         }
 
-        // Check if username or email already exists
-        const existingAccount = await users.findOne({ 
-          $or: [
-            { username: { $regex: `^${username}$`, $options: 'i' } },
-            { email: email }
-          ]
+        // First check for username conflicts
+        const usernameExists = await users.findOne({ 
+          username: { $regex: `^${username}$`, $options: 'i' }
         });
 
+        if (usernameExists) {
+          return res.render('register', { 
+            error: 'Username already taken.', 
+            currentPath: req.path 
+          });
+        }
+
+        // Then check for email conflicts and handle account linking
+        const existingAccount = await users.findOne({ email: email });
+
         if (existingAccount) {
-          if (existingAccount.googleId) {
-            return res.render('register', { error: 'This email is associated with a Google account. Please sign in with Google.', currentPath:req.path });
+          if (existingAccount.googleId && !existingAccount.password) {
+            // Google account exists - initiate linking process
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            await users.updateOne(
+              { _id: existingAccount._id },
+              {
+                $set: {
+                  linkToken: verificationToken,
+                  linkTokenExpires: Date.now() + 3600000,
+                  pendingLocalUsername: username,
+                  pendingLocalPassword: hashedPassword
+                }
+              }
+            );
+
+            const verifyUrl = `${req.protocol}://${req.get('host')}/verify-link/${verificationToken}`;
+            await transporter.sendMail({
+              to: email,
+              from: process.env.EMAIL_USER,
+              subject: 'Verify Account Linking - Recipe Journal',
+              html: `
+                <p>You are attempting to link a local account to your Google account.</p>
+                <p>Click this <a href="${verifyUrl}">link</a> to verify and link your accounts.</p>
+                <p>This link will expire in 1 hour.</p>
+                <p>If you didn't request this, please ignore this email.</p>
+              `
+            });
+
+            return res.render('verify-email', {
+              email: email,
+              success: 'Please check your email to verify account linking.',
+              currentPath: req.path
+            });
+          } else {
+            // Regular account exists with this email
+            return res.render('register', { 
+              error: 'Email already registered.', 
+              currentPath: req.path 
+            });
           }
-          if (existingAccount.email === email) {
-            return res.render('register', { error: 'Email already registered.', currentPath:req.path });
-          }
-          return res.render('register', { error: 'Username already taken.', currentPath:req.path });
         }
 
         // Hash password
@@ -1258,24 +1304,23 @@ async function run() {
         const newUser = {
           username: username,
           email: email,
-          password: hashedPassword
+          password: hashedPassword,
+          createdAt: new Date()
         };
-        const insertResult = await users.insertOne(newUser); // Get result to access insertedId
-
-        // Log the user in automatically after registration
-        // Need to fetch the newly created user object with _id for req.login
+        const insertResult = await users.insertOne(newUser);
         const createdUser = await users.findOne({ _id: insertResult.insertedId });
+
         if (!createdUser) {
           console.error("Failed to find newly registered user for login.");
           return res.redirect('/login');
         }
 
-        req.login(createdUser, (err) => { // Passport's req.login method needs the user object
+        req.login(createdUser, (err) => {
           if (err) {
             console.error("Login after registration failed:", err);
-            return res.redirect('/login'); // Redirect to login on error
+            return res.redirect('/login');
           }
-          return res.redirect('/recipeList'); // Redirect to recipe list on success
+          return res.redirect('/recipeList');
         });
 
       } catch (err) {
