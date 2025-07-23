@@ -1123,49 +1123,103 @@ async function run() {
       try {
         const { email } = req.body;
 
-        // Find the user with pending verification
-        const user = await users.findOne({
+        // First check for an active email verification request
+        let user = await users.findOne({
           email: email,
-          linkToken: { $exists: true },
-          linkTokenExpires: { $gt: Date.now() }
+          verificationToken: { $exists: true },
+          verificationTokenExpires: { $gt: Date.now() },
+          isVerified: false
         });
+
+        // If no active email verification, check for any pending (even expired)
+        if (!user) {
+          user = await users.findOne({
+            email: email,
+            verificationToken: { $exists: true },
+            isVerified: false
+          });
+        }
+
+        // If still no user, check for account linking requests
+        if (!user) {
+          user = await users.findOne({
+            email: email,
+            linkToken: { $exists: true },
+            linkTokenExpires: { $gt: Date.now() }
+          });
+
+          if (!user) {
+            user = await users.findOne({
+              email: email,
+              linkToken: { $exists: true }
+            });
+          }
+        }
 
         if (!user) {
           return res.render('verify-email', {
             email: email,
-            error: 'Verification request not found or expired. Please try registering again.',
+            error: 'No verification request found for this email. Please register again.',
             currentPath: req.path
           });
         }
 
-        // Generate new verification token
+        // Generate new verification token and expiry
         const verificationToken = crypto.randomBytes(32).toString('hex');
         const verificationExpires = Date.now() + 3600000; // 1 hour
 
-        // Update user with new token
-        await users.updateOne(
-          { _id: user._id },
-          {
-            $set: {
-              linkToken: verificationToken,
-              linkTokenExpires: verificationExpires
+        // Determine if this is an email verification or account linking request
+        if (user.verificationToken) {
+          // Update email verification token
+          await users.updateOne(
+            { _id: user._id },
+            {
+              $set: {
+                verificationToken: verificationToken,
+                verificationTokenExpires: verificationExpires
+              }
             }
-          }
-        );
+          );
 
-        // Send new verification email
-        const verifyUrl = `${req.protocol}://${req.get('host')}/verify-link/${verificationToken}`;
-        await transporter.sendMail({
-          to: email,
-          from: process.env.EMAIL_USER,
-          subject: 'Verify Account Linking - Recipe Journal',
-          html: `
-            <p>You requested a new verification email for linking your account.</p>
-            <p>Click this <a href="${verifyUrl}">link</a> to verify and link your accounts.</p>
-            <p>This link will expire in 1 hour.</p>
-            <p>If you didn't request this, please ignore this email.</p>
-          `
-        });
+          // Send email verification email
+          const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email/${verificationToken}`;
+          await transporter.sendMail({
+            to: email,
+            from: process.env.EMAIL_USER,
+            subject: 'Verify Your Email - Recipe Journal',
+            html: `
+              <p>You requested a new verification email.</p>
+              <p>Click this <a href="${verifyUrl}">link</a> to verify your email address.</p>
+              <p>This link will expire in 1 hour.</p>
+              <p>If you didn't request this, please ignore this email.</p>
+            `
+          });
+        } else {
+          // Update account linking token
+          await users.updateOne(
+            { _id: user._id },
+            {
+              $set: {
+                linkToken: verificationToken,
+                linkTokenExpires: verificationExpires
+              }
+            }
+          );
+
+          // Send account linking email
+          const verifyUrl = `${req.protocol}://${req.get('host')}/verify-link/${verificationToken}`;
+          await transporter.sendMail({
+            to: email,
+            from: process.env.EMAIL_USER,
+            subject: 'Verify Account Linking - Recipe Journal',
+            html: `
+              <p>You requested a new verification email for linking your account.</p>
+              <p>Click this <a href="${verifyUrl}">link</a> to verify and link your accounts.</p>
+              <p>This link will expire in 1 hour.</p>
+              <p>If you didn't request this, please ignore this email.</p>
+            `
+          });
+        }
 
         res.render('verify-email', {
           email: email,
@@ -1405,7 +1459,7 @@ async function run() {
           });
         }
 
-        // First check for username conflicts
+        // Check for existing accounts (both username and email)
         const usernameExists = await users.findOne({ 
           username: { $regex: `^${username}$`, $options: 'i' }
         });
@@ -1421,6 +1475,19 @@ async function run() {
         const existingAccount = await users.findOne({ email: email });
 
         if (existingAccount) {
+          // If there's an existing pending verification with this email, preserve the token
+          const pendingUser = await users.findOne({ 
+            email: email,
+            isVerified: false,
+            verificationToken: { $exists: true }
+          });
+
+          if (pendingUser) {
+            return res.render('register', {
+              error: 'A verification email has already been sent to this address.',
+              currentPath: req.path
+            });
+          }
           if (existingAccount.googleId && !existingAccount.password) {
             // Google account exists - initiate linking process
             const verificationToken = crypto.randomBytes(32).toString('hex');
