@@ -829,11 +829,25 @@ async function run() {
     });
 
     // Handle login
-    app.post('/login', passport.authenticate('local', {
-      successRedirect: '/recipeList', // Redirect on successful login
-      failureRedirect: '/login',     // Redirect back to login on failure
-      // failureFlash: true // Requires connect-flash, not installed currently
-    }), (req, res) => {
+    app.post('/login', (req, res, next) => {
+      passport.authenticate('local', (err, user, info) => {
+        if (err) { 
+          return next(err); 
+        }
+        if (!user) {
+          return res.render('login', { 
+            error: 'Incorrect username or password',
+            currentPage: false,
+            currentPath: req.path
+          });
+        }
+        req.logIn(user, (err) => {
+          if (err) { 
+            return next(err); 
+          }
+          return res.redirect('/recipeList');
+        });
+      })(req, res, next);
     });
 
 
