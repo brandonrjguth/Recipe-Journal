@@ -14,7 +14,29 @@ const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcrypt');
 const MongoStore = require('connect-mongo');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 require('dotenv').config();
+
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD
+  }
+});
+
+// Verify email configuration
+transporter.verify(function(error, success) {
+  if (error) {
+    console.log('Email configuration error:', error);
+  } else {
+    console.log('Server is ready to take our messages');
+  }
+});
 
 //Setup express, port
 const app = express();
@@ -88,8 +110,25 @@ async function run() {
     },
     async function(accessToken, refreshToken, profile, done) {
         try {
-            // Check if user exists
-            let user = await users.findOne({ googleId: profile.id });
+            // First, check if there's a linked account with this email
+            let user = await users.findOne({ 
+              email: profile.emails[0].value,
+              isLinkedAccount: true 
+            });
+            
+            if (user) {
+                // If this is a linked account, update the Google ID if it's not set
+                if (!user.googleId) {
+                    await users.updateOne(
+                        { _id: user._id },
+                        { $set: { googleId: profile.id } }
+                    );
+                }
+                return done(null, user);
+            }
+
+            // If no linked account, check for existing Google account
+            user = await users.findOne({ googleId: profile.id });
             
             if (!user) {
                 // Create new user with firstLogin flag
@@ -118,11 +157,16 @@ async function run() {
     passport.use(new LocalStrategy(
       async (username, password, done) => {
         try {
-          // Case-insensitive username lookup using regex
-          const user = await users.findOne({ username: { $regex: `^${username}$`, $options: 'i' } });
+          // Check if input is email format
+          const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
+          
+          // Find user by username or email
+          const user = await users.findOne({
+            [isEmail ? 'email' : 'username']: isEmail ? username : { $regex: `^${username}$`, $options: 'i' }
+          });
+          
           if (!user) {
-            // Keep the generic message for security
-            return done(null, false, { message: 'Incorrect username or password.' });
+            return done(null, false, { message: 'Incorrect username/email or password.' });
           }
           // Compare password
           const match = await bcrypt.compare(password, user.password);
@@ -764,6 +808,294 @@ async function run() {
       });
     });
 
+    // Forgot password page
+    app.get('/forgot-password', (req, res) => {
+      res.render('forgot-password', { error: null, success: null, currentPath: req.path });
+    });
+
+    // Handle forgot password request
+    app.post('/forgot-password', async (req, res) => {
+      try {
+        const { email } = req.body;
+
+        // Find user by email
+        const user = await users.findOne({ email: email });
+
+        if (!user) {
+          return res.render('forgot-password', {
+            error: 'No user found with that email address.',
+            success: null,
+            currentPath: req.path
+          });
+        }
+
+        // Check if it's a Google user
+        if (user.googleId) {
+          return res.render('forgot-password', {
+            error: 'This email is associated with a Google account. Please sign in with Google.',
+            success: null,
+            currentPath: req.path
+          });
+        }
+
+        // Generate reset token and expiry
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpires = Date.now() + 3600000; // 1 hour
+
+        // Store token and expiry with user
+        await users.updateOne(
+          { _id: user._id },
+          { 
+            $set: {
+              resetPasswordToken: resetToken,
+              resetPasswordExpires: resetTokenExpires
+            }
+          }
+        );
+
+        // Create reset URL
+        const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+        // Send email
+        await transporter.sendMail({
+          to: user.email,
+          from: process.env.EMAIL_USER,
+          subject: 'Password Reset Request',
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="${resetUrl}">link</a> to reset your password.</p>
+            <p>This link will expire in 1 hour.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+          `
+        });
+
+        // Render success message
+        res.render('forgot-password', {
+          error: null,
+          success: 'Check your email for password reset instructions.',
+          currentPath: req.path
+        });
+
+      } catch (err) {
+        console.error('Password reset error:', err);
+        res.render('forgot-password', {
+          error: 'An error occurred. Please try again later.',
+          success: null,
+          currentPath: req.path
+        });
+      }
+    });
+
+    // Reset password page
+    // Account linking verification route
+    app.get('/verify-link/:token', ensureAuthenticated, async (req, res) => {
+      try {
+        const user = await users.findOne({
+          linkToken: req.params.token,
+          linkTokenExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+          return res.render('verify-email', {
+            error: 'Verification token is invalid or has expired.',
+            email: req.user.email,
+            currentPath: req.path
+          });
+        }
+
+        // Verify that the current user owns the Google account
+        if (user._id.toString() !== req.user._id.toString()) {
+          return res.render('verify-email', {
+            error: 'You must be logged in to the Google account you are trying to link.',
+            email: req.user.email,
+            currentPath: req.path
+          });
+        }
+
+        // Update user with local credentials and clear linking tokens
+        await users.updateOne(
+          { _id: user._id },
+          {
+            $set: { 
+              username: user.pendingLocalUsername,
+              password: user.pendingLocalPassword,
+              isLinkedAccount: true
+            },
+            $unset: { 
+              linkToken: "",
+              linkTokenExpires: "",
+              pendingLocalUsername: "",
+              pendingLocalPassword: ""
+            }
+          }
+        );
+
+        res.render('login', {
+          error: null,
+          success: 'Accounts successfully linked. Please log in with either method.',
+          currentPath: req.path
+        });
+      } catch (err) {
+        console.error('Error verifying account link:', err);
+        res.render('verify-email', {
+          error: 'An error occurred during verification.',
+          email: req.user.email,
+          currentPath: req.path
+        });
+      }
+    });
+
+    // Resend verification email for account linking
+    app.post('/resend-verification', async (req, res) => {
+      try {
+        const { email } = req.body;
+
+        // Find the user with pending verification
+        const user = await users.findOne({
+          email: email,
+          linkToken: { $exists: true },
+          linkTokenExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+          return res.render('verify-email', {
+            email: email,
+            error: 'Verification request not found or expired. Please try registering again.',
+            currentPath: req.path
+          });
+        }
+
+        // Generate new verification token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpires = Date.now() + 3600000; // 1 hour
+
+        // Update user with new token
+        await users.updateOne(
+          { _id: user._id },
+          {
+            $set: {
+              linkToken: verificationToken,
+              linkTokenExpires: verificationExpires
+            }
+          }
+        );
+
+        // Send new verification email
+        const verifyUrl = `${req.protocol}://${req.get('host')}/verify-link/${verificationToken}`;
+        await transporter.sendMail({
+          to: email,
+          from: process.env.EMAIL_USER,
+          subject: 'Verify Account Linking - Recipe Journal',
+          html: `
+            <p>You requested a new verification email for linking your account.</p>
+            <p>Click this <a href="${verifyUrl}">link</a> to verify and link your accounts.</p>
+            <p>This link will expire in 1 hour.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+          `
+        });
+
+        res.render('verify-email', {
+          email: email,
+          success: 'A new verification email has been sent.',
+          currentPath: req.path
+        });
+      } catch (err) {
+        console.error('Error resending verification email:', err);
+        res.render('verify-email', {
+          email: req.body.email,
+          error: 'An error occurred while resending the verification email.',
+          currentPath: req.path
+        });
+      }
+    });
+
+    app.get('/reset-password/:token', async (req, res) => {
+      try {
+        const user = await users.findOne({
+          resetPasswordToken: req.params.token,
+          resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+          return res.render('forgot-password', {
+            error: 'Password reset token is invalid or has expired.',
+            success: null,
+            currentPath: req.path
+          });
+        }
+
+        res.render('reset-password', {
+          token: req.params.token,
+          error: null,
+          currentPath: req.path
+        });
+      } catch (err) {
+        console.error('Error rendering reset password page:', err);
+        res.redirect('/login');
+      }
+    });
+
+    // Handle password reset
+    app.post('/reset-password/:token', async (req, res) => {
+      try {
+        const { password, passwordConfirm } = req.body;
+
+        // Validate passwords match
+        if (password !== passwordConfirm) {
+          return res.render('reset-password', {
+            token: req.params.token,
+            error: 'Passwords do not match.',
+            currentPath: req.path
+          });
+        }
+
+        // Find user with valid reset token
+        const user = await users.findOne({
+          resetPasswordToken: req.params.token,
+          resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+          return res.render('forgot-password', {
+            error: 'Password reset token is invalid or has expired.',
+            success: null,
+            currentPath: req.path
+          });
+        }
+
+        // Hash new password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Update user's password and clear reset token
+        await users.updateOne(
+          { _id: user._id },
+          {
+            $set: { password: hashedPassword },
+            $unset: { 
+              resetPasswordToken: "",
+              resetPasswordExpires: "" 
+            }
+          }
+        );
+
+        // Redirect to login with success message
+        return res.render('login', {
+          error: null,
+          success: 'Your password has been reset. Please login with your new password.',
+          currentPath: req.path
+        });
+
+      } catch (err) {
+        console.error('Error resetting password:', err);
+        res.render('reset-password', {
+          token: req.params.token,
+          error: 'An error occurred while resetting your password.',
+          currentPath: req.path
+        });
+      }
+    });
+
 
     //--------------------- IMAGE SERVING ROUTES -----------------------------//
 
@@ -813,10 +1145,70 @@ async function run() {
     // Handle registration
     app.post('/register', async (req, res) => {
       try {
-        const { username, password, passwordConfirm } = req.body;
+        const { username, email, password, passwordConfirm } = req.body;
+
+        // Check for existing accounts (both local and OAuth)
+        const existingUser = await users.findOne({ 
+          $or: [
+            { username: { $regex: `^${username}$`, $options: 'i' } },
+            { email: email }
+          ]
+        });
+
+        // Handle existing Google account
+        if (existingUser && existingUser.googleId) {
+          return res.render('register', { 
+            error: 'This email is already registered with Google. Please sign in with Google or use a different email.',
+            currentPath: req.path 
+          });
+        }
+
+        // Handle local account linking if user has Google account with same email
+        const googleUser = await users.findOne({ 
+          email: email,
+          googleId: { $exists: true }
+        });
+
+        if (googleUser) {
+          // Generate verification token for account linking
+          const verificationToken = crypto.randomBytes(32).toString('hex');
+          const verificationExpires = Date.now() + 3600000; // 1 hour
+
+          await users.updateOne(
+            { _id: googleUser._id },
+            {
+              $set: {
+                linkToken: verificationToken,
+                linkTokenExpires: verificationExpires,
+                pendingLocalUsername: username,
+                pendingLocalPassword: await bcrypt.hash(password, 10)
+              }
+            }
+          );
+
+          // Send verification email
+          const verifyUrl = `${req.protocol}://${req.get('host')}/verify-link/${verificationToken}`;
+          await transporter.sendMail({
+            to: email,
+            from: process.env.EMAIL_USER,
+            subject: 'Verify Account Linking - Recipe Journal',
+            html: `
+              <p>You are attempting to create a local account that will be linked to your Google account.</p>
+              <p>Click this <a href="${verifyUrl}">link</a> to verify and link your accounts.</p>
+              <p>This link will expire in 1 hour.</p>
+              <p>If you didn't request this, please ignore this email.</p>
+            `
+          });
+
+          return res.render('verify-email', {
+            email: email,
+            success: 'Please check your email to verify account linking.',
+            currentPath: req.path
+          });
+        }
 
         // Basic validation
-        if (!username || !password || !passwordConfirm) {
+        if (!username || !email || !password || !passwordConfirm) {
           return res.render('register', { error: 'All fields are required.', currentPath:req.path });
         }
         if (password !== passwordConfirm) {
@@ -840,9 +1232,21 @@ async function run() {
           });
         }
 
-        // Check if user already exists
-        const existingUser = await users.findOne({ username: username });
-        if (existingUser) {
+        // Check if username or email already exists
+        const existingAccount = await users.findOne({ 
+          $or: [
+            { username: { $regex: `^${username}$`, $options: 'i' } },
+            { email: email }
+          ]
+        });
+
+        if (existingAccount) {
+          if (existingAccount.googleId) {
+            return res.render('register', { error: 'This email is associated with a Google account. Please sign in with Google.', currentPath:req.path });
+          }
+          if (existingAccount.email === email) {
+            return res.render('register', { error: 'Email already registered.', currentPath:req.path });
+          }
           return res.render('register', { error: 'Username already taken.', currentPath:req.path });
         }
 
@@ -853,6 +1257,7 @@ async function run() {
         // Create new user
         const newUser = {
           username: username,
+          email: email,
           password: hashedPassword
         };
         const insertResult = await users.insertOne(newUser); // Get result to access insertedId
@@ -887,7 +1292,7 @@ async function run() {
         }
         if (!user) {
           return res.render('login', { 
-            error: 'Incorrect username or password',
+            error: 'Incorrect username/email or password',
             currentPage: false,
             currentPath: req.path
           });

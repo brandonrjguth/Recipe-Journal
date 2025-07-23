@@ -20,9 +20,6 @@
     margin-bottom: 1.5rem;
 }
 
-span#confirmationType{
-    padding:none !important;
-}
 
 .form-group label {
     display: block;
@@ -71,10 +68,19 @@ span#confirmationType{
     background-color: #d62a00;
 }
 
-/* Error message styling */
+/* Message styling */
 .error-message {
     color: var(--accent-red);
     background-color: rgba(245, 49, 0, 0.1);
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    color: #4BB543;
+    background-color: rgba(75, 181, 67, 0.1);
     padding: 0.75rem;
     border-radius: 4px;
     margin-bottom: 1rem;

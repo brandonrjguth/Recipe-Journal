@@ -32,6 +32,23 @@
             <div class="error-message"><%= error %></div>
         <% } %>
 
+        <!-- Account Status Section -->
+        <div class="account-status" style="margin-bottom: 2rem; padding: 1rem; background-color: var(--background-light); border-radius: 8px;">
+            <h2 style="margin-bottom: 1rem; font-size: 1.2rem; color: var(--text);">Account Status</h2>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <p><strong>Email:</strong> <%= currentUser.email %></p>
+                <p><strong>Login Method:</strong> 
+                    <% if (currentUser.isLinkedAccount) { %>
+                        Linked Account (Google & Password)
+                    <% } else if (googleUser) { %>
+                        Google Account
+                    <% } else { %>
+                        Password Login
+                    <% } %>
+                </p>
+            </div>
+        </div>
+
         <form action="/profile" method="POST" id="setUsernameForm">
             <div class="form-group">
                 <label for="username" style="font-family: 'Poppins', sans-serif;">
