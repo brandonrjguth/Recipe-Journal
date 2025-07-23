@@ -7,7 +7,7 @@ const errorMessages = {
     imageRequired: "Please select at least one image",
     ingredient: "Ingredient field cannot be empty",
     step: "Step field cannot be empty",
-    emailAsUsername: "Username cannot be an email address"
+    emailAsUsername: "Display name cannot be an email address"
 };
 
 // Add error styling
@@ -181,7 +181,7 @@ function initFormValidation(formId) {
         submitBtn.addEventListener('click', (e) => {
             let isValid = true;
 
-            // Special validation for username field in profile form
+            // Validate display name is not an email
             if (form.getAttribute('id') === 'setUsernameForm') {
                 const usernameInput = form.querySelector('#username');
                 if (!validateNotEmail(usernameInput)) {
