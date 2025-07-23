@@ -623,7 +623,24 @@ async function run() {
 
     // Username setup routes
     app.get('/profile', ensureAuthenticated, (req, res) => {
-      res.render('profile', { error: null, currentPath: req.path });
+
+      let googleUser;
+
+      if (req.user.googleId){
+        googleUser = true;
+      } else {
+        googleUser = false;
+      }
+
+      console.log(googleUser);
+
+      res.render('profile', { 
+        error: null, 
+        currentPath: req.path,
+        currentUser: req.user.username,
+        currentUserEmail: req.user.email,
+        googleUser: googleUser // Pass Google user status
+      });
     });
 
     app.post('/profile', ensureAuthenticated, async (req, res) => {
@@ -672,6 +689,36 @@ async function run() {
           error: 'An error occurred while setting username',
           currentPath: req.path 
         });
+      }
+    });
+
+    // Handle account deletion
+    app.post('/delete-account', ensureAuthenticated, async (req, res) => {
+      try {
+        const userId = req.user._id;
+
+        // Delete all user's recipes
+        await recipes.deleteMany({ userId: userId });
+
+        // Delete all user's favourites
+        await userFavourites.deleteMany({ userId: userId });
+
+        // Delete all user's shopping list items
+        await userShoppingList.deleteMany({ userId: userId });
+
+        // Delete the user
+        await users.deleteOne({ _id: userId });
+
+        // Log the user out
+        req.logout((err) => {
+          if (err) {
+            console.error('Error logging out after account deletion:', err);
+          }
+          res.sendStatus(200);
+        });
+      } catch (err) {
+        console.error('Error deleting account:', err);
+        res.status(500).send('Error deleting account');
       }
     });
 

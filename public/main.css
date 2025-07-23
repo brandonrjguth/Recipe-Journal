@@ -205,7 +205,6 @@ ul{
 span{
     align-self:center;
     color: red;
-    padding-right:0.5rem;
 }
 
 
@@ -339,6 +338,8 @@ both classes.
 .mobileMenu.active{
     display:flex;
 }
+
+
 
 
 /*---------------------------------------------------*/
