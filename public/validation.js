@@ -43,7 +43,16 @@ function clearError(input) {
 // Validate required fields
 function validateRequired(input) {
     if (!input.value.trim()) {
-        showError(input, errorMessages.required);
+        let message = errorMessages.required;
+        
+        // Use specific messages for ingredients and steps
+        if (input.closest('.ingredientsNode')) {
+            message = errorMessages.ingredient;
+        } else if (input.closest('.stepsNode')) {
+            message = errorMessages.step;
+        }
+        
+        showError(input, message);
         return false;
     }
     clearError(input);

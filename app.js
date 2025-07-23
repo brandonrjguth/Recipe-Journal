@@ -824,6 +824,8 @@ async function run() {
           return
         }
 
+        let thumbImageBuffer;
+        
         //Determine if there are any images and compress them
         if (!req.body.isImg && req.files.length == 1) {
           images = await sharp(req.files[0].buffer)
@@ -834,6 +836,12 @@ async function run() {
           .resize(400)
           .jpeg({ quality: 75 })
           .toBuffer(); 
+        }
+
+        // For link recipes, use placeholder image
+        if (req.body.link) {
+          images = undefined;
+          thumbImageBuffer = undefined;
         }
 
         if (req.body.isImg) {

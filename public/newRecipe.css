@@ -333,7 +333,9 @@ i{
 
 .ingredientsNode h3, .stepsNode h3{
     padding-right:1rem;
+    align-self:center;
 }
+
 
 /* Style for '+' add buttons */
 .ingredients button, .steps button {
