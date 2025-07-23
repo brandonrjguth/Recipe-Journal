@@ -1639,8 +1639,8 @@ async function run() {
     });
 
     // Handle login
-    app.post('/login', (req, res, next) => {
-      passport.authenticate('local', (err, user, info) => {
+    app.post('/login', async (req, res, next) => {
+      passport.authenticate('local', async (err, user, info) => {
         if (err) { 
           return next(err); 
         }
