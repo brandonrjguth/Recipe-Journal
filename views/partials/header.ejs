@@ -43,7 +43,7 @@
                                     <span class="dropdown-arrow">&#9662;</span> <!-- Down arrow -->
                                 </button>
                                 <ul class="user-dropdown-menu">
-                                    <li><a href="/set-username">Profile</a></li>
+                                    <li><a href="/profile">Profile</a></li>
                                     <li><a href="/logout">Logout</a></li>
                                 </ul>
                             </li>
@@ -80,7 +80,7 @@
 
         <ul class="user-bar">
         <% if (currentUser) { %>  
-                <li class="user-greeting"><%= currentUser.username %></li> 
+                <li class="user-greeting"><a class="usernameLink"href="/profile"><%= currentUser.username %></a></li> 
                 <li class="user-greeting">|</li> 
                 <li><a href="/logout">Logout</a></li>
         <% } else { %>

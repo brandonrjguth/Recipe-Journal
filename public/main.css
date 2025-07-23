@@ -219,6 +219,10 @@ span{
     font-size:0.5rem;
 }
 
+.usernameLink {
+    padding: 0 !important;
+}
+
 
 /*Menushelf class is on both mobile and desktop menu's. By default the class is set to display-none.
 The way it is shown on mobile is by targeting .menushelf.active and setting display:flex.
@@ -266,6 +270,7 @@ both classes.
 .mainMenu, .user-bar{
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .mainMenu{

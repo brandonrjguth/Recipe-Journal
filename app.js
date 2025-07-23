@@ -614,7 +614,7 @@ async function run() {
       (req, res) => {
         // Check if user needs to set username
         if (req.user.firstLogin) {
-          res.redirect('/set-username');
+          res.redirect('/profile');
         } else {
           res.redirect('/recipeList');
         }
@@ -622,18 +622,18 @@ async function run() {
     );
 
     // Username setup routes
-    app.get('/set-username', ensureAuthenticated, (req, res) => {
-      res.render('setUsername', { error: null, currentPath: req.path });
+    app.get('/profile', ensureAuthenticated, (req, res) => {
+      res.render('profile', { error: null, currentPath: req.path });
     });
 
-    app.post('/set-username', ensureAuthenticated, async (req, res) => {
+    app.post('/profile', ensureAuthenticated, async (req, res) => {
       try {
         const { username } = req.body;
         const userId = req.user._id;
 
         // Validate username
         if (!username || username.length < 3 || username.length > 20) {
-          return res.render('setUsername', { 
+          return res.render('profile', { 
             error: 'Username must be between 3 and 20 characters',
             currentPath: req.path,
             currentUser: req.user
@@ -647,7 +647,7 @@ async function run() {
         });
 
         if (existingUser) {
-          return res.render('setUsername', {
+          return res.render('profile', {
             error: 'Username is already taken',
             currentPath: req.path,
             currentUser: req.user
@@ -668,7 +668,7 @@ async function run() {
         res.redirect('/recipeList');
       } catch (err) {
         console.error('Error setting username:', err);
-        res.render('setUsername', { 
+        res.render('profile', { 
           error: 'An error occurred while setting username',
           currentPath: req.path 
         });
