@@ -853,18 +853,6 @@ async function run() {
           });
         }
 
-        // Update user to verified status
-        await users.updateOne(
-          { _id: unverifiedUser._id },
-          {
-            $set: { isVerified: true },
-            $unset: { 
-              verificationToken: "",
-              verificationTokenExpires: ""
-            }
-          }
-        );
-
         // Log the user in automatically
         req.login(unverifiedUser, (err) => {
           if (err) {
