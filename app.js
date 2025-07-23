@@ -93,10 +93,15 @@ async function run() {
             
             if (!user) {
                 // Create new user with firstLogin flag
+                // Truncate displayName if it's longer than 20 characters
+                const truncatedUsername = profile.displayName.length > 20 
+                    ? profile.displayName.substring(0, 20)
+                    : profile.displayName;
+                
                 user = {
                     googleId: profile.id,
-                    displayName: profile.displayName, // Store original display name
-                    username: profile.displayName, // Initial username, can be changed
+                    displayName: profile.displayName, // Store original full display name
+                    username: truncatedUsername, // Initial username, truncated if needed
                     email: profile.emails[0].value,
                     firstLogin: true // Flag to indicate username needs to be set
                 };
@@ -816,6 +821,23 @@ async function run() {
         }
         if (password !== passwordConfirm) {
           return res.render('register', { error: 'Passwords do not match.', currentPath:req.path });
+        }
+
+        // Validate username length
+        if (username.length < 3 || username.length > 20) {
+          return res.render('register', {
+            error: 'Username must be between 3 and 20 characters',
+            currentPath: req.path
+          });
+        }
+
+        // Validate username is not an email address
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailPattern.test(username)) {
+          return res.render('register', {
+            error: 'Username cannot be an email address',
+            currentPath: req.path
+          });
         }
 
         // Check if user already exists

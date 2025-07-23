@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
-
+    <script src="/validation.js" defer></script>
 </head>
 <body>
      <%- include('partials/header'); %>
@@ -33,10 +33,12 @@
             <div class="error-message"><%= error %></div>
         <% } %>
 
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" id="registerForm">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required 
+                    pattern="^(?!.*@.*\.)[a-zA-Z0-9_-]{3,20}$"
+                    title="Username must be between 3-20 characters and can only contain letters, numbers, underscores and hyphens. Email addresses are not allowed.">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
@@ -54,5 +56,10 @@
         </div>
     </div>
     <script src="/pwa.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initFormValidation('registerForm');
+        });
+    </script>
 </body>
 </html>
