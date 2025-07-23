@@ -853,15 +853,6 @@ async function run() {
           });
         }
 
-        // Log the user in automatically
-        req.login(unverifiedUser, (err) => {
-          if (err) {
-            console.error("Login after verification failed:", err);
-            return res.redirect('/login');
-          }
-          return res.redirect('/recipeList');
-        });
-
       } catch (err) {
         console.error('Error verifying email:', err);
         res.render('verify-email', {
