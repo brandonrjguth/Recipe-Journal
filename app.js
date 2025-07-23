@@ -855,7 +855,7 @@ async function run() {
 
         // Update user to verified status
         await users.updateOne(
-          { _id: user._id },
+          { _id: unverifiedUser._id },
           {
             $set: { isVerified: true },
             $unset: { 
@@ -866,7 +866,7 @@ async function run() {
         );
 
         // Log the user in automatically
-        req.login(user, (err) => {
+        req.login(unverifiedUser, (err) => {
           if (err) {
             console.error("Login after verification failed:", err);
             return res.redirect('/login');
