@@ -172,7 +172,7 @@
         createTag();
 
         function countTags(){
-            tagInput.focus();
+            //tagInput.focus();
         }
 
         function seed(){
@@ -183,7 +183,7 @@
             tagUl.querySelectorAll("li").forEach(li => li.remove());
             tags.forEach(tag => {
             let liTag = `<li>${tag} <i class="uit uit-multiply" onclick="remove(this, '${tag}')"></i></li>`;
-            tagUl.insertAdjacentHTML("beforeend", liTag); // or "afterbegin"
+            tagUl.insertAdjacentHTML("afterbegin", liTag); // or "afterbegin"
         });
             /*tags.slice().reverse().forEach(tag =>{
                 let liTag = `<li>${tag} <i class="uit uit-multiply" onclick="remove(this, '${tag}')"></i></li>`;
@@ -225,8 +225,12 @@
 
         tagPreset.forEach((tag) => {
             tag.addEventListener("click", function(){
-                tags.push(this.textContent);
-                createTag();
+
+                if (!tags.includes(this.textContent)){
+                    tags.push(this.textContent);
+                    createTag();
+                }
+            
             })
         })
 

@@ -59,7 +59,7 @@
                 </div>
                 <div class="tagContent">
                   <p>Press enter after each category or select from popular categories below</p>
-                  <ul><input type="text" class="tagInput" spellcheck="false"></ul>
+                  <ul><input type="search" class="tagInput" spellcheck="false"></ul>
                   <div class="presetWrapper">
                     <p class="presetTag">Main</p>
                     <p class="presetTag">Side</p>
@@ -204,9 +204,12 @@
         tagInput.addEventListener("keyup", addTag);
         tagPreset.forEach((tag) => {
             tag.addEventListener("click", function(){
-                console.log("here");
-                tags.push(this.textContent);
-                createTag();
+
+                if (!tags.includes(this.textContent)){
+                    tags.push(this.textContent);
+                    createTag();
+                }
+            
             })
         })
     // ----------------------------------------------------------------------------------------------//

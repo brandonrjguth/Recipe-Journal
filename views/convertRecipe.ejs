@@ -140,9 +140,12 @@
 
         tagPreset.forEach((tag) => {
             tag.addEventListener("click", function(){
-                console.log("here");
-                tags.push(this.textContent);
-                createTag();
+
+                if (!tags.includes(this.textContent)){
+                    tags.push(this.textContent);
+                    createTag();
+                }
+            
             })
         })
     // ----------------------------------------------------------------------------------------------//
