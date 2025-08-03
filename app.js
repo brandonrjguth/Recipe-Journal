@@ -1877,6 +1877,8 @@ async function run() {
 
     //Convert a link to a Recipe
     app.post('/convertRecipe', ensureAuthenticated, async (req, res) => { // Protected
+
+      console.log("here");
       try {
         const userId = req.user._id;
 

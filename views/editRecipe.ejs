@@ -66,7 +66,7 @@
         <% if (recipe.isLink){%>
             <div class="Link form-group">
                 <h2>Recipe Link</h2>
-                <input type='text' name='link' required placeholder="https://example.com/recipe"></input>
+                <input type='text' name='link' value="<%=recipe.recipeUrl%>" required></input>
             </div>     
         <%}%>
 

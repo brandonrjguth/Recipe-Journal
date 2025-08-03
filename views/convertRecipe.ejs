@@ -162,10 +162,31 @@
             e.preventDefault(); // Prevent default button behavior
             let categories = document.querySelector(".categories");
             
-            // Let validation.js handle the form validation
-            // If form is valid, it will be submitted there
+            // Set categories value from tags array
             if (categories) {
                 categories.value = tags;
+            }
+            
+            // Validate the form
+            let isValid = true;
+            
+            // Validate required fields
+            const requiredInputs = submitRecipeForm.querySelectorAll('input[required], textarea[required]');
+            requiredInputs.forEach(input => {
+                if (input.type === 'url' || input.inputMode === 'url') {
+                    if (!validateUrl(input)) {
+                        isValid = false;
+                    }
+                } else {
+                    if (!validateRequired(input)) {
+                        isValid = false;
+                    }
+                }
+            });
+            
+            // If all validations pass, submit the form
+            if (isValid) {
+                submitRecipeForm.submit();
             }
         });
     </script>
