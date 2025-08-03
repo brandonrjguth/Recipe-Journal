@@ -145,12 +145,8 @@
         let deleteForm = document.querySelector("#deleteRecipe")
 
         deleteBtn.addEventListener("click", function(){
-
-            //Make user confirm recipe deletion before submitting the form
-            const response = confirm("Are you sure you want to delete this recipe?")
-            if (response === true){
-                deleteForm.submit();
-            }
+            //Show custom delete confirmation modal
+            showDeleteConfirmation(deleteForm);
         })
 
         // --- Shopping List Button Handler ---
@@ -190,6 +186,7 @@
         }
     </script>
 
+    <script src="/deleteModal.js"></script>
     <script src="/pwa.js"></script>
 </body>
 </html>

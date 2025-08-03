@@ -100,12 +100,8 @@
         let deleteForm = document.querySelector("#deleteRecipe")
 
         deleteBtn.addEventListener("click", function(){
-
-            //Make user confirm recipe deletion before submitting the form
-            const response = confirm("Are you sure you want to delete this recipe?")
-            if (response === true){
-                deleteForm.submit();
-            }
+            //Show custom delete confirmation modal
+            showDeleteConfirmation(deleteForm);
         })
 
         let thumbnails = document.querySelectorAll(".thumbnail")
@@ -118,6 +114,7 @@
             })
         })
     </script>
-        
+    
+    <script src="/deleteModal.js"></script>
 </body>
 </html>
