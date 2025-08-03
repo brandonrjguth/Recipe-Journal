@@ -380,6 +380,20 @@ async function run() {
     app.get("/favourites", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
 
+        let sort = "title"; // Default sort by title
+        if (req.query.sort){
+          sort = req.query.sort;
+        }
+
+        // Dynamically set the sort order
+        let sortOrder;
+
+        if (sort === 'date') {
+          sortOrder = { "_id": -1 }; // Sort by newest created
+        } else {
+          sortOrder = { "title": 1 }; // Default sort by title
+        }
+
         //get UserId from passport session
         const userId = req.user._id;
 
@@ -399,7 +413,7 @@ async function run() {
 
         // Fetch the paginated recipe documents using the extracted IDs
         let recipeList = await recipes.find(query)
-                                      .sort({ "title": 1 })
+                                      .sort(sortOrder)
                                       .skip(skip)
                                       .limit(limit)
                                       .toArray();
@@ -429,6 +443,7 @@ async function run() {
           favourites: true,
           currentPage: page,
           totalPages: totalPages,
+          sort:sort,
           limit: limit,
           currentPath: req.path // Keep original path for potential other uses
         });

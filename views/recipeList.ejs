@@ -83,10 +83,18 @@
                     <li><a href="#" data-value="date" class="<%= sort === 'date' ? 'active' : '' %>">Date</a></li>
                 </ul>
             </div>
+
+            <% if (favourites === true) { %>
+                <form action="/favourites" method="GET" id="sortForm" style="display: none;">
+                    <input type="hidden" name="page" value="<%= currentPage %>">
+                    <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">                 
+                </form>
+            <% } else { %>
             <form action="/recipeList" method="GET" id="sortForm" style="display: none;">
                 <input type="hidden" name="page" value="<%= currentPage %>">
                 <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">
             </form>
+            <% } %>
         </div>
 
 
