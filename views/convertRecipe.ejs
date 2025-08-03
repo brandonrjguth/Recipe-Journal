@@ -53,8 +53,8 @@
                   <h2>Categories</h2>
                 </div>
                 <div class="tagContent">
-                  <p>Press enter after each category or select from popular categories below</p>
-                  <ul><input type="text" spellcheck="false"></ul>
+                  <p>Press enter after each category or select from popular categories below youre heree</p>
+                  <ul><input type="search" spellcheck="false"></ul>
                   <div class="presetWrapper">
                     <p class="presetTag">Main</p>
                     <p class="presetTag">Side</p>
@@ -67,7 +67,7 @@
               </div>
             <div class="Link form-group">
                 <h2>Recipe Link</h2>
-                <input type='text' name='link' required placeholder="https://example.com/recipe"></input>
+                <input type='text' name='link' autocomplete="off" autocorrect="off" spellcheck="false" inputmode="url" required placeholder="https://example.com/recipe"></input>
             </div>     
             <div class="submitWrapper">
                 <button type='button' class='submitBtn'>SUBMIT</button>
@@ -114,22 +114,30 @@
             countTags();
         }
 
-        function addTag(e){
-            if(e.key == "Enter"){
-                let tag = e.target.value.replace(/\s+/g, ' ');
-                if(tag.length > 1 && !tags.includes(tag)){
-                    if(tags.length < 10){
-                        tag.split(',').forEach(tag => {
-                            tags.push(tag);
-                            createTag();
-                        });
-                    }
-                }
-                e.target.value = "";
+        function processTagInput() {
+            let tag = tagInput.value.trim();
+            if (tag.length > 1 && !tags.includes(tag)) {
+                tags.push(tag);
+                createTag();
             }
+            tagInput.value = "";
         }
 
-        tagInput.addEventListener("keyup", addTag);
+        tagInput.addEventListener("keydown", function(e) {
+            if (e.key === "Enter" || e.code === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                processTagInput();
+            }
+        });
+        tagInput.addEventListener("keyup", function(e) {
+            if (e.key === "Enter" || e.code === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                processTagInput();
+            }
+        });
+
         tagPreset.forEach((tag) => {
             tag.addEventListener("click", function(){
                 console.log("here");
