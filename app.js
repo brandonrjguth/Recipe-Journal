@@ -466,14 +466,27 @@ async function run() {
         const page = parseInt(req.query.page) || 1; // Get page from query, default to 1
         const limit = parseInt(req.query.limit) || 12; // Get limit from query, default to 12
         const skip = (page - 1) * limit;
+        let sort = "title"
+
+        if (req.query.sort){
+          sort = req.query.sort;
+        }
 
         // Base query for user's recipes
         const query = { userId: userId };
 
+        // Dynamically set the sort order
+        let sortOrder;
+        if (sort === 'date') {
+          sortOrder = { "_id": -1 }; // Sort by newest created
+        } else {
+          sortOrder = { "title": 1 }; // Default sort by title
+        }
+
         // Get paginated user's recipes
         let recipeList = await recipes.find(query)
                                       .collation({ locale: "en" })
-                                      .sort({ "title": 1 })
+                                      .sort(sortOrder)
                                       .skip(skip)
                                       .limit(limit)
                                       .toArray();
@@ -503,8 +516,10 @@ async function run() {
           currentPage: page,
           totalPages: totalPages,
           limit: limit,
+          sort:sort, // Pass sort parameter
           currentPath: req.path // Keep original path for potential other uses
         });
+
       } catch (err) {
         console.error("Error fetching recipe list:", err);
         res.status(500).send('Error fetching recipe list');
