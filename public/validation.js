@@ -16,30 +16,22 @@ function showError(input, message) {
     if (!formGroup) return;
 
     // Remove any existing error message
-    const existingError = formGroup.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
+    let errorDiv = formGroup.querySelector('.error-message');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        // Insert after the input row if it exists, otherwise at the end
+        const inputRow = formGroup.querySelector('.input-row');
+        if (inputRow) {
+            inputRow.parentNode.insertBefore(errorDiv, inputRow.nextSibling);
+        } else {
+            formGroup.appendChild(errorDiv);
+        }
     }
 
-    // Create and add new error message
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
     errorDiv.textContent = message;
-    formGroup.appendChild(errorDiv);
+    errorDiv.style.display = 'block'; // Make sure it's visible
     input.classList.add('invalid');
-}
-
-// Validate username format
-function validateUsername(input) {
-    const value = input.value.trim();
-    // Allow 3-20 chars, letters, numbers, underscores, hyphens
-    const usernamePattern = /^[a-zA-Z0-9_-]{3,20}$/;
-    if (!usernamePattern.test(value)) {
-        showError(input, 'Username must be 3-20 characters and can only contain letters, numbers, underscores and hyphens.');
-        return false;
-    }
-    clearError(input);
-    return true;
 }
 
 // Remove error styling
@@ -76,7 +68,8 @@ function validateRequired(input) {
 // Validate URL format
 function validateUrl(input) {
     if (!input.value.trim()) {
-        return true; // Skip if empty, let required validation handle it
+        showError(input, errorMessages.required); // Assume it's required if this function is called
+        return false; 
     }
 
     try {
@@ -91,7 +84,8 @@ function validateUrl(input) {
 
 // Validate image upload
 function validateImageUpload(input) {
-    const errorDiv = input.closest('.form-group').querySelector('.error-message');
+    const formGroup = input.closest('.form-group');
+    const errorDiv = formGroup.querySelector('.error-message');
     if (!input.files || input.files.length === 0) {
         showError(input, errorMessages.imageRequired);
         if (errorDiv) errorDiv.style.display = 'block';
@@ -105,16 +99,10 @@ function validateImageUpload(input) {
 // Validate all ingredient fields
 function validateIngredients() {
     let isValid = true;
-    document.querySelectorAll('.ingredientsNode').forEach(node => {
-        const input = node.querySelector('input');
-        const errorDiv = node.querySelector('.error-message');
-        if (!input.value.trim()) {
-            showError(input, errorMessages.ingredient);
-            if (errorDiv) errorDiv.style.display = 'block';
-            isValid = false;
-        } else {
-            clearError(input);
-            if (errorDiv) errorDiv.style.display = 'none';
+    document.querySelectorAll('.ingredientsList .ingredientsNode').forEach(node => {
+        const input = node.querySelector('input, textarea');
+        if (!validateRequired(input)) {
+           isValid = false;
         }
     });
     return isValid;
@@ -123,138 +111,42 @@ function validateIngredients() {
 // Validate all step fields
 function validateSteps() {
     let isValid = true;
-    document.querySelectorAll('.stepsNode').forEach(node => {
+    document.querySelectorAll('.stepsList .stepsNode').forEach(node => {
         const textarea = node.querySelector('textarea');
-        const errorDiv = node.querySelector('.error-message');
-        if (!textarea.value.trim()) {
-            showError(textarea, errorMessages.step);
-            if (errorDiv) errorDiv.style.display = 'block';
+        if (!validateRequired(textarea)) {
             isValid = false;
-        } else {
-            clearError(textarea);
-            if (errorDiv) errorDiv.style.display = 'none';
         }
     });
     return isValid;
 }
 
-// Initialize form validation
+/**
+ * Initializes form validation behaviors.
+ * This version removes on-blur validation and redundant submit handlers.
+ * Validation is now primarily triggered by the script in the main HTML file.
+ */
 function initFormValidation(formId) {
     const form = document.getElementById(formId);
     if (!form) return;
 
-    const inputs = form.querySelectorAll('input[required]');
-    const urlInputs = form.querySelectorAll('input[type="url"], input[name="link"]');
-    const submitBtn = form.querySelector('button[type="submit"], .submitBtn');
-    const imageInputs = form.querySelectorAll('input[type="file"]');
+    const allInputs = form.querySelectorAll('input[required], textarea[required]');
 
-    // Add validation on blur for all required fields
-    inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateRequired(input);
-        });
-
+    // Add an 'input' listener to all fields.
+    // This provides good user experience by clearing an error message
+    // as soon as the user starts typing to correct it.
+    allInputs.forEach(input => {
         input.addEventListener('input', () => {
-            if (input.value.trim()) {
+            // Check if the field has a value and if it was previously invalid
+            if (input.value.trim() && input.classList.contains('invalid')) {
                 clearError(input);
             }
         });
     });
 
-    // Add URL validation for link fields
-    urlInputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateUrl(input);
-        });
-    });
+    // The event listeners for 'blur' have been removed to prevent validation
+    // from running every time a user clicks away from an input field.
 
-    // Add validation for image upload if this is an image recipe
-    if (form.querySelector('input[name="isImg"]')) {
-        imageInputs.forEach(input => {
-            input.addEventListener('change', () => {
-                validateImageUpload(input);
-            });
-        });
-    }
-
-    // Validate all fields on submit
-    if (submitBtn) {
-        submitBtn.addEventListener('click', (e) => {
-            let isValid = true;
-
-            // Validate display name is not an email
-            if (form.getAttribute('id') === 'setUsernameForm') {
-                const usernameInput = form.querySelector('#username');
-                if (!validateNotEmail(usernameInput)) {
-                    isValid = false;
-                }
-            }
-
-            // Validate all required fields
-            inputs.forEach(input => {
-                if (!validateRequired(input)) {
-                    isValid = false;
-                }
-            });
-
-            // Validate URLs
-            urlInputs.forEach(input => {
-                if (!validateUrl(input)) {
-                    isValid = false;
-                }
-            });
-
-            // Validate image upload if this is an image recipe
-            if (form.querySelector('input[name="isImg"]')) {
-                imageInputs.forEach(input => {
-                    if (!validateImageUpload(input)) {
-                        isValid = false;
-                    }
-                });
-            }
-
-            // Validate ingredients and steps if they exist
-            if (document.querySelector('.ingredientsNode')) {
-                if (!validateIngredients()) {
-                    isValid = false;
-                }
-            }
-
-            if (document.querySelector('.stepsNode')) {
-                if (!validateSteps()) {
-                    isValid = false;
-                }
-            }
-
-            // Additional validation for image recipes
-            if (form.querySelector('input[name="isImg"]')) {
-                const imageInput = form.querySelector('.uploadInput');
-                if (!validateImageUpload(imageInput)) {
-                    isValid = false;
-                }
-            }
-
-            // Additional validation for manual recipes
-            if (!form.querySelector('input[name="isImg"]') && !form.querySelector('input[name="link"]')) {
-                if (!validateIngredients()) {
-                    isValid = false;
-                }
-                if (!validateSteps()) {
-                    isValid = false;
-                }
-            }
-
-            // Submit form if valid
-            if (isValid && form.checkValidity()) {
-                if (form.getAttribute('id') === 'submitRecipe') {
-                    // Handle special case for recipe form
-                    const categories = document.querySelector('.categories');
-                    if (categories) {
-                        categories.value = tags;
-                    }
-                }
-                form.submit();
-            }
-        });
-    }
+    // The event listener for the submit button has also been removed from this file,
+    // as it is already correctly handled in your newRecipe.html script tag.
+    // This prevents redundant code and potential conflicts.
 }

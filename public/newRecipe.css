@@ -2,6 +2,7 @@
 input[type="text"],
 input[type="email"],
 input[type="password"],
+.tagInput,
 textarea {
   font-family: 'Poppins', sans-serif; 
   padding: 10px 12px; 
@@ -14,15 +15,52 @@ textarea {
   outline: none;
   width: 100%; 
   box-sizing: border-box; 
+  transition: none; 
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-textarea:focus {
+textarea:focus{
   border-color: var(--primary); 
   box-shadow: 0 0 0 3px var(--accent-red); 
+  border:none;
 }
+
+/* This rule makes the input field blend seamlessly into its container */
+.tagContent ul input {
+  flex: 1;
+  box-shadow: 0 0 0 2px var(--shadow-color);  /* No shadow by default */
+
+}
+
+/* This rule applies the red outline ONLY to the input on focus */
+.tagContent ul input:focus {
+  /* Create the outline using box-shadow. A 2px shadow is a good starting point. */
+  box-shadow: 0 0 0 2px var(--accent-red);
+  /* Optional: Add a slight border-radius to the shadow itself for a softer look */
+  border-radius: 3px;
+}
+/*
+.tagInput:focus{
+    outline:none
+}
+
+.tagContent ul:focus-within {
+  border-color: var(--accent-red);
+  outline:none;
+  box-shadow: 0 0 0 3px var(--accent-red); 
+
+.tagContent ul .tagInput:focus {
+    box-shadow: none;
+    border: none;     
+*/
+.was-validated input:invalid,
+.was-validated textarea:invalid {
+  border-color: var(--accent-red) !important;
+  box-shadow: 0 0 0 2px var(--accent-red) !important;
+}
+
 
 .warning{
     color: #a83232; 
@@ -175,6 +213,7 @@ i{
     padding: 8px; /* Add padding around tags */
     margin: 12px 0;
     border-radius: 6px; 
+    list-style:none;
     border: 1px solid var(--border-light); 
     background-color: var(--white); 
   }

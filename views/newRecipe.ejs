@@ -37,13 +37,13 @@
          <!--All inputs have regex to insure correct patterns, submit button triggers javascript below to test for 
             patternValidity and empty inputs for entire page before submitting-->
         
-        <form class="col" id='submitRecipe' action='/newRecipe' method='post' enctype="multipart/form-data">
+        <form class="col" id='submitRecipe' action='/newRecipe' method='post' novalidate enctype="multipart/form-data">
             <% if (recipeExists === true) {%><div class="warning">A recipe with that title already exists. Please try a new one.</div><%}%>
             <h1>New Recipe</h1>
 
             <div class="title col form-group">
                 <h2>Title</h2>
-                <input type='text' name='title' required pattern="[^{}<>]{2,50}"></input>
+                <input type='text' autocomplete="off" name='title' required pattern="[^{}<>]{2,50}"></input>
             </div>
             <div class="favourite col form-group"> <!-- Added form-group class -->
                 <h2>Favourite</h2>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="tagContent">
                   <p>Press enter after each category or select from popular categories below</p>
-                  <ul><input type="text" spellcheck="false"></ul>
+                  <ul><input type="text" class="tagInput" spellcheck="false"></ul>
                   <div class="presetWrapper">
                     <p class="presetTag">Main</p>
                     <p class="presetTag">Side</p>
@@ -98,7 +98,7 @@
         <% if (isLink){%>
             <div class="Link form-group">
                 <h2>Recipe Link</h2>
-                <input type='text' name='link' required placeholder="https://example.com/recipe"></input>
+                <input type='text' name='link' autocomplete="off" required placeholder="https://example.com/recipe"></input>
             </div>     
         <%}%>
 
@@ -119,7 +119,7 @@
                 <div class="ingredientsNode form-group" id="ingredientDiv1">
                     <div class="input-row">
                         <h3>1</h3>
-                        <input name="ingredient1" type="text" required pattern="[^{}<>]{2,70}">
+                        <input name="ingredient1" type="text" autocomplete="off" required pattern="[^{}<>]{2,70}">
                         <button id="ingredientBtn1">X</button>
                     </div>
                     <div class="error-message" style="display: none;">Please enter an ingredient</div>
@@ -136,7 +136,7 @@
                 <div class="stepsNode form-group" id="stepDiv1">
                     <div class="input-row">
                         <h3>1</h3>
-                        <textarea name="step1" type="text" required pattern="[^{}<>]{2,70}"></textarea>
+                        <textarea name="step1" type="text"  autocomplete="off"required pattern="[^{}<>]{2,70}"></textarea>
                         <button id="stepBtn1" type="button">X</button>
                     </div>
                     <div class="error-message" style="display: none;">Please enter a step</div>
@@ -167,7 +167,7 @@
         createTag();
 
         function countTags(){
-            tagInput.focus();
+           // tagInput.focus();
         }
 
         function createTag(){
@@ -336,6 +336,7 @@
                     div.classList.add("stepsNode", "row");
                     textInput.name = `step${stepNumber}`;
                     textInput.pattern = "[^{}<>]{2,300}";
+                    textInput.setAttribute("autocomplete", "off")
                     deleteButton.id = `stepBtn${stepNumber}`;
                     errorDiv.textContent = "Please enter a step";
 
@@ -355,6 +356,7 @@
                     div.id = `ingredientDiv${ingredientNumber}`;
                     textInput.name = `ingredient${ingredientNumber}`;
                     textInput.pattern = "[^{}<>]{2,70}";
+                    textInput.setAttribute("autocomplete", "off")
                     deleteButton.id = `ingredientBtn${ingredientNumber}`;
                     errorDiv.textContent = "Please enter an ingredient";
                     ingredientsArea.append(div);
