@@ -348,6 +348,15 @@ both classes.
 }
 
    /*------------Modern Sort Dropdown Styling-----------------*/
+
+    .sortOptions{
+        padding-bottom:2rem;
+        flex-wrap:wrap;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        gap:1rem;
+    }
     .sort-dropdown {
         position: relative;
         display: inline-block;
@@ -513,6 +522,172 @@ both classes.
     .sort-dropdown-menu li + li {
         border-top: 1px solid rgba(209, 209, 209, 0.3);
     }
+
+    /*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
+    .view-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .view-dropdown-toggle {
+        background: var(--white); 
+        border: 1px solid var(--border-light); 
+        padding: 0.75rem 1rem; 
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        color: var(--text); 
+        cursor: pointer; 
+        display: flex; 
+        align-items: center;
+        gap: 0.75rem;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        min-width: 160px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .view-dropdown-toggle:hover {
+        border-color: var(--accent-red);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .view-dropdown-toggle:active {
+        transform: translateY(0);
+    }
+
+    .view-label {
+        color: var(--text-light);
+        font-weight: 400;
+    }
+
+    .view-current {
+        color: var(--accent-red);
+        font-weight: 600;
+        flex-grow: 1;
+    }
+    
+    .view-dropdown-arrow {
+        font-size: 0.8em; 
+        line-height: 1; 
+        color: var(--text-light);
+        transition: transform 0.2s ease, color 0.2s ease;
+        margin-left: auto;
+    }
+
+    .view-dropdown-toggle:hover .view-dropdown-arrow {
+        color: var(--accent-red);
+    }
+
+    .view-dropdown.active .view-dropdown-arrow {
+        transform: rotate(180deg);
+        color: var(--accent-red);
+    }
+    
+    .view-dropdown-menu {
+        display: none; 
+        position: absolute; 
+        left: 0;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background-color: var(--white); 
+        border: 1px solid var(--border-light);
+        border-radius: 12px; 
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        z-index: 1000;
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        overflow: hidden;
+    }
+    
+    .view-dropdown-menu.active { 
+        display: block; 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    .view-dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 1.5rem;
+        width: 12px;
+        height: 12px;
+        background-color: var(--white);
+        border: 1px solid var(--border-light);
+        border-bottom: none;
+        border-right: none;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+    
+    .view-dropdown-menu li {
+        margin: 0;
+        padding: 0 !important;
+        list-style: none;
+    }
+
+    .view-dropdown-menu li a {
+        display: block; 
+        padding: 0.75rem 1.25rem; 
+        color: var(--text);
+        text-decoration: none; 
+        white-space: nowrap;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        border-radius: 0;
+        position: relative;
+    }
+
+    .view-dropdown-menu li:first-child a {
+        border-radius: 12px 12px 0 0;
+    }
+
+    .view-dropdown-menu li:last-child a {
+        border-radius: 0 0 12px 12px;
+    }
+
+    .view-dropdown-menu li:only-child a {
+        border-radius: 12px;
+    }
+    
+    .view-dropdown-menu li a:hover { 
+        background-color: var(--primary);
+        color: var(--accent-red);
+        padding-left: 1.5rem;
+    }
+
+    .view-dropdown-menu li a.active {
+        background-color: rgba(245, 49, 0, 0.08);
+        color: var(--accent-red);
+        padding-left: 1rem;
+    }
+
+    .view-dropdown-menu li a.active:hover {
+        background-color: rgba(245, 49, 0, 0.12);
+        color: var(--accent-red);
+        padding-left: 1.25rem;
+    }
+
+    .view-dropdown-menu li a.active::after {
+        content: '✓';
+        position: absolute;
+        right: 1rem;
+        color: var(--accent-red);
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+
+    .view-dropdown-menu li + li {
+        border-top: 1px solid rgba(209, 209, 209, 0.3);
+    }
   
 
 
@@ -521,6 +696,344 @@ both classes.
 /*---------------------------------------------------*/
 /*--------Desktop/Large Tablet styling (>700px)---------*/
 /*---------------------------------------------------*/
+
+/*------------Modern Sort Dropdown Styling-----------------*/
+.sort-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.sort-dropdown-toggle {
+    background: var(--white); 
+    border: 1px solid var(--border-light); 
+    padding: 0.5rem .75rem; 
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text); 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    min-width: 160px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sort-dropdown-toggle:hover {
+    border-color: var(--accent-red);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.sort-dropdown-toggle:active {
+    transform: translateY(0);
+}
+
+.sort-label {
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.sort-current {
+    color: var(--accent-red);
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.sort-dropdown-arrow {
+    font-size: 0.8em; 
+    line-height: 1; 
+    color: var(--text-light);
+    transition: transform 0.2s ease, color 0.2s ease;
+    margin-left: auto;
+}
+
+.sort-dropdown-toggle:hover .sort-dropdown-arrow {
+    color: var(--accent-red);
+}
+
+.sort-dropdown.active .sort-dropdown-arrow {
+    transform: rotate(180deg);
+    color: var(--accent-red);
+}
+
+.sort-dropdown-menu {
+    display: none; 
+    position: absolute; 
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background-color: var(--white); 
+    border: 1px solid var(--border-light);
+    border-radius: 12px; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.sort-dropdown-menu.active { 
+    display: block; 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.sort-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 1.5rem;
+    width: 12px;
+    height: 12px;
+    background-color: var(--white);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.sort-dropdown-menu li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sort-dropdown-menu li a {
+    display: block; 
+    padding: 0.75rem 1.25rem; 
+    color: var(--text);
+    text-decoration: none; 
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    border-radius: 0;
+    position: relative;
+}
+
+.sort-dropdown-menu li:first-child a {
+    border-radius: 12px 12px 0 0;
+}
+
+.sort-dropdown-menu li:last-child a {
+    border-radius: 0 0 12px 12px;
+}
+
+.sort-dropdown-menu li:only-child a {
+    border-radius: 12px;
+}
+
+.sort-dropdown-menu li a:hover { 
+    background-color: var(--primary);
+    color: var(--accent-red);
+    padding-left: 1.5rem;
+}
+
+.sort-dropdown-menu li a.active {
+    background-color: rgba(245, 49, 0, 0.08);
+    color: var(--accent-red);
+    font-weight: 600;
+    padding-left: 1rem;
+}
+
+.sort-dropdown-menu li a.active:hover {
+    background-color: rgba(245, 49, 0, 0.12);
+    color: var(--accent-red);
+    padding-left: 1.25rem;
+}
+
+.sort-dropdown-menu li a.active::after {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    color: var(--accent-red);
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.sort-dropdown-menu li + li {
+    border-top: 1px solid rgba(209, 209, 209, 0.3);
+}
+
+/*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
+.view-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.view-dropdown-toggle {
+    background: var(--white); 
+    border: 1px solid var(--border-light); 
+    padding: 0.5rem .75rem; 
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text); 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    min-width: 160px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.view-dropdown-toggle:hover {
+    border-color: var(--accent-red);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.view-dropdown-toggle:active {
+    transform: translateY(0);
+}
+
+.view-label {
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.view-current {
+    color: var(--accent-red);
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.view-dropdown-arrow {
+    font-size: 0.8em; 
+    line-height: 1; 
+    color: var(--text-light);
+    transition: transform 0.2s ease, color 0.2s ease;
+    margin-left: auto;
+}
+
+.view-dropdown-toggle:hover .view-dropdown-arrow {
+    color: var(--accent-red);
+}
+
+.view-dropdown.active .view-dropdown-arrow {
+    transform: rotate(180deg);
+    color: var(--accent-red);
+}
+
+.view-dropdown-menu {
+    display: none; 
+    position: absolute; 
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background-color: var(--white); 
+    border: 1px solid var(--border-light);
+    border-radius: 12px; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.view-dropdown-menu.active { 
+    display: block; 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.view-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 1.5rem;
+    width: 12px;
+    height: 12px;
+    background-color: var(--white);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.view-dropdown-menu li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.view-dropdown-menu li a {
+    display: block; 
+    padding: 0.75rem 1.25rem; 
+    color: var(--text);
+    text-decoration: none; 
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    border-radius: 0;
+    position: relative;
+}
+
+.view-dropdown-menu li:first-child a {
+    border-radius: 12px 12px 0 0;
+}
+
+.view-dropdown-menu li:last-child a {
+    border-radius: 0 0 12px 12px;
+}
+
+.view-dropdown-menu li:only-child a {
+    border-radius: 12px;
+}
+
+.view-dropdown-menu li a:hover { 
+    background-color: var(--primary);
+    color: var(--accent-red);
+    padding-left: 1.5rem;
+}
+
+.view-dropdown-menu li a.active {
+    background-color: rgba(245, 49, 0, 0.08);
+    color: var(--accent-red);
+    font-weight: 600;
+    padding-left: 1rem;
+}
+
+.view-dropdown-menu li a.active:hover {
+    background-color: rgba(245, 49, 0, 0.12);
+    color: var(--accent-red);
+    padding-left: 1.25rem;
+}
+
+.view-dropdown-menu li a.active::after {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    color: var(--accent-red);
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.view-dropdown-menu li + li {
+    border-top: 1px solid rgba(209, 209, 209, 0.3);
+}
 
   @media only screen and (min-width: 700px) {
 

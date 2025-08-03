@@ -61,27 +61,31 @@
         </h1>
 
         <div class="sortOptions">
-            <div class="toggle row">
-                <button aria-label="Toggle thumbnails view" id="toggleStylesheet">
-                    <img src="/imgs/thumb3.svg" height="20px" width="20px" alt="Thumbnail view icon">
-                    <img src="/imgs/slash.svg" height="20px" width="20px" alt="Slash icon">
-                    <img src="/imgs/list.svg" height="20px" width="20px" alt="List view icon">
+            <div class="view-dropdown">
+                <button type="button" class="view-dropdown-toggle">
+                    <span class="view-label">View:</span>
+                    <span class="view-current" id="viewCurrent">Thumbnails</span>
+                    <span class="view-dropdown-arrow">&#9662;</span>
                 </button>
+                <ul class="view-dropdown-menu">
+                    <li><a href="#" data-value="thumbs" class="active">Thumbnails</a></li>
+                    <li><a href="#" data-value="list">Compact</a></li>
+                </ul>
             </div>
-            <form action="/recipeList" method="GET" id="sortForm">
+            <div class="sort-dropdown">
+                <button type="button" class="sort-dropdown-toggle">
+                    <span class="sort-label">Sort by:</span>
+                    <span class="sort-current"><%= sort === 'title' ? 'Title' : 'Date' %></span>
+                    <span class="sort-dropdown-arrow">&#9662;</span>
+                </button>
+                <ul class="sort-dropdown-menu">
+                    <li><a href="#" data-value="title" class="<%= sort === 'title' ? 'active' : '' %>">Title</a></li>
+                    <li><a href="#" data-value="date" class="<%= sort === 'date' ? 'active' : '' %>">Date</a></li>
+                </ul>
+            </div>
+            <form action="/recipeList" method="GET" id="sortForm" style="display: none;">
                 <input type="hidden" name="page" value="<%= currentPage %>">
                 <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">
-                <div class="sort-dropdown">
-                    <button type="button" class="sort-dropdown-toggle">
-                        <span class="sort-label">Sort by:</span>
-                        <span class="sort-current"><%= sort === 'title' ? 'Title' : 'Date' %></span>
-                        <span class="sort-dropdown-arrow">&#9662;</span>
-                    </button>
-                    <ul class="sort-dropdown-menu">
-                        <li><a href="#" data-value="title" class="<%= sort === 'title' ? 'active' : '' %>">Title</a></li>
-                        <li><a href="#" data-value="date" class="<%= sort === 'date' ? 'active' : '' %>">Date</a></li>
-                    </ul>
-                </div>
             </form>
         </div>
 
@@ -188,7 +192,6 @@
         console.log("DOM ready - Simplified Script");
 
         // --- Selectors for Buttons ---
-        const toggleButton = document.getElementById('toggleStylesheet');
         const dynamicStylesheet = document.getElementById('dynamicStylesheet');
         const storageKey = 'recipeViewStyle';
         const deleteBtns = document.querySelectorAll(".deleteBtn");
@@ -203,6 +206,12 @@
         const sortForm = document.getElementById('sortForm');
         const sortValue = document.getElementById('sortValue');
         const sortCurrent = document.querySelector('.sort-current');
+
+        // --- View Dropdown Elements ---
+        const viewDropdown = document.querySelector('.view-dropdown');
+        const viewDropdownToggle = document.querySelector('.view-dropdown-toggle');
+        const viewDropdownMenu = document.querySelector('.view-dropdown-menu');
+        const viewCurrent = document.getElementById('viewCurrent');
 
         // --- Stylesheet Toggle Logic ---
         function applyAndSaveStyle(style) {
@@ -223,30 +232,32 @@
             console.log(`Applied style: ${style}. Image display set to: ${isThumbs ? 'block' : 'none'}`);
         }
 
-        function toggleStyles() {
-            const currentStyle = localStorage.getItem(storageKey) || 'thumbs';
-            const newStyle = currentStyle === 'thumbs' ? 'list' : 'thumbs';
-            console.log(`Toggling style from ${currentStyle} to ${newStyle}`);
-            applyAndSaveStyle(newStyle);
-        }
-
-        // Apply initial style on load (needed for the toggle)
+        // Apply initial style on load and update view dropdown
         const initialStyle = localStorage.getItem(storageKey) || 'thumbs';
-        // Check if applyAndSaveStyle needs to be called before applying display
-        // Or just apply the display part directly based on initialStyle
-         const initialIsThumbs = initialStyle === 'thumbs';
-         document.querySelectorAll(".recipeImg").forEach(img => {
-             img.style.display = initialIsThumbs ? 'block' : 'none';
-         });
-        console.log(`Initial style set based on localStorage: ${initialStyle}`);
-
-
-        // Add listener to the toggle button
-        if (toggleButton) {
-            toggleButton.addEventListener('click', toggleStyles);
-        } else {
-             console.error("Toggle stylesheet button not found!");
+        const initialIsThumbs = initialStyle === 'thumbs';
+        document.querySelectorAll(".recipeImg").forEach(img => {
+            img.style.display = initialIsThumbs ? 'block' : 'none';
+        });
+        
+        // Update view dropdown to show current selection
+        if (viewCurrent) {
+            viewCurrent.textContent = initialIsThumbs ? 'Thumbnails' : 'Compact';
         }
+        
+        // Update active states in view dropdown
+        const viewOptions = viewDropdownMenu?.querySelectorAll('a[data-value]');
+        if (viewOptions) {
+            viewOptions.forEach(option => {
+                const optionValue = option.getAttribute('data-value');
+                if (optionValue === initialStyle) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+        
+        console.log(`Initial style set based on localStorage: ${initialStyle}`);
 
         // --- Sort Dropdown Logic ---
         if (sortDropdownToggle && sortDropdownMenu && sortDropdown) {
@@ -283,22 +294,67 @@
                 });
             });
 
-            // Close dropdown if clicking outside
-            document.addEventListener('click', (event) => {
-                if (!sortDropdown.contains(event.target)) {
-                    sortDropdownMenu.classList.remove('active');
-                    sortDropdown.classList.remove('active');
-                }
+        }
+
+        // --- View Dropdown Logic ---
+        if (viewDropdownToggle && viewDropdownMenu && viewDropdown) {
+            viewDropdownToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                viewDropdownMenu.classList.toggle('active');
+                viewDropdown.classList.toggle('active');
             });
 
-            // Close dropdown on Escape key
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
+            // Handle view option selection
+            const viewOptions = viewDropdownMenu.querySelectorAll('a[data-value]');
+            viewOptions.forEach(option => {
+                option.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const selectedValue = option.getAttribute('data-value');
+                    const selectedText = option.textContent;
+                    
+                    // Apply the new style
+                    applyAndSaveStyle(selectedValue);
+                    
+                    // Update the displayed current view
+                    viewCurrent.textContent = selectedText;
+                    
+                    // Update active states
+                    viewOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Close dropdown
+                    viewDropdownMenu.classList.remove('active');
+                    viewDropdown.classList.remove('active');
+                });
+            });
+        }
+
+        // --- Global Dropdown Event Handlers (for both dropdowns) ---
+        // Close dropdowns if clicking outside
+        document.addEventListener('click', (event) => {
+            if (sortDropdown && !sortDropdown.contains(event.target)) {
+                sortDropdownMenu?.classList.remove('active');
+                sortDropdown.classList.remove('active');
+            }
+            if (viewDropdown && !viewDropdown.contains(event.target)) {
+                viewDropdownMenu?.classList.remove('active');
+                viewDropdown.classList.remove('active');
+            }
+        });
+
+        // Close dropdowns on Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (sortDropdownMenu && sortDropdown) {
                     sortDropdownMenu.classList.remove('active');
                     sortDropdown.classList.remove('active');
                 }
-            });
-        }
+                if (viewDropdownMenu && viewDropdown) {
+                    viewDropdownMenu.classList.remove('active');
+                    viewDropdown.classList.remove('active');
+                }
+            }
+        });
 
         // --- Button Handlers (Delete, Favourite, Shopping List) ---
 
