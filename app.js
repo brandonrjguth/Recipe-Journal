@@ -2152,6 +2152,20 @@ async function run() {
         const limit = parseInt(req.query.limit) || 12;
         const skip = (page - 1) * limit;
 
+        let sort = "title"
+
+        if (req.query.sort){
+          sort = req.query.sort;
+        }
+        // Dynamically set the sort order
+        let sortOrder;
+        if (sort === 'date') {
+          sortOrder = { "_id": -1 }; // Sort by newest created
+        } else {
+          sortOrder = { "title": 1 }; // Default sort by title
+        }
+
+
         // Base query for user's recipes matching the search term
         const query = {
           userId: userId,
@@ -2165,7 +2179,7 @@ async function run() {
         // Get paginated search results
         let recipeList = await recipes.find(query)
                                       .collation({ locale: "en" })
-                                      .sort({ "title": 1 })
+                                      .sort(sortOrder)
                                       .skip(skip)
                                       .limit(limit)
                                       .toArray();
@@ -2196,6 +2210,7 @@ async function run() {
           currentPage: page,
           totalPages: totalPages,
           limit: limit,
+          sort:sort,
           currentPath: '/search', // Use '/search' as the base path for pagination links
           searchTerm: searchTerm // Pass search term for pagination links
         });
@@ -2220,6 +2235,21 @@ async function run() {
         const limit = parseInt(req.query.limit) || 12; // Allow limit override if needed, but usually default
         const skip = (page - 1) * limit; // skip will be 0
 
+        
+        let sort = "title"
+
+        if (req.query.sort){
+          sort = req.query.sort;
+        }
+        // Dynamically set the sort order
+        let sortOrder;
+        if (sort === 'date') {
+          sortOrder = { "_id": -1 }; // Sort by newest created
+        } else {
+          sortOrder = { "title": 1 }; // Default sort by title
+        }
+
+
         // Base query for user's recipes matching the search term
         const query = {
           userId: userId,
@@ -2233,7 +2263,7 @@ async function run() {
         // Get paginated search results
         let recipeList = await recipes.find(query)
                                       .collation({ locale: "en" }) // Keep collation for sorting consistency
-                                      .sort({ "title": 1 })
+                                      .sort(sortOrder)
                                       .skip(skip)
                                       .limit(limit)
                                       .toArray();
@@ -2264,6 +2294,7 @@ async function run() {
           currentPage: page,
           totalPages: totalPages,
           limit: limit,
+          sort:sort,
           currentPath: '/search', // Use '/search' as the base path for pagination links
           searchTerm: searchTerm // Pass search term for pagination links
         });
