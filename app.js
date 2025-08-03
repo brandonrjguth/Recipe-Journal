@@ -880,6 +880,11 @@ async function run() {
 
     // Display login page
     app.get('/login', (req, res) => {
+      // If user is already authenticated, redirect to recipe list
+      if (req.isAuthenticated()) {
+        return res.redirect('/recipeList');
+      }
+      
       // Pass any flash messages if they exist (e.g., from failed login attempts)
       // Note: req.flash requires connect-flash middleware, which we haven't installed.
       // For simplicity, we just render the view without flash messages for now.
@@ -888,6 +893,11 @@ async function run() {
 
     // Display registration page
     app.get('/register', (req, res) => {
+      // If user is already authenticated, redirect to recipe list
+      if (req.isAuthenticated()) {
+        return res.redirect('/recipeList');
+      }
+      
       res.render('register', { error: null, currentPage:false, currentPath: req.path}); // Pass null initially
     });
 
