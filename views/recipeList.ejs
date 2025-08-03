@@ -70,11 +70,18 @@
             </div>
             <form action="/recipeList" method="GET" id="sortForm">
                 <input type="hidden" name="page" value="<%= currentPage %>">
-                <label for="sort">Sort by:</label>
-                <select name="sort" id="sort" onchange="this.form.submit()">
-                    <option value="title" <%= sort === 'title' ? 'selected' : '' %>>Title</option>
-                    <option value="date" <%= sort === 'date' ? 'selected' : '' %>>Date</option>
-                </select>
+                <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">
+                <div class="sort-dropdown">
+                    <button type="button" class="sort-dropdown-toggle">
+                        <span class="sort-label">Sort by:</span>
+                        <span class="sort-current"><%= sort === 'title' ? 'Title' : 'Date' %></span>
+                        <span class="sort-dropdown-arrow">&#9662;</span>
+                    </button>
+                    <ul class="sort-dropdown-menu">
+                        <li><a href="#" data-value="title" class="<%= sort === 'title' ? 'active' : '' %>">Title</a></li>
+                        <li><a href="#" data-value="date" class="<%= sort === 'date' ? 'active' : '' %>">Date</a></li>
+                    </ul>
+                </div>
             </form>
         </div>
 
@@ -188,6 +195,14 @@
         const deleteForm = document.querySelectorAll(".deleteRecipe");
         const favouriteForms = document.querySelectorAll(".favouriteRecipe");
         const shoppingForms = document.querySelectorAll(".shoppingList");
+        
+        // --- Sort Dropdown Elements ---
+        const sortDropdown = document.querySelector('.sort-dropdown');
+        const sortDropdownToggle = document.querySelector('.sort-dropdown-toggle');
+        const sortDropdownMenu = document.querySelector('.sort-dropdown-menu');
+        const sortForm = document.getElementById('sortForm');
+        const sortValue = document.getElementById('sortValue');
+        const sortCurrent = document.querySelector('.sort-current');
 
         // --- Stylesheet Toggle Logic ---
         function applyAndSaveStyle(style) {
@@ -231,6 +246,58 @@
             toggleButton.addEventListener('click', toggleStyles);
         } else {
              console.error("Toggle stylesheet button not found!");
+        }
+
+        // --- Sort Dropdown Logic ---
+        if (sortDropdownToggle && sortDropdownMenu && sortDropdown) {
+            sortDropdownToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                sortDropdownMenu.classList.toggle('active');
+                sortDropdown.classList.toggle('active');
+            });
+
+            // Handle sort option selection
+            const sortOptions = sortDropdownMenu.querySelectorAll('a[data-value]');
+            sortOptions.forEach(option => {
+                option.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const selectedValue = option.getAttribute('data-value');
+                    const selectedText = option.textContent;
+                    
+                    // Update the hidden input value
+                    sortValue.value = selectedValue;
+                    
+                    // Update the displayed current sort
+                    sortCurrent.textContent = selectedText;
+                    
+                    // Update active states
+                    sortOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Close dropdown
+                    sortDropdownMenu.classList.remove('active');
+                    sortDropdown.classList.remove('active');
+                    
+                    // Submit the form
+                    sortForm.submit();
+                });
+            });
+
+            // Close dropdown if clicking outside
+            document.addEventListener('click', (event) => {
+                if (!sortDropdown.contains(event.target)) {
+                    sortDropdownMenu.classList.remove('active');
+                    sortDropdown.classList.remove('active');
+                }
+            });
+
+            // Close dropdown on Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    sortDropdownMenu.classList.remove('active');
+                    sortDropdown.classList.remove('active');
+                }
+            });
         }
 
         // --- Button Handlers (Delete, Favourite, Shopping List) ---

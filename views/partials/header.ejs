@@ -118,19 +118,33 @@
     });
 
     // User Dropdown Toggle
+    const userDropdown = document.querySelector('.user-dropdown');
     const userDropdownToggle = document.querySelector('.user-dropdown-toggle');
     const userDropdownMenu = document.querySelector('.user-dropdown-menu');
 
-    if (userDropdownToggle && userDropdownMenu) {
+    if (userDropdownToggle && userDropdownMenu && userDropdown) {
         userDropdownToggle.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent click from closing menu immediately
+            const isActive = userDropdownMenu.classList.contains('active');
+            
+            // Toggle both the menu and the dropdown container for arrow animation
             userDropdownMenu.classList.toggle('active');
+            userDropdown.classList.toggle('active');
         });
 
         // Close dropdown if clicking outside
         document.addEventListener('click', (event) => {
-            if (!userDropdownToggle.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+            if (!userDropdown.contains(event.target)) {
                 userDropdownMenu.classList.remove('active');
+                userDropdown.classList.remove('active');
+            }
+        });
+
+        // Close dropdown on Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                userDropdownMenu.classList.remove('active');
+                userDropdown.classList.remove('active');
             }
         });
     }
