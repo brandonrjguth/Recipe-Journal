@@ -233,19 +233,19 @@ i{
   .tagContent ul li i{ /* Style for 'x' icon */
     height: 18px; 
     width: 18px;
-    color: var(--text); 
+    color: white; 
     margin-left: 8px;
     font-size: 11px; 
     cursor: pointer;
     border-radius: 50%;
-    background: var(--primary); 
+    background: #888888; /* Grey background */
     display: flex; /* Ensure centering */
     align-items: center; /* Center icon */
     justify-content: center;
     transition: background-color 0.2s ease;
   }
    .tagContent ul li i:hover {
-       background-color: var(--primary); /* Use primary on hover */
+       background-color: #666666; /* Darker grey on hover */
    }
 
   .tagContent ul input{ /* Input field within the tag area */
@@ -259,10 +259,21 @@ i{
     border-radius: 6px;
   }
 
+  /* Hide the browser's default search input clear button */
+  .tagContent ul input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .tagContent ul input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
   .tagAddBtn{ /* + button next to tag input */
-    background: #4a5568; /* Dark gray that's visible but not jarring */
+    background: var(--accent-red); /* Use the theme's accent color */
     color: white;
-    border: 1px solid #2d3748; /* Darker border for definition */
+    border: 1px solid var(--accent-red); /* Match border to background */
     border-radius: 4px; /* Slightly rounded corners */
     width: 28px;
     height: 28px;
@@ -276,14 +287,14 @@ i{
     position: absolute; /* Position absolutely within the ul container */
     top: 50%; /* Center vertically */
     transform: translateY(-50%); /* Perfect vertical centering */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slightly more visible shadow */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow */
     z-index: 10; /* Ensure button appears above input */
     left: 16px; /* Default position, will be updated by JavaScript */
   }
 
   .tagAddBtn:hover {
-    background: #2d3748; /* Darker gray on hover */
-    border-color: #1a202c;
+    background: #d42700; /* Darker red on hover (same as delete modal) */
+    border-color: #d42700;
   }
 
   .tagAddBtn:active {
