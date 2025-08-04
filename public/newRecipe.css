@@ -215,7 +215,8 @@ i{
     border-radius: 6px; 
     list-style:none;
     border: 1px solid var(--border-light); 
-    background-color: var(--white); 
+    background-color: var(--white);
+    position: relative; /* For positioning the button */
   }
 
   .tagContent ul li{ /* Style for individual tags */
@@ -250,12 +251,43 @@ i{
   .tagContent ul input{ /* Input field within the tag area */
     flex: 1; /* Allow input to grow */
     min-width: 150px; 
-    padding: 8px; 
+    padding: 8px; /* Remove right padding */
     border: none; /* Remove border */
     outline: none;
     font-size: 0.95rem; 
     font-family: 'Poppins', sans-serif;
     border-radius: 6px;
+  }
+
+  .tagAddBtn{ /* + button next to tag input */
+    background: #4a5568; /* Dark gray that's visible but not jarring */
+    color: white;
+    border: 1px solid #2d3748; /* Darker border for definition */
+    border-radius: 4px; /* Slightly rounded corners */
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none; /* Hidden by default, shown by JavaScript */
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease; /* Simple transition */
+    position: absolute; /* Position absolutely within the ul container */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Perfect vertical centering */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slightly more visible shadow */
+    z-index: 10; /* Ensure button appears above input */
+    left: 16px; /* Default position, will be updated by JavaScript */
+  }
+
+  .tagAddBtn:hover {
+    background: #2d3748; /* Darker gray on hover */
+    border-color: #1a202c;
+  }
+
+  .tagAddBtn:active {
+    transform: translateY(-50%) scale(0.95); /* Keep vertical centering while scaling */
   }
 
 

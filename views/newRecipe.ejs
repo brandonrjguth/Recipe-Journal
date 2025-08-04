@@ -59,7 +59,10 @@
                 </div>
                 <div class="tagContent">
                   <p>Press enter after each category or select from popular categories below</p>
-                  <ul><input type="search" class="tagInput" spellcheck="false"></ul>
+                  <ul>
+                    <input type="search" class="tagInput" spellcheck="false">
+                    <button type="button" class="tagAddBtn" title="Add tag">+</button>
+                  </ul>
                   <div class="presetWrapper">
                     <p class="presetTag">Main</p>
                     <p class="presetTag">Side</p>
@@ -156,6 +159,7 @@
         //--------------------------TAG SECTION LOGIC ----------------------//
         const tagUl = document.querySelector(".tagContent ul"),
         tagInput = document.querySelector(".tagContent ul input"),
+        tagAddBtn = document.querySelector(".tagAddBtn"),
         tagNumb = document.querySelector(".tagDetails span"),
         tagPreset = document.querySelectorAll(".presetTag");
 
@@ -202,6 +206,55 @@
         }
 
         tagInput.addEventListener("keyup", addTag);
+        
+        // Function to position the + button next to the text
+        function positionAddButton() {
+            const inputValue = tagInput.value;
+            if (inputValue.trim().length > 0) {
+                // Create a temporary span to measure text width
+                const tempSpan = document.createElement('span');
+                tempSpan.style.visibility = 'hidden';
+                tempSpan.style.position = 'absolute';
+                tempSpan.style.fontSize = '0.95rem';
+                tempSpan.style.fontFamily = 'Poppins, sans-serif';
+                tempSpan.style.padding = '8px';
+                tempSpan.textContent = inputValue;
+                document.body.appendChild(tempSpan);
+                
+                const textWidth = tempSpan.offsetWidth;
+                document.body.removeChild(tempSpan);
+                
+                // Position button right after the text with some padding
+                const inputRect = tagInput.getBoundingClientRect();
+                const containerRect = tagUl.getBoundingClientRect();
+                const relativeLeft = (inputRect.left - containerRect.left) + textWidth + 8;
+                
+                tagAddBtn.style.left = relativeLeft + 'px';
+                tagAddBtn.style.display = 'flex';
+            } else {
+                tagAddBtn.style.display = 'none';
+            }
+        }
+
+        // Add event listener for input changes to reposition button
+        tagInput.addEventListener('input', positionAddButton);
+        tagInput.addEventListener('keyup', positionAddButton);
+
+        // Add event listener for the + button
+        tagAddBtn.addEventListener("click", function(){
+            let tag = tagInput.value.replace(/\s+/g, ' ').trim();
+            if(tag.length > 1 && !tags.includes(tag)){
+                if(tags.length < 10){
+                    tag.split(',').forEach(tag => {
+                        tags.push(tag);
+                        createTag();
+                    });
+                }
+            }
+            tagInput.value = "";
+            positionAddButton(); // Update button position after clearing input
+        });
+        
         tagPreset.forEach((tag) => {
             tag.addEventListener("click", function(){
 
