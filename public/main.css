@@ -448,7 +448,7 @@ ul.mainMenu, ul.user-bar {
 .sort-dropdown-toggle {
     background: var(--white); 
     border: 1px solid var(--border-light); 
-    padding: 0.75rem 1rem; 
+    padding: 0.5rem .75rem; 
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -456,11 +456,11 @@ ul.mainMenu, ul.user-bar {
     cursor: pointer; 
     display: flex; 
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     border-radius: 12px;
     transition: all 0.2s ease;
     font-weight: 500;
-    min-width: 160px;
+    min-width: 110px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -611,7 +611,7 @@ ul.mainMenu, ul.user-bar {
 .view-dropdown-toggle {
     background: var(--white); 
     border: 1px solid var(--border-light); 
-    padding: 0.75rem 1rem; 
+    padding: 0.5rem 0.75rem; 
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -619,11 +619,11 @@ ul.mainMenu, ul.user-bar {
     cursor: pointer; 
     display: flex; 
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     border-radius: 12px;
     transition: all 0.2s ease;
     font-weight: 500;
-    min-width: 160px;
+    min-width: 110px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
