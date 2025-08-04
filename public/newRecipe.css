@@ -468,6 +468,12 @@ i{
 
 
 
+/* Hide delete buttons on first ingredient and step items */
+#ingredientDiv1 button[id^="ingredientBtn"],
+#stepDiv1 button[id^="stepBtn"] {
+    display: none !important;
+}
+
 @media only screen and (min-width: 600px) {
 
     

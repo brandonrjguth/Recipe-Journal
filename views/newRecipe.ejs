@@ -271,27 +271,35 @@
             //Assign function to assign delete buttons for steps or ingredients
             let initDeleteButtons = (recipeReq) => {
                 if (recipeReq === "steps"){
-                    for (i = 1; i < steps.length + 1; i++){
+                    // Start from i = 2 to skip the first step (which should not be deletable)
+                    for (i = 2; i < steps.length + 1; i++){
                     let thisStepsNode = document.querySelector(`#stepDiv${i}`)
                     let thisNodeDeleteBtn = document.querySelector(`#stepBtn${i}`)
                     
                     /*When a nodes delete button is clicked, remove the node, recount the nodes,
                     reset the steps headers, and id's in order again accordingly*/
                     thisNodeDeleteBtn.addEventListener("click", function(){
-                        thisStepsNode.remove();
-                        setNumber("steps");
-                        reset("steps"); 
+                        // Only allow deletion if there's more than one step
+                        if (steps.length > 1) {
+                            thisStepsNode.remove();
+                            setNumber("steps");
+                            reset("steps"); 
+                        }
                         })
                     }
                 }
                 else if (recipeReq === "ingredients"){
-                    for (i = 1; i < ingredients.length + 1; i++){
+                    // Start from i = 2 to skip the first ingredient (which should not be deletable)
+                    for (i = 2; i < ingredients.length + 1; i++){
                     let thisIngredientsNode = document.querySelector(`#ingredientDiv${i}`)
                     let thisNodeDeleteBtn = document.querySelector(`#ingredientBtn${i}`)
                     thisNodeDeleteBtn.addEventListener("click", function(){
-                        thisIngredientsNode.remove();
-                        setNumber("ingredients");
-                        reset("ingredients"); 
+                        // Only allow deletion if there's more than one ingredient
+                        if (ingredients.length > 1) {
+                            thisIngredientsNode.remove();
+                            setNumber("ingredients");
+                            reset("ingredients"); 
+                        }
                         })
                     }
                 } else {
