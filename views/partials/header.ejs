@@ -106,6 +106,17 @@
     searchButtonMobile.addEventListener("click", () => {
         searchBarMobile.classList.toggle("hidden"); // Use toggle instead of remove
         mobileMenu.classList.remove('active'); // Toggle the 'active' class
+        
+        // Focus the search input when the search bar is revealed
+        if (!searchBarMobile.classList.contains("hidden")) {
+            const searchInput = searchBarMobile.querySelector('input[name="search"]');
+            if (searchInput) {
+                // Use setTimeout to ensure the element is visible before focusing
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 100);
+            }
+        }
     });
 
     // Hamburger Menu Toggle
