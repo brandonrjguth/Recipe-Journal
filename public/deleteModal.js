@@ -53,9 +53,9 @@ class DeleteModal {
         });
         
         // Confirm deletion
-        confirmBtn.addEventListener('click', () => {
+        confirmBtn.addEventListener('click', async () => {
             if (this.currentForm) {
-                this.currentForm.submit();
+                await this.handleDelete();
             }
             this.hide();
         });
@@ -73,6 +73,66 @@ class DeleteModal {
     hide() {
         this.modal.classList.remove('show');
         this.currentForm = null;
+    }
+
+    async handleDelete() {
+        // Check if we're on the recipe detail page - if so, use form submission (redirect)
+        if (window.location.pathname.includes('/recipe/') && !window.location.pathname.includes('/recipeList')) {
+            this.currentForm.submit();
+            return;
+        }
+
+        try {
+            // Get form data
+            const formData = new FormData(this.currentForm);
+            const action = this.currentForm.action;
+            
+            // Send AJAX request
+            const response = await fetch(action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(formData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Find and remove the recipe element from DOM
+                this.removeRecipeFromDOM();
+            } else {
+                console.error('Delete failed:', result.message);
+                // Fallback to form submission for error handling
+                this.currentForm.submit();
+            }
+        } catch (error) {
+            console.error('Error during delete:', error);
+            // Fallback to form submission
+            this.currentForm.submit();
+        }
+    }
+
+    removeRecipeFromDOM() {
+        // Find the recipe container that contains this form
+        let recipeElement = this.currentForm.closest('.contentRoworCol');
+        if (!recipeElement) {
+            // Try alternative selectors if the class name is different
+            recipeElement = this.currentForm.closest('li');
+        }
+        
+        if (recipeElement) {
+            // Add fade out animation
+            recipeElement.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+            recipeElement.style.opacity = '0';
+            recipeElement.style.transform = 'translateX(-20px)';
+            
+            // Remove element after animation
+            setTimeout(() => {
+                recipeElement.remove();
+            }, 300);
+        }
     }
 }
 

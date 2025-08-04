@@ -2117,12 +2117,18 @@ async function run() {
         const recipeToDelete = await recipes.findOne({ title: titleToDelete, userId:userId });
         if (!recipeToDelete) {
           console.log(`Delete failed: Recipe "${titleToDelete}" not found.`);
-          // Recipe doesn't exist, maybe already deleted. Redirect gracefully.
+          // Recipe doesn't exist, maybe already deleted
+          if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            return res.status(404).json({ success: false, message: 'Recipe not found' });
+          }
           return res.redirect("/recipeList");
         }
         if (!recipeToDelete.userId || recipeToDelete.userId.toString() !== userId.toString()) {
           console.log(`User ${userId} attempted to delete recipe owned by ${recipeToDelete.userId}`);
-          // Don't delete, just redirect
+          // Don't delete
+          if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            return res.status(403).json({ success: false, message: 'Unauthorized' });
+          }
           return res.redirect("/recipeList");
         }
 
@@ -2134,9 +2140,16 @@ async function run() {
         await userFavourites.deleteMany({ recipeId: recipeIdToDelete });
         await userShoppingList.deleteMany({ recipeId: recipeIdToDelete });
 
+        // Return JSON for AJAX requests, redirect for form submissions
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+          return res.json({ success: true, message: 'Recipe deleted successfully' });
+        }
         res.redirect("/recipeList");
       } catch (err) {
         console.error("Error deleting recipe:", err);
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+          return res.status(500).json({ success: false, message: 'Error deleting recipe' });
+        }
         res.status(500).send('Error deleting recipe');
       }
     });

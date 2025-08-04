@@ -8,3 +8,4 @@ node_modules/*
 /node_modules/mongodb
 /node_modules
 .aider*
+acli.exe
