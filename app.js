@@ -380,9 +380,12 @@ async function run() {
     app.get("/favourites", ensureAuthenticated, async (req, res) => { // Protected & User-Specific
       try {
 
-        let sort = "title"; // Default sort by title
-        if (req.query.sort){
-          sort = req.query.sort;
+        // Get user's preferred sort from session, default to "title"
+        let sort = req.query.sort || req.session.sortPreference || "title";
+        
+        // Update session with current sort preference if provided in query
+        if (req.query.sort) {
+          req.session.sortPreference = req.query.sort;
         }
 
         // Dynamically set the sort order
@@ -481,10 +484,13 @@ async function run() {
         const page = parseInt(req.query.page) || 1; // Get page from query, default to 1
         const limit = parseInt(req.query.limit) || 12; // Get limit from query, default to 12
         const skip = (page - 1) * limit;
-        let sort = "title"
-
-        if (req.query.sort){
-          sort = req.query.sort;
+        
+        // Get user's preferred sort from session, default to "title"
+        let sort = req.query.sort || req.session.sortPreference || "title";
+        
+        // Update session with current sort preference if provided in query
+        if (req.query.sort) {
+          req.session.sortPreference = req.query.sort;
         }
 
         // Base query for user's recipes
@@ -2165,10 +2171,12 @@ async function run() {
         const limit = parseInt(req.query.limit) || 12;
         const skip = (page - 1) * limit;
 
-        let sort = "title"
-
-        if (req.query.sort){
-          sort = req.query.sort;
+        // Get user's preferred sort from session, default to "title"
+        let sort = req.query.sort || req.session.sortPreference || "title";
+        
+        // Update session with current sort preference if provided in query
+        if (req.query.sort) {
+          req.session.sortPreference = req.query.sort;
         }
         // Dynamically set the sort order
         let sortOrder;
@@ -2248,11 +2256,12 @@ async function run() {
         const limit = parseInt(req.query.limit) || 12; // Allow limit override if needed, but usually default
         const skip = (page - 1) * limit; // skip will be 0
 
+        // Get user's preferred sort from session, default to "title"
+        let sort = req.query.sort || req.session.sortPreference || "title";
         
-        let sort = "title"
-
-        if (req.query.sort){
-          sort = req.query.sort;
+        // Update session with current sort preference if provided in query
+        if (req.query.sort) {
+          req.session.sortPreference = req.query.sort;
         }
         // Dynamically set the sort order
         let sortOrder;
