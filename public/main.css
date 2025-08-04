@@ -294,6 +294,10 @@ ul{
     outline:none;
 }
 
+.searchInput input:focus{
+    box-shadow:none !important;
+}
+
 .searchBarMobileWrapper .searchInput button{
     border:none;
     background-color: var(--white);
