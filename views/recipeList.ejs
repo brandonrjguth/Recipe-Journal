@@ -89,6 +89,11 @@
                     <input type="hidden" name="page" value="<%= currentPage %>">
                     <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">                 
                 </form>
+            <% } else if (currentPath === '/search') { %>       
+            <form action="/search" method="GET" id="sortForm" style="display: none;">
+                <input type="hidden" name="page" value="<%= currentPage %>">
+                <input type="hidden" name="sort" id="sortValue" value="<%= sort %>">
+                <input type="hidden" name="search" value="<%= searchTerm %>">
             <% } else { %>
             <form action="/recipeList" method="GET" id="sortForm" style="display: none;">
                 <input type="hidden" name="page" value="<%= currentPage %>">
