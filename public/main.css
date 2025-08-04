@@ -273,6 +273,7 @@ ul{
     border-radius:12px;
     box-shadow: 0 0 0 2px var(--border-light);
     display:flex;
+    background-color: var(--white);
 }
 
 .searchBarMobileWrapper .searchInput:focus-within {
@@ -284,6 +285,9 @@ ul{
     border-radius: 0 12px 12px 0;
     border:none;
     font-size: 1.2rem;
+    box-shadow: none !important;
+    margin: 0;
+    padding: 0.1rem;
 }
 
 .searchBarMobileWrapper .searchInput input:focus{
