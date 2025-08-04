@@ -14,6 +14,9 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    /* Remove blue tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 
 html {
@@ -462,6 +465,43 @@ ul.mainMenu, ul.user-bar {
     font-weight: 500;
     min-width: 110px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* Remove mobile tap highlight */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    outline: none;
+}
+
+/* Remove all focus styles by default */
+.sort-dropdown-toggle:focus {
+    outline: none !important;
+}
+
+/* Completely disable focus styles on touch devices and mobile simulation */
+@media (hover: none) and (pointer: coarse) {
+    .sort-dropdown-toggle:focus {
+        border-color: var(--border-light) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+}
+
+/* Also disable for DevTools mobile simulation */
+@media (max-width: 768px) {
+    .sort-dropdown-toggle:focus {
+        border-color: var(--border-light) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+}
+
+/* Only show red outline when dropdown is active (opened) */
+.sort-dropdown.active .sort-dropdown-toggle {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Override hover when active to maintain red styling */
+.sort-dropdown.active .sort-dropdown-toggle:hover {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .sort-dropdown-toggle:hover {
@@ -625,6 +665,43 @@ ul.mainMenu, ul.user-bar {
     font-weight: 500;
     min-width: 110px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* Remove mobile tap highlight */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    outline: none;
+}
+
+/* Remove all focus styles by default */
+.view-dropdown-toggle:focus {
+    outline: none !important;
+}
+
+/* Completely disable focus styles on touch devices and mobile simulation */
+@media (hover: none) and (pointer: coarse) {
+    .view-dropdown-toggle:focus {
+        border-color: var(--border-light) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+}
+
+/* Also disable for DevTools mobile simulation */
+@media (max-width: 768px) {
+    .view-dropdown-toggle:focus {
+        border-color: var(--border-light) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+}
+
+/* Only show red outline when dropdown is active (opened) */
+.view-dropdown.active .view-dropdown-toggle {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Override hover when active to maintain red styling */
+.view-dropdown.active .view-dropdown-toggle:hover {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .view-dropdown-toggle:hover {

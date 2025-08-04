@@ -283,8 +283,25 @@
         if (sortDropdownToggle && sortDropdownMenu && sortDropdown) {
             sortDropdownToggle.addEventListener('click', (event) => {
                 event.stopPropagation();
-                sortDropdownMenu.classList.toggle('active');
-                sortDropdown.classList.toggle('active');
+                const isCurrentlyOpen = sortDropdownMenu.classList.contains('active');
+                
+                if (isCurrentlyOpen) {
+                    // Close the dropdown
+                    sortDropdownMenu.classList.remove('active');
+                    sortDropdown.classList.remove('active');
+                    // Dynamically remove focus styling
+                    sortDropdownToggle.style.borderColor = 'var(--border-light)';
+                    sortDropdownToggle.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                    // Remove focus to clear any outline/highlight
+                    sortDropdownToggle.blur();
+                } else {
+                    // Open the dropdown
+                    sortDropdownMenu.classList.add('active');
+                    sortDropdown.classList.add('active');
+                    // Clear any inline styles when opening
+                    sortDropdownToggle.style.borderColor = '';
+                    sortDropdownToggle.style.boxShadow = '';
+                }
             });
 
             // Handle sort option selection
@@ -320,8 +337,25 @@
         if (viewDropdownToggle && viewDropdownMenu && viewDropdown) {
             viewDropdownToggle.addEventListener('click', (event) => {
                 event.stopPropagation();
-                viewDropdownMenu.classList.toggle('active');
-                viewDropdown.classList.toggle('active');
+                const isCurrentlyOpen = viewDropdownMenu.classList.contains('active');
+                
+                if (isCurrentlyOpen) {
+                    // Close the dropdown
+                    viewDropdownMenu.classList.remove('active');
+                    viewDropdown.classList.remove('active');
+                    // Dynamically remove focus styling
+                    viewDropdownToggle.style.borderColor = 'var(--border-light)';
+                    viewDropdownToggle.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                    // Remove focus to clear any outline/highlight
+                    viewDropdownToggle.blur();
+                } else {
+                    // Open the dropdown
+                    viewDropdownMenu.classList.add('active');
+                    viewDropdown.classList.add('active');
+                    // Clear any inline styles when opening
+                    viewDropdownToggle.style.borderColor = '';
+                    viewDropdownToggle.style.boxShadow = '';
+                }
             });
 
             // Handle view option selection
@@ -359,10 +393,22 @@
             if (sortDropdown && !sortDropdown.contains(event.target)) {
                 sortDropdownMenu?.classList.remove('active');
                 sortDropdown.classList.remove('active');
+                // Dynamically remove focus styling
+                if (sortDropdownToggle) {
+                    sortDropdownToggle.style.borderColor = 'var(--border-light)';
+                    sortDropdownToggle.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                    sortDropdownToggle.blur();
+                }
             }
             if (viewDropdown && !viewDropdown.contains(event.target)) {
                 viewDropdownMenu?.classList.remove('active');
                 viewDropdown.classList.remove('active');
+                // Dynamically remove focus styling
+                if (viewDropdownToggle) {
+                    viewDropdownToggle.style.borderColor = 'var(--border-light)';
+                    viewDropdownToggle.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                    viewDropdownToggle.blur();
+                }
             }
         });
 

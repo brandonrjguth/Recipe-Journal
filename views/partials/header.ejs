@@ -103,7 +103,8 @@
     let searchButtonMobile = document.querySelector(".searchButtonMobile");
     let searchBarMobile = document.querySelector(".searchBarMobile");
 
-    searchButtonMobile.addEventListener("click", () => {
+    searchButtonMobile.addEventListener("click", (event) => {
+        event.stopPropagation(); // Prevent this click from triggering the document click handler
         searchBarMobile.classList.toggle("hidden"); // Use toggle instead of remove
         mobileMenu.classList.remove('active'); // Toggle the 'active' class
         
@@ -119,13 +120,43 @@
         }
     });
 
+    // Global click handler for closing elements when clicking outside
+    document.addEventListener('click', (event) => {
+        // Handle mobile search bar
+        if (!searchBarMobile.classList.contains("hidden")) {
+            const isClickInsideSearchBar = searchBarMobile.contains(event.target);
+            const isClickOnSearchButton = searchButtonMobile.contains(event.target);
+            
+            if (!isClickInsideSearchBar && !isClickOnSearchButton) {
+                searchBarMobile.classList.add("hidden");
+            }
+        }
+        
+        // Handle mobile menu
+        if (mobileMenu.classList.contains("active")) {
+            const isClickInsideMobileMenu = mobileMenu.contains(event.target);
+            const isClickOnHamburgerButton = hamburgerBtn.contains(event.target);
+            
+            if (!isClickInsideMobileMenu && !isClickOnHamburgerButton) {
+                mobileMenu.classList.remove("active");
+            }
+        }
+        
+        // Handle user dropdown (if it exists)
+        if (userDropdown && !userDropdown.contains(event.target)) {
+            userDropdownMenu.classList.remove('active');
+            userDropdown.classList.remove('active');
+        }
+    });
+
     // Hamburger Menu Toggle
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
-    hamburgerBtn.addEventListener('click', () => {
+    hamburgerBtn.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent this click from triggering the document click handler
         mobileMenu.classList.toggle('active'); // Toggle the 'active' class
-        searchBarMobile.classList.add("hidden"); // Use toggle instead of remove
+        searchBarMobile.classList.add("hidden"); // Close search bar when opening mobile menu
     });
 
     // User Dropdown Toggle
@@ -143,13 +174,6 @@
             userDropdown.classList.toggle('active');
         });
 
-        // Close dropdown if clicking outside
-        document.addEventListener('click', (event) => {
-            if (!userDropdown.contains(event.target)) {
-                userDropdownMenu.classList.remove('active');
-                userDropdown.classList.remove('active');
-            }
-        });
 
         // Close dropdown on Escape key
         document.addEventListener('keydown', (event) => {
