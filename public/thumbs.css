@@ -113,17 +113,15 @@
         padding: 0;
         z-index: 1000;
         opacity: 0;
-        transform: translateY(-10px) scale(0.95);
+        transform: translateY(-10px);
         transition: opacity 0.2s ease, transform 0.2s ease;
         overflow: hidden;
-        pointer-events: none;
     }
     
     .sort-dropdown-menu.active { 
         display: block; 
         opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
+        transform: translateY(0);
     }
 
     .sort-dropdown-menu::before {
@@ -155,7 +153,7 @@
         white-space: nowrap;
         font-weight: 500;
         font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        transition: background-color 0.2s ease, color 0.2s ease;
         border-radius: 0;
         position: relative;
     }
@@ -175,20 +173,17 @@
     .sort-dropdown-menu li a:hover { 
         background-color: var(--primary);
         color: var(--accent-red);
-        padding-left: 1.5rem;
     }
 
     .sort-dropdown-menu li a.active {
         background-color: var(--white);
         color: var(--accent-red);
         font-weight: 600;
-        padding-left: 1rem;
     }
 
     .sort-dropdown-menu li a.active:hover {
         background-color: rgba(245, 49, 0, 0.12);
         color: var(--accent-red);
-        padding-left: 1.25rem;
     }
 
     .sort-dropdown-menu li a.active::after {
@@ -202,6 +197,13 @@
 
     .sort-dropdown-menu li + li {
         border-top: 1px solid rgba(209, 209, 209, 0.3);
+    }
+
+    /* Maintain hover styling when clicking dropdown items */
+    .sort-dropdown-menu li a:active {
+        background-color: var(--primary) !important;
+        color: var(--accent-red) !important;
+        padding-left: 1.5rem !important;
     }
 
     /*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
@@ -282,17 +284,15 @@
         padding: 0;
         z-index: 999;
         opacity: 0;
-        transform: translateY(-10px) scale(0.95);
+        transform: translateY(-10px);
         transition: opacity 0.2s ease, transform 0.2s ease;
         overflow: hidden;
-        pointer-events: none;
     }
 
     .view-dropdown-menu.active { 
         display: block; 
         opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
+        transform: translateY(0);
     }
 
     .view-dropdown-menu::before {
@@ -324,7 +324,7 @@
         white-space: nowrap;
         font-weight: 500;
         font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        transition: background-color 0.2s ease, color 0.2s ease;
         border-radius: 0;
         position: relative;
     }
@@ -344,20 +344,17 @@
     .view-dropdown-menu li a:hover { 
         background-color: var(--primary);
         color: var(--accent-red);
-        padding-left: 1.5rem;
     }
 
     .view-dropdown-menu li a.active {
         background-color: rgba(245, 49, 0, 0.08);
         color: var(--accent-red);
         font-weight: 600;
-        padding-left: 1rem;
     }
 
     .view-dropdown-menu li a.active:hover {
         background-color: rgba(245, 49, 0, 0.12);
         color: var(--accent-red);
-        padding-left: 1.25rem;
     }
 
     .view-dropdown-menu li a.active::after {
@@ -372,14 +369,17 @@
     .view-dropdown-menu li + li {
         border-top: 1px solid rgba(209, 209, 209, 0.3);
     }
+
+    /* Maintain hover styling when clicking dropdown items */
+    .view-dropdown-menu li a:active {
+        background-color: var(--primary) !important;
+        color: var(--accent-red) !important;
+        padding-left: 1.5rem !important;
+    }
   
-
-
 /*-----------------------*/
 /*-----Recipe List-------*/
 /*-----------------------*/
-
-
 
 .content ul{
     width:100%;
@@ -389,24 +389,16 @@
     gap:2rem;
 }
 
-
 /*------Recipe Wrapper-----*/
 .contentRoworCol {
     display: grid;
-    align-items: center; /* Maybe change to stretch if needed */
+    align-items: center;
     justify-content: space-between;
     width: 100%;
-    /* Ensure the grid row for the image can accommodate 14rem + padding/gaps */
-    /* Your existing grid-template-rows: 2fr 10fr 1fr; might need adjustment */
-    /* Consider explicit row sizes or adjust fractions */
-    grid-template-rows: auto minmax(14rem, auto) auto; /* Title, Image Area, Buttons */
-     /* OR grid-template-rows: auto 1fr auto; and let the image height push it */
-    height: auto; /* Let the row height be determined by content */
-    /* max-height: 20rem; */ /* Be careful this doesn't conflict */
+    grid-template-rows: auto minmax(14rem, auto) auto;
+    height: auto;
     grid-template-columns: 1fr;
     padding-bottom: 1rem;
-    /* Add overflow: hidden; to the image's direct container (the <a> tag) */
-    /* or potentially the .contentRow itself if appropriate */
 }
 
 /*-----Recipe Title-----*/
@@ -420,41 +412,30 @@
  .content a, .content a:visited{
     color:rgb(0, 0, 0);
     text-decoration:none;
-
 }
 
 /*------Recipe Thumbnail-----------*/
 img.recipeImg {
-    /* Your existing dimensions, object-fit, etc. */
     display: block;
     width: 100%;
-    height: 13rem; /* Example height */
+    height: 13rem;
     object-fit: cover;
-
-    /* Core styles for the fix */
-    opacity: 0; /* Start invisible */
-    transition: opacity 0.15s ease-in-out; /* Adjust timing as needed */
-    /* Optional: Add a background for the container */
-    /* background-color: #eee; */
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
 }
 
-img.recipeImg.loaded { /* Class added by inline onload */
-    opacity: 1; /* Fade in */
+img.recipeImg.loaded {
+    opacity: 1;
 }
 
-img.recipeImg.error { /* Optional class for error state */
-    /* Style for failed images, e.g., show placeholder */
-    /* content: url('/imgs/placeholder-error.jpg'); */
-    opacity: 1; /* Ensure errors are visible */
-    /* background-color: #fdd; */
+img.recipeImg.error {
+    opacity: 1;
 }
 
 /*------------Buttons Row-----------*/
-
 .buttons.row{
     justify-content: center;
 }
-
 
 .deleteBtn, .editBtn, .favouriteBtn, .shoppingListBtn{
     display: flex;
@@ -467,7 +448,6 @@ img.recipeImg.error { /* Optional class for error state */
     height: 1.5rem;
 }
 
-
 /*-----------------------------------------*/
 /* --------- Pagination Row ------------- */
 /*-----------------------------------------*/
@@ -475,9 +455,9 @@ img.recipeImg.error { /* Optional class for error state */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem 0 1rem 0; /* Add some padding */
-    gap: 0.5rem; /* Space between elements */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    padding: 2rem 0 1rem 0;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .pagination a,
@@ -500,12 +480,12 @@ img.recipeImg.error { /* Optional class for error state */
 
 .pagination .current {
     background-color: var(--accent-red);
-    color: var(--primary); /* White text on red background */
+    color: var(--primary);
     border-color: var(--accent-red);
     font-weight: bold;
 }
 
-  @media only screen and (min-width: 600px) {
+@media only screen and (min-width: 600px) {
     @media only screen and (max-width: 1200px) {
         .content{
             width:90%;
@@ -513,13 +493,14 @@ img.recipeImg.error { /* Optional class for error state */
         .content h1{
             font-size: 5rem;
         }
-      }
-  }
-  @media only screen and (min-width: 1200px) {
+    }
+}
+
+@media only screen and (min-width: 1200px) {
     .content{
         width:90%;
     }
     .content h1{
         font-size: 5rem;
     }
-  }
+}

@@ -285,25 +285,21 @@
             sortOptions.forEach(option => {
                 option.addEventListener('click', (event) => {
                     event.preventDefault();
+                    event.stopPropagation();
+                    
                     const selectedValue = option.getAttribute('data-value');
                     const selectedText = option.textContent;
                     
                     // Update the hidden input value
                     sortValue.value = selectedValue;
                     
-                    // Update the displayed current sort
-                    sortCurrent.textContent = selectedText;
+                    // Prevent any animations or transitions during form submission
+                    document.body.style.pointerEvents = 'none';
                     
-                    // Update active states
-                    sortOptions.forEach(opt => opt.classList.remove('active'));
-                    option.classList.add('active');
-                    
-                    // Close dropdown
-                    sortDropdownMenu.classList.remove('active');
-                    sortDropdown.classList.remove('active');
-                    
-                    // Submit the form
-                    sortForm.submit();
+                    // Submit the form immediately without DOM updates
+                    requestAnimationFrame(() => {
+                        sortForm.submit();
+                    });
                 });
             });
 

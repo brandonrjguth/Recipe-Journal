@@ -1,14 +1,3 @@
-/*---------------------------------------------------*/
-/*----------Base Stylings, Default Colours-----------*/
-/*---------------------------------------------------*/
-
-/*Box sizing set to border-box so that all padding is included and doesnt push outside the view width*/
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 :root {
     --primary: #FFF7ED;
     --text: #333333;
@@ -19,41 +8,40 @@
     --accent-red: #F53100;
     --tag-accent: #FECACA;
     --tag-text: #431407;
-  }
+}
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 html {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     font-family: 'Poppins', sans-serif;
     color: var(--text);
     background-color: var(--primary);
 }
 
-
 body, p, h3, h2, h1, ul, li {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
 }
 
-.col{
+.col {
     flex-direction: column !important;
 }
-
-/*Explicitly decalare font-type for text input,
-Some browsers will not inherit it from html styles*/
 
 input[type="text"],
 textarea {
     font-family: 'Poppins', sans-serif;
 }
 
-/*easy styling classes*/
-.hidden{ display:none !important; }
-.col{ display:flex; flex-direction: column; }
-.row{ display:flex; }
+.hidden { display: none !important; }
+.col { display: flex; flex-direction: column; }
+.row { display: flex; }
 
-/* Form validation styles */
 .error-message {
     color: var(--accent-red);
     font-size: 0.85rem;
@@ -61,7 +49,6 @@ textarea {
     margin-bottom: 0.25rem;
 }
 
-/* Special styling for ingredient and step nodes */
 .ingredientsNode,
 .stepsNode {
     display: flex;
@@ -70,7 +57,6 @@ textarea {
     position: relative;
 }
 
-/* Row container for input elements */
 .ingredientsNode .input-row,
 .stepsNode .input-row {
     display: flex;
@@ -79,7 +65,6 @@ textarea {
     width: 100%;
 }
 
-/* Error message styling */
 .ingredientsNode .error-message,
 .stepsNode .error-message {
     width: 100%;
@@ -89,7 +74,6 @@ textarea {
     font-size: 0.85rem;
 }
 
-/* Ensure inputs don't have bottom margin since error is in a new row */
 .ingredientsNode input,
 .stepsNode textarea {
     margin-bottom: 0;
@@ -104,10 +88,6 @@ input.invalid {
     border-color: var(--accent-red) !important;
     box-shadow: 0 0 0 1px var(--accent-red) !important;
 }
-
-/*---------------------------------------------------*/
-/*-------Delete Confirmation Modal Styling----------*/
-/*---------------------------------------------------*/
 
 .delete-modal {
     display: none;
@@ -201,21 +181,15 @@ input.invalid {
 
 .delete-modal-btn:focus {
     outline: none;
-    /*box-shadow: 0 0 0 2px rgba(245, 49, 0, 0.3);*/
-}*/
-
-
-ul{
-    list-style: none ;
 }
 
-/*---------------------------------------------------*/
-/*-------Header Styling--------*/
-/*---------------------------------------------------*/
+ul {
+    list-style: none;
+}
 
-.header{
+.header {
     position: relative;
-    display:flex;
+    display: flex;
     flex-direction: column;
     box-shadow: 0 2px 8px var(--shadow-color);
     background-color: var(--primary);
@@ -229,50 +203,50 @@ ul{
     align-items: center;
 }
 
-.logo{
-    display:flex;
-    padding:1rem 0;
+.logo {
+    display: flex;
+    padding: 1rem 0;
 }
 
 .logoName {
     text-decoration: none;
     height: 3rem;
-    display:flex;
+    display: flex;
     min-width: 100px;
 }
 
-.logoName h1{
-    padding-right:0.5rem;
-    display:none;
+.logoName h1 {
+    padding-right: 0.5rem;
+    display: none;
 }
 
-.firstHalfEnd{ 
-    display:flex; 
+.firstHalfEnd { 
+    display: flex; 
 }
 
-.searchBar{
-    display:none;
+.searchBar {
+    display: none;
 }
 
-.searchButton{
+.searchButton {
     background-color: transparent;
-    border:none;
+    border: none;
     align-self: center;
-    height:100%;
+    height: 100%;
 }
 
-.searchButtonMobile{
+.searchButtonMobile {
     display: flex;
 }
 
-.searchBarMobileWrapper{
-    padding:1.5rem;
+.searchBarMobileWrapper {
+    padding: 1.5rem;
 }
 
-.searchBarMobileWrapper .searchInput{
-    border-radius:12px;
+.searchBarMobileWrapper .searchInput {
+    border-radius: 12px;
     box-shadow: 0 0 0 2px var(--border-light);
-    display:flex;
+    display: flex;
     background-color: var(--white);
 }
 
@@ -280,26 +254,26 @@ ul{
     box-shadow: 0 0 0 2px var(--accent-red);
 }
 
-.searchBarMobileWrapper .searchInput input{
-    width:100%;
+.searchBarMobileWrapper .searchInput input {
+    width: 100%;
     border-radius: 0 12px 12px 0;
-    border:none;
+    border: none;
     font-size: 1.2rem;
     box-shadow: none !important;
     margin: 0;
     padding: 0.1rem;
 }
 
-.searchBarMobileWrapper .searchInput input:focus{
-    outline:none;
+.searchBarMobileWrapper .searchInput input:focus {
+    outline: none;
 }
 
-.searchInput input:focus{
-    box-shadow:none !important;
+.searchInput input:focus {
+    box-shadow: none !important;
 }
 
-.searchBarMobileWrapper .searchInput button{
-    border:none;
+.searchBarMobileWrapper .searchInput button {
+    border: none;
     background-color: var(--white);
     border-radius: 12px 0 0 12px;
     padding: 0;
@@ -307,26 +281,25 @@ ul{
     align-items: center;
 }
 
-.searchBarMobileWrapper .searchInput button img{
+.searchBarMobileWrapper .searchInput button img {
     height: 2.5rem;
     padding: 0.5rem;
     display: block;
 }
 
-span{
-    align-self:center;
+span {
+    align-self: center;
     color: red;
 }
 
-
-.mobileMenu{
+.mobileMenu {
     padding-bottom: 1rem;
 }
 
-.menu{
-    display:none;
+.menu {
+    display: none;
     list-style: none;
-    font-size:0.5rem;
+    font-size: 0.5rem;
     list-style-type: none;
 }
 
@@ -338,14 +311,6 @@ ul.mainMenu, ul.user-bar {
     padding: 0 !important;
 }
 
-
-/*Menushelf class is on both mobile and desktop menu's. By default the class is set to display-none.
-The way it is shown on mobile is by targeting .menushelf.active and setting display:flex.
-
-This is because the active class gets added to it when the hamburger menu is clicked. As the active class
-is applied to the user drop-down menu also, we want to target specifically the mobile menu shelf which has
-both classes.
-*/
 .menuShelf {
     display: none;
     position: absolute;
@@ -376,18 +341,17 @@ both classes.
     border-radius: 4px;
 }
 
-
 .mainMenu a.current,
 .mainMenu a:hover {
     color: var(--accent-red);
 }
 
-.mainMenu, .user-bar{
+.mainMenu, .user-bar {
     display: flex;
     gap: 1rem;
 }
 
-.mainMenu{
+.mainMenu {
     flex-direction: column;
 }
 
@@ -398,28 +362,30 @@ both classes.
     border-bottom: 1px solid var(--primary);
     box-sizing: border-box;
 }
- .menuShelf li:last-child {
+
+.menuShelf li:last-child {
     border-bottom: none;
 }
 
- .menuShelf li a, .menuShelf li.user-greeting {
+.menuShelf li a, .menuShelf li.user-greeting {
     display: block;
     padding: 12px 0;
     color: var(--text);
     text-decoration: none;
 }
- .menuShelf li a:hover {
+
+.menuShelf li a:hover {
     background-color: var(--primary);
 }
 
-.searchButton img{
+.searchButton img {
     height: 1.7rem;
     margin-top: 0.3rem;
 }
 
-.user-greeting{
-    color:var(--text);
-    font-weight:500;
+.user-greeting {
+    color: var(--text);
+    font-weight: 500;
 }
 
 .firstHalfHeader, .secondHalfHeader {
@@ -438,6 +404,18 @@ both classes.
     gap: 2rem;
 }
 
+.searchBarMobileWrapper {
+    padding: 0rem 1rem 1rem 1rem;
+}
+
+.searchBarMobileWrapper .searchInput button img {
+    height: 2.3rem;
+}
+
+.searchBarMobileWrapper .searchInput input {
+    font-size: 1rem;
+}
+
 .hamburger-button {
     display: block;
     background: none;
@@ -449,362 +427,19 @@ both classes.
     align-self: center;
 }
 
-
-.mobileMenu.active{
-    display:flex;
+.mobileMenu.active {
+    display: flex;
 }
 
-   /*------------Modern Sort Dropdown Styling-----------------*/
+.sortOptions {
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+}
 
-    .sortOptions{
-        padding-bottom:2rem;
-        flex-wrap:wrap;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        gap:1rem;
-    }
-    .sort-dropdown {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .sort-dropdown-toggle {
-        background: var(--white); 
-        border: 1px solid var(--border-light); 
-        padding: 0.75rem 1rem; 
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        font-size: 0.95rem;
-        color: var(--text); 
-        cursor: pointer; 
-        display: flex; 
-        align-items: center;
-        gap: 0.75rem;
-        border-radius: 12px;
-        transition: all 0.2s ease;
-        font-weight: 500;
-        min-width: 160px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .sort-dropdown-toggle:hover {
-        border-color: var(--accent-red);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .sort-dropdown-toggle:active {
-        transform: translateY(0);
-    }
-
-    .sort-label {
-        color: var(--text-light);
-        font-weight: 400;
-    }
-
-    .sort-current {
-        color: var(--accent-red);
-        font-weight: 600;
-        flex-grow: 1;
-    }
-    
-    .sort-dropdown-arrow {
-        font-size: 0.8em; 
-        line-height: 1; 
-        color: var(--text-light);
-        transition: transform 0.2s ease, color 0.2s ease;
-        margin-left: auto;
-    }
-
-    .sort-dropdown-toggle:hover .sort-dropdown-arrow {
-        color: var(--accent-red);
-    }
-
-    .sort-dropdown.active .sort-dropdown-arrow {
-        transform: rotate(180deg);
-        color: var(--accent-red);
-    }
-    
-    .sort-dropdown-menu {
-        display: none; 
-        position: absolute; 
-        left: 0;
-        right: 0;
-        top: calc(100% + 0.5rem);
-        background-color: var(--white); 
-        border: 1px solid var(--border-light);
-        border-radius: 12px; 
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        z-index: 1000;
-        opacity: 0;
-        transform: translateY(-10px) scale(0.95);
-        transition: opacity 0.2s ease, transform 0.2s ease;
-        overflow: hidden;
-    }
-    
-    .sort-dropdown-menu.active { 
-        display: block; 
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
-    .sort-dropdown-menu::before {
-        content: '';
-        position: absolute;
-        top: -6px;
-        left: 1.5rem;
-        width: 12px;
-        height: 12px;
-        background-color: var(--white);
-        border: 1px solid var(--border-light);
-        border-bottom: none;
-        border-right: none;
-        transform: rotate(45deg);
-        z-index: -1;
-    }
-    
-    .sort-dropdown-menu li {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .sort-dropdown-menu li a {
-        display: block; 
-        padding: 0.75rem 1.25rem; 
-        color: var(--text);
-        text-decoration: none; 
-        white-space: nowrap;
-        font-weight: 500;
-        font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
-        border-radius: 0;
-        position: relative;
-    }
-
-    .sort-dropdown-menu li:first-child a {
-        border-radius: 12px 12px 0 0;
-    }
-
-    .sort-dropdown-menu li:last-child a {
-        border-radius: 0 0 12px 12px;
-    }
-
-    .sort-dropdown-menu li:only-child a {
-        border-radius: 12px;
-    }
-    
-    .sort-dropdown-menu li a:hover { 
-        background-color: var(--primary);
-        color: var(--accent-red);
-        padding-left: 1.5rem;
-    }
-
-    .sort-dropdown-menu li a.active {
-        background-color: var(--white);
-        color: var(--accent-red);
-        font-weight: 600;
-        padding-left: 1rem;
-    }
-
-    .sort-dropdown-menu li a.active:hover {
-        background-color: rgba(245, 49, 0, 0.12);
-        color: var(--accent-red);
-        padding-left: 1.25rem;
-    }
-
-    .sort-dropdown-menu li a.active::after {
-        content: '✓';
-        position: absolute;
-        right: 1rem;
-        color: var(--accent-red);
-        font-weight: bold;
-        font-size: 0.9em;
-    }
-
-    .sort-dropdown-menu li + li {
-        border-top: 1px solid rgba(209, 209, 209, 0.3);
-    }
-
-    /*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
-    .view-dropdown {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .view-dropdown-toggle {
-        background: var(--white); 
-        border: 1px solid var(--border-light); 
-        padding: 0.75rem 1rem; 
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        font-size: 0.95rem;
-        color: var(--text); 
-        cursor: pointer; 
-        display: flex; 
-        align-items: center;
-        gap: 0.75rem;
-        border-radius: 12px;
-        transition: all 0.2s ease;
-        font-weight: 500;
-        min-width: 160px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .view-dropdown-toggle:hover {
-        border-color: var(--accent-red);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .view-dropdown-toggle:active {
-        transform: translateY(0);
-    }
-
-    .view-label {
-        color: var(--text-light);
-        font-weight: 400;
-    }
-
-    .view-current {
-        color: var(--accent-red);
-        font-weight: 600;
-        flex-grow: 1;
-    }
-    
-    .view-dropdown-arrow {
-        font-size: 0.8em; 
-        line-height: 1; 
-        color: var(--text-light);
-        transition: transform 0.2s ease, color 0.2s ease;
-        margin-left: auto;
-    }
-
-    .view-dropdown-toggle:hover .view-dropdown-arrow {
-        color: var(--accent-red);
-    }
-
-    .view-dropdown.active .view-dropdown-arrow {
-        transform: rotate(180deg);
-        color: var(--accent-red);
-    }
-    
-    .view-dropdown-menu {
-        display: none; 
-        position: absolute; 
-        left: 0;
-        right: 0;
-        top: calc(100% + 0.5rem);
-        background-color: var(--white); 
-        border: 1px solid var(--border-light);
-        border-radius: 12px; 
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        z-index: 1000;
-        opacity: 0;
-        transform: translateY(-10px) scale(0.95);
-        transition: opacity 0.2s ease, transform 0.2s ease;
-        overflow: hidden;
-    }
-    
-    .view-dropdown-menu.active { 
-        display: block; 
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
-    .view-dropdown-menu::before {
-        content: '';
-        position: absolute;
-        top: -6px;
-        left: 1.5rem;
-        width: 12px;
-        height: 12px;
-        background-color: var(--white);
-        border: 1px solid var(--border-light);
-        border-bottom: none;
-        border-right: none;
-        transform: rotate(45deg);
-        z-index: -1;
-    }
-    
-    .view-dropdown-menu li {
-        margin: 0;
-        padding: 0 !important;
-        list-style: none;
-    }
-
-    .view-dropdown-menu li a {
-        display: block; 
-        padding: 0.75rem 1.25rem; 
-        color: var(--text);
-        text-decoration: none; 
-        white-space: nowrap;
-        font-weight: 500;
-        font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
-        border-radius: 0;
-        position: relative;
-    }
-
-    .view-dropdown-menu li:first-child a {
-        border-radius: 12px 12px 0 0;
-    }
-
-    .view-dropdown-menu li:last-child a {
-        border-radius: 0 0 12px 12px;
-    }
-
-    .view-dropdown-menu li:only-child a {
-        border-radius: 12px;
-    }
-    
-    .view-dropdown-menu li a:hover { 
-        background-color: var(--primary);
-        color: var(--accent-red);
-        padding-left: 1.5rem;
-    }
-
-    .view-dropdown-menu li a.active {
-        background-color: rgba(245, 49, 0, 0.08);
-        color: var(--accent-red);
-        padding-left: 1rem;
-    }
-
-    .view-dropdown-menu li a.active:hover {
-        background-color: rgba(245, 49, 0, 0.12);
-        color: var(--accent-red);
-        padding-left: 1.25rem;
-    }
-
-    .view-dropdown-menu li a.active::after {
-        content: '✓';
-        position: absolute;
-        right: 1rem;
-        color: var(--accent-red);
-        font-weight: bold;
-        font-size: 0.9em;
-    }
-
-    .view-dropdown-menu li + li {
-        border-top: 1px solid rgba(209, 209, 209, 0.3);
-    }
-  
-
-
-
-
-/*---------------------------------------------------*/
-/*--------Desktop/Large Tablet styling (>700px)---------*/
-/*---------------------------------------------------*/
-
-/*------------Modern Sort Dropdown Styling-----------------*/
 .sort-dropdown {
     position: relative;
     display: inline-block;
@@ -813,7 +448,7 @@ both classes.
 .sort-dropdown-toggle {
     background: var(--white); 
     border: 1px solid var(--border-light); 
-    padding: 0.5rem .75rem; 
+    padding: 0.75rem 1rem; 
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -882,17 +517,15 @@ both classes.
     padding: 0;
     z-index: 1000;
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-10px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     overflow: hidden;
-    pointer-events: none;
 }
 
 .sort-dropdown-menu.active { 
     display: block; 
     opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .sort-dropdown-menu::before {
@@ -924,7 +557,7 @@ both classes.
     white-space: nowrap;
     font-weight: 500;
     font-size: 0.95rem;
-    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     border-radius: 0;
     position: relative;
 }
@@ -944,20 +577,17 @@ both classes.
 .sort-dropdown-menu li a:hover { 
     background-color: var(--primary);
     color: var(--accent-red);
-    padding-left: 1.5rem;
 }
 
 .sort-dropdown-menu li a.active {
-    background-color: rgba(245, 49, 0, 0.08);
+    background-color: var(--white);
     color: var(--accent-red);
     font-weight: 600;
-    padding-left: 1rem;
 }
 
 .sort-dropdown-menu li a.active:hover {
     background-color: rgba(245, 49, 0, 0.12);
     color: var(--accent-red);
-    padding-left: 1.25rem;
 }
 
 .sort-dropdown-menu li a.active::after {
@@ -973,7 +603,6 @@ both classes.
     border-top: 1px solid rgba(209, 209, 209, 0.3);
 }
 
-/*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
 .view-dropdown {
     position: relative;
     display: inline-block;
@@ -982,7 +611,7 @@ both classes.
 .view-dropdown-toggle {
     background: var(--white); 
     border: 1px solid var(--border-light); 
-    padding: 0.5rem .75rem; 
+    padding: 0.75rem 1rem; 
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -1049,19 +678,17 @@ both classes.
     list-style: none;
     margin: 0;
     padding: 0;
-    z-index: 999;
+    z-index: 1000;
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-10px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     overflow: hidden;
-    pointer-events: none;
 }
 
 .view-dropdown-menu.active { 
     display: block; 
     opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .view-dropdown-menu::before {
@@ -1093,7 +720,7 @@ both classes.
     white-space: nowrap;
     font-weight: 500;
     font-size: 0.95rem;
-    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     border-radius: 0;
     position: relative;
 }
@@ -1113,20 +740,17 @@ both classes.
 .view-dropdown-menu li a:hover { 
     background-color: var(--primary);
     color: var(--accent-red);
-    padding-left: 1.5rem;
 }
 
 .view-dropdown-menu li a.active {
     background-color: rgba(245, 49, 0, 0.08);
     color: var(--accent-red);
     font-weight: 600;
-    padding-left: 1rem;
 }
 
 .view-dropdown-menu li a.active:hover {
     background-color: rgba(245, 49, 0, 0.12);
     color: var(--accent-red);
-    padding-left: 1.25rem;
 }
 
 .view-dropdown-menu li a.active::after {
@@ -1142,24 +766,20 @@ both classes.
     border-top: 1px solid rgba(209, 209, 209, 0.3);
 }
 
-  @media only screen and (min-width: 700px) {
-
-
-    /*----As per the previous description, now menuShelf is made active for desktop sizes, and .menuShelf.mobileMenu is completely hidden
-    whether active or not by this specificity---*/
-    .menuShelf{
-        padding:0.5rem;
+@media only screen and (min-width: 700px) {
+    .menuShelf {
+        padding: 0.5rem;
         align-items: center;
-        display:flex;
+        display: flex;
         list-style: none;
-        gap:1rem;
+        gap: 1rem;
         background-color: var(--primary);
         color: var(--text);
         font-weight: 600;
         flex-direction: row;
         position: static;
         box-shadow: none;
-        width:auto;
+        width: auto;
         justify-content: space-around;
     }
 
@@ -1184,13 +804,16 @@ both classes.
         padding: 0;
         text-align: left;
     }
-     .menuShelf li a, .menuShelf li.user-greeting {
+
+    .menuShelf li a, .menuShelf li.user-greeting {
         display: inline;
         padding: 0;
     }
-     .menuShelf li a:hover {
+
+    .menuShelf li a:hover {
         background-color: transparent;
     }
+
     .mainMenu, .user-bar {
         flex-direction: row;
     }
@@ -1200,10 +823,12 @@ both classes.
         justify-content: space-between;
         gap: 1rem;
     }
+
     .firstHalfHeader {
         width: auto;
         gap: 2rem;
     }
+
     .secondHalfHeader {
         gap: 1rem;
     }
@@ -1211,6 +836,7 @@ both classes.
     .searchBarMobileWrapper {
         padding: 0rem 1rem 1rem 1rem;
     }
+
     .searchBarMobileWrapper .searchInput button img {
         height: 2.3rem;
     }
@@ -1219,8 +845,6 @@ both classes.
         font-size: 1rem;
     }
 
-
-    /*------------Desktop user logout menu styling-----------------*/
     .user-dropdown {
         position: relative;
         display: inline-block;
@@ -1278,19 +902,19 @@ both classes.
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         list-style: none;
         margin: 0;
-        padding: 0.5rem 0;
+        padding: 0;
         min-width: 140px;
         z-index: 1000;
         opacity: 0;
-        transform: translateY(-10px) scale(0.95);
+        transform: translateY(-10px);
         transition: opacity 0.2s ease, transform 0.2s ease;
     }
     
     .user-dropdown-menu.active { 
         display: block; 
         opacity: 1;
-        transform: translateY(0) scale(1);
-        padding:0;
+        transform: translateY(0);
+        padding: 0;
     }
 
     .user-dropdown-menu::before {
@@ -1321,7 +945,7 @@ both classes.
         white-space: nowrap;
         font-weight: 500;
         font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        transition: background-color 0.2s ease, color 0.2s ease;
         border-radius: 0;
     }
 
@@ -1340,20 +964,14 @@ both classes.
     .user-dropdown-menu li a:hover { 
         background-color: var(--primary);
         color: var(--accent-red);
-        padding-left: 1.5rem;
     }
 
     .user-dropdown-menu li + li {
         border-top: 1px solid rgba(209, 209, 209, 0.3);
     }
+}
 
- 
-/*---------------------------------------------------*/
-/*----------------Full size desktop screen Styling--------------------------*/
-/*---------------------------------------------------*/
-  @media only screen and (min-width: 991px) {
-
-    /*Display full search bar in header, hide search button that brings up the search bar below the header*/
+@media only screen and (min-width: 991px) {
     .searchBar {
         display: flex;
     }
@@ -1374,8 +992,8 @@ both classes.
         box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 20%);
     }
 
-    .searchBarMobile{
-        display:none;
+    .searchBarMobile {
+        display: none;
     }
 
     .searchInput:focus-within {
@@ -1409,4 +1027,4 @@ both classes.
     .search-image-button:focus {
         outline: none;
     }
-  }
+}
