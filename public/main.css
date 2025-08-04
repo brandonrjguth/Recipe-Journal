@@ -708,7 +708,7 @@ ul.mainMenu, ul.user-bar {
 
 .view-dropdown-menu li {
     margin: 0;
-    padding: 0;
+    padding: 0 !important;
     list-style: none;
 }
 

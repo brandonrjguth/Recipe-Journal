@@ -99,29 +99,26 @@
     }
     
     .sort-dropdown-menu {
-        display: none; 
-        position: absolute; 
+        position: absolute;
+        top: 100%;
         left: 0;
-        right: 0;
-        top: calc(100% + 0.5rem);
-        background-color: var(--white); 
+        width: 100%;
+        background: var(--white);
         border: 1px solid var(--border-light);
-        border-radius: 12px; 
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        list-style: none;
-        margin: 0;
-        padding: 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         z-index: 1000;
         opacity: 0;
-        transform: translateY(-10px);
+        visibility: hidden;
+        transform: translateY(-10px) scale(0.95);
         transition: opacity 0.2s ease, transform 0.2s ease;
-        overflow: hidden;
+        margin-top: 0.5rem;
     }
     
     .sort-dropdown-menu.active { 
-        display: block; 
         opacity: 1;
-        transform: translateY(0);
+        visibility: visible;
+        transform: translateY(0) scale(1);
     }
 
     .sort-dropdown-menu::before {
@@ -153,7 +150,7 @@
         white-space: nowrap;
         font-weight: 500;
         font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease;
+        transition: none;
         border-radius: 0;
         position: relative;
     }
@@ -199,11 +196,13 @@
         border-top: 1px solid rgba(209, 209, 209, 0.3);
     }
 
-    /* Maintain hover styling when clicking dropdown items */
+    /* Prevent any visual changes when clicking dropdown items */
     .sort-dropdown-menu li a:active {
-        background-color: var(--primary) !important;
-        color: var(--accent-red) !important;
-        padding-left: 1.5rem !important;
+        background-color: inherit !important;
+        color: inherit !important;
+        padding: 0.75rem 1.25rem !important;
+        transform: none !important;
+        transition: none !important;
     }
 
     /*------------Modern View Dropdown Styling (Same as Sort)-----------------*/
@@ -270,29 +269,26 @@
     }
 
     .view-dropdown-menu {
-        display: none; 
-        position: absolute; 
+        position: absolute;
+        top: 100%;
         left: 0;
-        right: 0;
-        top: calc(100% + 0.5rem);
-        background-color: var(--white); 
+        width: 100%;
+        background: var(--white);
         border: 1px solid var(--border-light);
-        border-radius: 12px; 
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        z-index: 999;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
         opacity: 0;
-        transform: translateY(-10px);
+        visibility: hidden;
+        transform: translateY(-10px) scale(0.95);
         transition: opacity 0.2s ease, transform 0.2s ease;
-        overflow: hidden;
+        margin-top: 0.5rem;
     }
 
     .view-dropdown-menu.active { 
-        display: block; 
         opacity: 1;
-        transform: translateY(0);
+        visibility: visible;
+        transform: translateY(0) scale(1);
     }
 
     .view-dropdown-menu::before {
@@ -324,7 +320,7 @@
         white-space: nowrap;
         font-weight: 500;
         font-size: 0.95rem;
-        transition: background-color 0.2s ease, color 0.2s ease;
+        transition: none;
         border-radius: 0;
         position: relative;
     }
@@ -370,11 +366,13 @@
         border-top: 1px solid rgba(209, 209, 209, 0.3);
     }
 
-    /* Maintain hover styling when clicking dropdown items */
+    /* Prevent any visual changes when clicking dropdown items */
     .view-dropdown-menu li a:active {
-        background-color: var(--primary) !important;
-        color: var(--accent-red) !important;
-        padding-left: 1.5rem !important;
+        background-color: inherit !important;
+        color: inherit !important;
+        padding: 0.75rem 1.25rem !important;
+        transform: none !important;
+        transition: none !important;
     }
   
 /*-----------------------*/

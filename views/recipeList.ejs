@@ -290,6 +290,10 @@
                     const selectedValue = option.getAttribute('data-value');
                     const selectedText = option.textContent;
                     
+                    // Close the dropdown immediately for better UX
+                    sortDropdownMenu.classList.remove('active');
+                    sortDropdown.classList.remove('active');
+                    
                     // Update the hidden input value
                     sortValue.value = selectedValue;
                     
@@ -320,6 +324,10 @@
                     event.preventDefault();
                     const selectedValue = option.getAttribute('data-value');
                     const selectedText = option.textContent;
+                    
+                    // Close the dropdown immediately for better UX
+                    viewDropdownMenu.classList.remove('active');
+                    viewDropdown.classList.remove('active');
                     
                     // Apply the new style
                     applyAndSaveStyle(selectedValue);
