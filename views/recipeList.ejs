@@ -71,11 +71,11 @@
             <div class="view-dropdown">
                 <button type="button" class="view-dropdown-toggle">
                     <span class="view-label">View:</span>
-                    <span class="view-current" id="viewCurrent">Thumbnail</span>
+                    <span class="view-current" id="viewCurrent">Thumbnails</span>
                     <span class="view-dropdown-arrow">&#9662;</span>
                 </button>
                 <ul class="view-dropdown-menu">
-                    <li><a href="#" data-value="thumbs" class="active">Thumbnail</a></li>
+                    <li><a href="#" data-value="thumbs" class="active">Thumbnails</a></li>
                     <li><a href="#" data-value="list">Compact</a></li>
                 </ul>
             </div>
@@ -261,7 +261,7 @@
         
         // Update view dropdown to show current selection
         if (viewCurrent) {
-            viewCurrent.textContent = initialIsThumbs ? 'Thumbnail' : 'Compact';
+            viewCurrent.textContent = initialIsThumbs ? 'Thumbnails' : 'Compact';
         }
         
         // Update active states in view dropdown
